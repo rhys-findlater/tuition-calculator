@@ -1,1 +1,30 @@
-<!-- Empty -->
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Tuition Calculator</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+  </head>
+  <body>
+    <header class="header">
+      <div class="header-container">
+        <div class="header-subcontainer">
+          <p class="header-text">Tuition Calculator</p>
+          <p class="header-subtext">Calculate study costs with ease</p>
+        </div>
+        <img
+          src="{{ url_for('static', filename='images/uc-logo.png') }}"
+          alt="logo"
+          class="header-logo"
+        />
+      </div>
+    </header>
+    <footer class="footer">
+      <p class="footer-text">
+        UC Online Course Costing Application | University
+      </p>
+    </footer>
+  </body>
+</html>

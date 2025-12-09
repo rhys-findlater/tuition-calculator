@@ -1,1 +1,77 @@
-/* Empty */
+/* ==================== Global ==================== */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+* {
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+}
+
+body {
+  font-size: 1rem;
+  max-width: 60rem;
+  line-height: 1.5;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-family: Inter, sans-serif;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* ==================== Header ==================== */
+
+.header {
+  width: 100vw;
+  text-align: center;
+  background: #212121;
+}
+
+.header-container {
+  margin: 0 auto;
+  padding: 1.5rem 10rem;
+  display: flex;
+  gap: 1.3rem;
+}
+
+.header-subcontainer {
+  display: flex;
+  flex-direction: column;
+  order: 2;
+}
+
+.header-text {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: white;
+}
+
+.header-subtext {
+  font-size: 0.875rem;
+  color: white;
+}
+
+.header-logo {
+  height: 4rem;
+}
+
+/* ==================== Footer ==================== */
+
+.footer {
+  width: 100vw;
+  text-align: center;
+  background: #212121;
+  padding: 1.5rem 10rem;
+}
+
+.footer-text {
+  color: white;
+}
