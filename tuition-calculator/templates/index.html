@@ -11,8 +11,8 @@
     <header class="header">
       <div class="header-container">
         <div class="header-subcontainer">
-          <p class="header-text">Tuition Calculator</p>
-          <p class="header-subtext">Calculate study costs with ease</p>
+          <p class="header-heading">Tuition Calculator</p>
+          <p class="header-subheading">Calculate study costs with ease</p>
         </div>
         <img
           src="{{ url_for('static', filename='images/uc-logo.png') }}"
@@ -21,6 +21,70 @@
         />
       </div>
     </header>
+    <div class="body-container">
+      <div class="learner-info-container">
+        <div class="learner-info-header-container">
+          <p class="learner-info-heading">Learner Information</p>
+          <p class="learner-info-subheading">
+            Select your learner type and current location to calculate accurate
+            costs
+          </p>
+        </div>
+        <div class="learner-info-selection-container">
+          <div class="learner-info-select-container">
+            <p class="learner-info-select-text">Learner Type</p>
+            <form method="post">
+              <div>
+                <input
+                  type="radio"
+                  id="domestic"
+                  name="learner_type"
+                  value="domestic"
+                  checked
+                />
+                <label for="domestic"
+                  >Domestic Learner<br />New Zealand citizen or resident</label
+                >
+              </div>
+
+              <div>
+                <input
+                  type="radio"
+                  id="international"
+                  name="learner_type"
+                  value="international"
+                />
+                <label for="international"
+                  >International Learner<br />International student</label
+                >
+              </div>
+            </form>
+          </div>
+          <div class="learner-info-select-container">
+            <p class="learner-info-select-text">Current Physical Location</p>
+            <form method="post">
+              <div>
+                <input
+                  type="radio"
+                  id="onshore"
+                  name="location_type"
+                  value="onshore"
+                />
+                <label for="onshore">Onshore (In New Zealand)<br />GST applies</label>
+              </div>
+              <div>
+                <input 
+                  type="radio"
+                  id="offshore"
+                  name="location_type"
+                  value="offshore"
+                />
+                <label for="offshore">Offshore (Outside New Zealand)<br />GST does not apply</label>
+              </div>
+          </div>
+        </div>
+      </div>
+    </div>
     <footer class="footer">
       <p class="footer-text">
         UC Online Course Costing Application | University

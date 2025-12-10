@@ -27,6 +27,11 @@ body {
   justify-content: space-between;
 }
 
+.body-container {
+  display: flex;
+  justify-content: center;
+}
+
 /* ==================== Header ==================== */
 
 .header {
@@ -48,19 +53,61 @@ body {
   order: 2;
 }
 
-.header-text {
+.header-heading {
   font-size: 1.5rem;
   font-weight: bold;
   color: white;
 }
 
-.header-subtext {
+.header-subheading {
   font-size: 0.875rem;
   color: white;
 }
 
 .header-logo {
   height: 4rem;
+}
+
+/* ==================== Learner-info ==================== */
+
+.learner-info-container {
+  border: 1px solid #000;
+  border-radius: 8px;
+  padding: 1.5rem 1.5rem;
+
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.learner-info-header-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.09rem;
+}
+
+.learner-info-heading {
+  font-size: 1rem;
+}
+
+.learner-info-subheading {
+  font-size: 1rem;
+}
+
+.learner-info-selection-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.learner-info-select-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.learner-info-select-text {
+  font-size: 0.875rem;
 }
 
 /* ==================== Footer ==================== */
