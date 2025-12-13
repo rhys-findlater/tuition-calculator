@@ -22,87 +22,94 @@
       </div>
     </header>
     <main>
-<<<<<<< Updated upstream
-      <div class="learner-info-container">
-        <div class="learner-info-header-container">
-          <p class="learner-info-heading">Learner Information</p>
-          <p class="learner-info-subheading">
-            Select your learner type and current location to calculate accurate
-            costs
-=======
       <div class="welcome-section">
         <div class="welcome-icon">
-          <img 
-            src="{{ url_for('static', filename='icons/calculator.svg') }}" 
+          <img
+            src="{{ url_for('static', filename='icons/calculator.svg') }}"
             alt="Calculator icon"
             class="icon"
           />
         </div>
         <div class="welcome-content">
           <p class="welcome-title">
-            Welcome to the UC Online Tuition Calculator 
+            Welcome to the UC Online Tuition Calculator
           </p>
           <p class="welcome-text">
-            Select your courses and learner type below to receive an accurate, comprehensive cost breakdown including Student Services Levy (SSL) and GST where applicable. Export your results to PDF for record keeping or visa documentation.
->>>>>>> Stashed changes
+            Select your courses and learner type below to receive an accurate,
+            comprehensive cost breakdown including Student Services Levy (SSL)
+            and GST where applicable. Export your results to PDF for record
+            keeping or visa documentation.
           </p>
         </div>
-        <div class="learner-info-selection-container">
-          <div class="learner-info-select-container">
-            <p class="learner-info-select-text">Learner Type</p>
-            <form method="post">
-              <div class="learner-info-option">
-                <input
-                  type="radio"
-                  id="domestic"
-                  name="learner_type"
-                  value="domestic"
-                  checked
-                />
-                <label for="domestic"
-                  >Domestic Learner<br />New Zealand citizen or resident</label
-                >
-              </div>
-
-              <div class="learner-info-option">
-                <input
-                  type="radio"
-                  id="international"
-                  name="learner_type"
-                  value="international"
-                />
-                <label for="international"
-                  >International Learner<br />International student</label
-                >
-              </div>
-            </form>
+      </div>
+      <div class="main-content-container">
+        <div class="learner-info-container">
+          <div class="learner-info-header-container">
+            <p class="learner-info-heading">Learner Information</p>
+            <p class="learner-info-subheading">
+              Select your learner type and current location to calculate
+              accurate costs
+            </p>
           </div>
-          <div class="learner-info-select-container">
-            <p class="learner-info-select-text">Current Physical Location</p>
-            <form method="post">
-              <label class="learner-info-option">
-                <input
-                  type="radio"
-                  id="onshore"
-                  name="location_type"
-                  value="onshore"
-                />
-                <div>
-                  <p>Onshore (In New Zealand)<br />GST applies</p>
+          <div class="learner-info-selection-container">
+            <div class="learner-info-select-container">
+              <p class="learner-info-select-text">Learner Type</p>
+              <form method="post">
+                <div class="learner-info-option">
+                  <input
+                    type="radio"
+                    id="domestic"
+                    name="learner_type"
+                    value="domestic"
+                    checked
+                  />
+                  <label for="domestic"
+                    >Domestic Learner<br />New Zealand citizen or
+                    resident</label
+                  >
                 </div>
-              </label>
-            </form>
 
-            <div class="learner-info-option">
-              <input
-                type="radio"
-                id="offshore"
-                name="location_type"
-                value="offshore"
-              />
-              <label for="offshore"
-                >Offshore (Outside New Zealand)<br />GST does not apply</label
-              >
+                <div class="learner-info-option">
+                  <input
+                    type="radio"
+                    id="international"
+                    name="learner_type"
+                    value="international"
+                  />
+                  <label for="international"
+                    >International Learner<br />International student</label
+                  >
+                </div>
+              </form>
+            </div>
+            <div class="learner-info-select-container">
+              <p class="learner-info-select-text">Current Physical Location</p>
+              <form method="post">
+                <div class="learner-info-option">
+                  <input
+                    type="radio"
+                    id="domestic"
+                    name="learner_type"
+                    value="domestic"
+                    checked
+                  />
+                  <label for="domestic"
+                    >Onshore (In New Zealand) <br />GST applies</label
+                  >
+                </div>
+                <div class="learner-info-option">
+                  <input
+                    type="radio"
+                    id="offshore"
+                    name="location_type"
+                    value="offshore"
+                  />
+                  <label for="offshore"
+                    >Offshore (Outside New Zealand)<br />GST does not
+                    apply</label
+                  >
+                </div>
+              </form>
             </div>
           </div>
         </div>

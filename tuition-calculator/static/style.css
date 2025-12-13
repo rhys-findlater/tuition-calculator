@@ -28,15 +28,16 @@ body {
 
 main {
   max-width: 80rem;
-<<<<<<< Updated upstream
   margin-inline: auto;
 
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.main-content-container {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-=======
-  margin: auto;
-  justify-content: center;
->>>>>>> Stashed changes
 }
 
 /* ==================== Header ==================== */
