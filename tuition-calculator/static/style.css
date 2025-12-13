@@ -16,7 +16,6 @@ html {
 
 body {
   font-size: 1rem;
-  max-width: 60rem;
   line-height: 1.5;
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
@@ -25,6 +24,14 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+}
+
+main {
+  max-width: 80rem;
+  margin-inline: auto;
+
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 /* ==================== Header ==================== */
@@ -61,6 +68,66 @@ body {
 
 .header-logo {
   height: 4rem;
+}
+
+/* ==================== Learner-info ==================== */
+
+.learner-info-container {
+  box-shadow: 8px 8px 20px 2px rgba(0, 0, 0, 0.3);
+  /* border: 1px solid #000; */
+  border-radius: 8px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+
+  grid-column: span 2 / span 2;
+}
+
+.learner-info-header-container {
+  padding-inline: 1.5rem;
+  padding-top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.09rem;
+}
+
+.learner-info-heading {
+  font-size: 1rem;
+}
+
+.learner-info-subheading {
+  font-size: 1rem;
+}
+
+.learner-info-selection-container {
+  padding-inline: 1.5rem;
+  padding-bottom: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.learner-info-select-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.learner-info-select-text {
+  font-size: 0.875rem;
+}
+
+.learner-info-option {
+  border: 1px solid #d3d3d3;
+  border-radius: 8px;
+  padding: 1rem;
+  margin: 0.75rem;
+  font-size: 0.875rem;
+}
+
+.learner-info-option:hover {
+  background-color: #f0f0f0;
 }
 
 /* ==================== Footer ==================== */
