@@ -96,6 +96,17 @@ main {
   gap: 0.75;
 }
 
+.welcome-text-block {
+  max-width: 60rem;      /* lets text wrap nicely */
+}
+.welcome-title {
+  font-size: 1rem;
+}
+
+.welcome-text {
+  font-size: 0.875rem;
+}
+
 /* ==================== Learner-info ==================== */
 
 .learner-info-container {
