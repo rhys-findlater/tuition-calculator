@@ -174,20 +174,35 @@
             </p>
           </div>
         </div>
-      </div>
-      <div class="course-selection-container">
-        <div class="course-selection-heading-container">
-          <div class="course-selection-icon-container">
-            <img
-              src="{{ url_for('static', filename='icons/book-open.svg') }}"
-              alt="Open book icon"
-              class="main-icon"
-            />
-            <p class="course-selection-heading">Course Selection</p>
+        <div class="course-selection-container">
+          <div class="course-selection-heading-container">
+            <div class="course-selection-icon-container">
+              <img
+                src="{{ url_for('static', filename='icons/book-open.svg') }}"
+                alt="Open book icon"
+                class="main-icon"
+              />
+              <p class="course-selection-heading">Course Selection</p>
+            </div>
+            <p class="course-selection-container-text">
+              Search and select courses to add to your cost calculation
+            </p>
           </div>
-          <p class="course-selection-container-text">
-            Search and select courses to add to your cost calculation
-          </p>
+          <div class="course-selection-search-container">
+            <form class="course-search" role="search">
+              <label for="course-search" class="course-search-label"
+                >Available Courses</label
+              >
+              <input
+                id="course-search"
+                class="search-input"
+                name="q"
+                type="search"
+                placeholder="Search
+            by course code or name..."
+              />
+            </form>
+          </div>
         </div>
       </div>
     </main>
