@@ -174,11 +174,16 @@
             </p>
           </div>
         </div>
+        
         <div class="ssl-container">
           <div class="ssl-container-header">
             <div class="ssl-container-header-row">
               <div class="ssl-container-icon-wrapper">
-                <div class="ssl-container-icon"></div>
+                <img
+                  src="{{ url_for('static', filename='icons/info.svg') }}"
+                  alt="Information"
+                  class="main-icon"
+                />
               </div>
               <div>
                 <p class="ssl-container-title">Student Services Levy (SSL) 2025</p>
@@ -194,7 +199,11 @@
             <div class="ssl-panel-onshore">
               <div class="ssl-panel-header">
                 <div class="ssl-panel-icon-wrapper">
-                  <div class="ssl-panel-icon"></div>
+                  <img
+                    src="{{ url_for('static', filename='icons/map-pin.svg') }}"
+                    alt="On-campus location"
+                    class="sub-icon"
+                  />
                 </div>
                 <div class="ssl-panel-header-text">
                   <p class="ssl-panel-title">On-campus (Onshore)</p>
@@ -221,7 +230,11 @@
             <div class="ssl-panel-offshore">
               <div class="ssl-panel-header">
                 <div class="ssl-panel-icon-wrapper">
-                  <div class="ssl-panel-icon"></div>
+                  <img
+                    src="{{ url_for('static', filename='icons/globe.svg') }}"
+                    alt="Off-campus location"
+                    class="sub-icon"
+                  />
                 </div>
                 <div class="ssl-panel-header-text">
                   <p class="ssl-panel-title">Off-campus (Offshore)</p>
