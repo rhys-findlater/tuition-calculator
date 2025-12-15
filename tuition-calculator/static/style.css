@@ -110,7 +110,7 @@ main {
 }
 
 .welcome-text-block {
-  max-width: 60rem; /* lets text wrap nicely */
+  max-width: 60rem; 
 }
 
 .welcome-title {
@@ -267,6 +267,109 @@ main {
   border: 1.2px solid #000;
 }
 
+/* ==================== Learner-info ==================== */
+.ssl-container {
+  padding-inline: 1.5rem;
+  padding-top: 1.5rem;
+  padding-bottom: 1.5rem;
+  margin-bottom: 1.25rem;
+  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  border-radius: 10px;
+  background-color: #ededed;      
+  border: 1px solid #e5e7eb;      
+  grid-column: span 2 / span 2;
+}
+
+.ssl-container-header {
+  padding-bottom: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.ssl-container-header-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.ssl-container-icon-wrapper {
+  background-color: rgba(206,62,46,0.1);
+  border-radius: 0.5rem;          
+  padding: 0.5rem;
+  line-height: 0;
+}
+
+.ssl-container-title {
+  font-size: 1rem;
+}
+
+.ssl-container-subtitle {
+  font-size: 0.875rem;
+}
+
+.ssl-container-content {
+  display: grid;
+  gap: 1rem;                     
+}
+
+.ssl-panel-onshore,
+.ssl-panel-offshore {
+  box-shadow: 0 3px 6px 0 rgb(0 0 0 / 0.1);
+  background-color: #ffffff;     
+  border-radius: 0.75rem;       
+  padding: 1rem;              
+  border: 1px solid #e5e7eb; 
+}
+
+.ssl-panel-header { 
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.ssl-panel-icon-wrapper {
+  background-color: rgba(206,62,46,0.1);
+  border-radius: 0.5rem;          
+  padding: 0.5rem;
+  line-height: 0;
+}
+
+.ssl-panel-header-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.ssl-panel-title {
+  font-size: 0.95rem;
+}
+
+.ssl-panel-subtitle {
+  font-size: 0.75rem;
+  color: rgba(44, 44, 44, 0.8);
+ }
+
+.ssl-panel-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-left: 2.75rem;
+}
+
+.ssl-panel-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.875rem;
+  padding-block: 0.375rem;        
+}
+
+.ssl-panel-row:not(:last-child) {
+  border-bottom: 1px solid #F2F5F9; 
+}
+
+.ssl-panel-value {
+  color: #CE3E2E;
+  font-size: 1rem;
+}
 /* ==================== Footer ==================== */
 
 .footer {
