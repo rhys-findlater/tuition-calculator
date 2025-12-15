@@ -24,23 +24,22 @@
     <main>
       <div class="welcome-section-container">
         <div class="welcome-content">
-          <div class="welcome-icon">
+          <div class="welcome-content-icon-container">
             <img
               src="{{ url_for('static', filename='icons/calculator.svg') }}"
               alt="Calculator icon"
+              class="main-icon"
             />
-          </div>
-          <div class="welcome-text-block">
             <p class="welcome-title">
               Welcome to the UC Online Tuition Calculator
             </p>
-            <p class="welcome-text">
-              Select your courses and learner type below to receive an accurate,
-              comprehensive cost breakdown including Student Services Levy (SSL)
-              and GST where applicable. Export your results to PDF for record
-              keeping or visa documentation.
-            </p>
           </div>
+          <p class="welcome-text">
+            Select your courses and learner type below to receive an accurate,
+            comprehensive cost breakdown including Student Services Levy (SSL)
+            and GST where applicable. Export your results to PDF for record
+            keeping or visa documentation.
+          </p>
         </div>
       </div>
 
@@ -51,6 +50,7 @@
               <img
                 src="{{ url_for('static', filename='icons/users.svg') }}"
                 alt="Person icon"
+                class="main-icon"
               />
               <p class="learner-info-header-text">Learner Information</p>
             </div>
@@ -159,7 +159,7 @@
             <img
               src="{{ url_for('static', filename='icons/receipt.svg') }}"
               alt="Receipt icon"
-              class="sub-icon"
+              class="main-icon"
             />
             <p class="cost-summary-header">Cost Summary</p>
           </div>
@@ -173,6 +173,21 @@
               Select courses to see course breakdown
             </p>
           </div>
+        </div>
+      </div>
+      <div class="course-selection-container">
+        <div class="course-selection-heading-container">
+          <div class="course-selection-icon-container">
+            <img
+              src="{{ url_for('static', filename='icons/book-open.svg') }}"
+              alt="Open book icon"
+              class="main-icon"
+            />
+            <p class="course-selection-heading">Course Selection</p>
+          </div>
+          <p class="course-selection-container-text">
+            Search and select courses to add to your cost calculation
+          </p>
         </div>
       </div>
     </main>
