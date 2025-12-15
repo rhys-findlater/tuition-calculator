@@ -205,6 +205,92 @@
           </div>
         </div>
       </div>
+
+      <div class="ssl-container">
+        <div class="ssl-container-header">
+          <div class="ssl-container-header-row">
+            <div class="ssl-container-icon-wrapper">
+              <img
+                src="{{ url_for('static', filename='icons/info.svg') }}"
+                alt="Information"
+                class="main-icon"
+              />
+            </div>
+            <div>
+              <p class="ssl-container-title">
+                Student Services Levy (SSL) 2025
+              </p>
+              <p class="ssl-container-subtitle">
+                Charged per academic point, based on your physical location
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="ssl-container-content">
+          <!-- On-campus (Onshore) -->
+          <div class="ssl-panel-onshore">
+            <div class="ssl-panel-header">
+              <div class="ssl-panel-icon-wrapper">
+                <img
+                  src="{{ url_for('static', filename='icons/map-pin.svg') }}"
+                  alt="On-campus location"
+                  class="sub-icon"
+                />
+              </div>
+              <div class="ssl-panel-header-text">
+                <p class="ssl-panel-title">On-campus (Onshore)</p>
+                <p class="ssl-panel-subtitle">Site codes: C, M, A</p>
+              </div>
+            </div>
+
+            <div class="ssl-panel-rows">
+              <div class="ssl-panel-row">
+                <p class="ssl-panel-label">One 15-point course</p>
+                <p class="ssl-panel-value">$145.80</p>
+              </div>
+              <div class="ssl-panel-row">
+                <p class="ssl-panel-label">One semester (60 points)</p>
+                <p class="ssl-panel-value">$583.20</p>
+              </div>
+              <div class="ssl-panel-row">
+                <p class="ssl-panel-label">Two semesters (120 points)</p>
+                <p class="ssl-panel-value">$1166.40</p>
+              </div>
+            </div>
+          </div>
+          <!-- Off-campus (Offshore) -->
+          <div class="ssl-panel-offshore">
+            <div class="ssl-panel-header">
+              <div class="ssl-panel-icon-wrapper">
+                <img
+                  src="{{ url_for('static', filename='icons/globe.svg') }}"
+                  alt="Off-campus location"
+                  class="sub-icon"
+                />
+              </div>
+              <div class="ssl-panel-header-text">
+                <p class="ssl-panel-title">Off-campus (Offshore)</p>
+                <p class="ssl-panel-subtitle">Site codes: D, O, E, N, F</p>
+              </div>
+            </div>
+
+            <div class="ssl-panel-rows">
+              <div class="ssl-panel-row">
+                <p class="ssl-panel-label">One 15-point course</p>
+                <p class="ssl-panel-value">$29.10</p>
+              </div>
+              <div class="ssl-panel-row">
+                <p class="ssl-panel-label">One semester (60 points)</p>
+                <p class="ssl-panel-value">$116.40</p>
+              </div>
+              <div class="ssl-panel-row">
+                <p class="ssl-panel-label">Two semesters (120 points)</p>
+                <p class="ssl-panel-value">$232.80</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </main>
 
     <footer class="footer">
