@@ -213,81 +213,32 @@
             <button class="course-degree-filter">Law</button>
           </div>
           <div class="course-selection-course-list">
-            <div class="course-selection-course">
-              <div class="course-selection-course-info-container">
-                <div class="course-selection-course-code-container">
-                  <p>ARTS101</p>
-                  <p class="course-selection-course-degree">Arts</p>
-                  <p class="course-selection-course-points">15 pts</p>
+            {% for course in courses %}
+              <div class="course-selection-course"
+                  data-course-code="{{ course.code }}"
+                  data-course-title="{{ course.title }}"
+                  data-course-points="{{ course.points }}"
+                  data-course-price="{{ course.price }}"
+                  data-course-faculty="{{ course.faculty }}">
+                <div class="course-selection-course-info-container">
+                  <div class="course-selection-course-code-container">
+                    <p>{{ course.code }}</p>
+                    <p class="course-selection-course-degree">{{ course.faculty }}</p>
+                    <p class="course-selection-course-points">{{ course.points }} pts</p>
+                  </div>
+                  <p>{{ course.title }}</p>
                 </div>
-                <p>Introduction to Art History</p>
-              </div>
-              <div class="course-selection-course-button-container">
-                <p>$892.50</p>
-                <button class="course-selection-course-button" type="button"><span class="course-selection-course-button-add">+</span><span>Add</span>
-                </button>
-              </div>
-            </div>
-            <div class="course-selection-course">
-              <div class="course-selection-course-info-container">
-                <div class="course-selection-course-code-container">
-                  <p>ENGL201</p>
-                  <p class="course-selection-course-degree">Arts</p>
-                  <p class="course-selection-course-points">15 pts</p>
+                <div class="course-selection-course-button-container">
+                  <p>${{ "%.2f"|format(course.price) }}</p>
+                  <button class="course-selection-course-button"
+                          type="button"
+                          data-course-toggle>
+                    <span class="course-selection-course-button-add">+</span>
+                    <span class="course-selection-course-button-label">Add</span>
+                  </button>
                 </div>
-                <p>English Literature and Culture</p>
               </div>
-              <div class="course-selection-course-button-container">
-                <p>$892.50</p>
-                <button class="course-selection-course-button" type="button"><span class="course-selection-course-button-add">+</span><span>Add</span>
-                </button>
-              </div>
-            </div>
-            <div class="course-selection-course">
-              <div class="course-selection-course-info-container">
-                <div class="course-selection-course-code-container">
-                  <p>HIST102</p>
-                  <p class="course-selection-course-degree">Arts</p>
-                  <p class="course-selection-course-points">15 pts</p>
-                </div>
-                <p>Modern World History</p>
-              </div>
-              <div class="course-selection-course-button-container">
-                <p>$892.50</p>
-                <button class="course-selection-course-button" type="button"><span class="course-selection-course-button-add">+</span><span>Add</span>
-                </button>
-              </div>
-            </div>
-            <div class="course-selection-course">
-              <div class="course-selection-course-info-container">
-                <div class="course-selection-course-code-container">
-                  <p>BSNS101</p>
-                  <p class="course-selection-course-degree">Business</p>
-                  <p class="course-selection-course-points">15 pts</p>
-                </div>
-                <p>Foundations of Business</p>
-              </div>
-              <div class="course-selection-course-button-container">
-                <p>$1050.00</p>
-                <button class="course-selection-course-button" type="button"><span class="course-selection-course-button-add">+</span><span>Add</span>
-                </button>
-              </div>
-            </div>
-            <div class="course-selection-course">
-              <div class="course-selection-course-info-container">
-                <div class="course-selection-course-code-container">
-                  <p>ECON104</p>
-                  <p class="course-selection-course-degree">Business</p>
-                  <p class="course-selection-course-points">15 pts</p>
-                </div>
-                <p>Introduction to Economics</p>
-              </div>
-              <div class="course-selection-course-button-container">
-                <p>$1050.00</p>
-                <button class="course-selection-course-button" type="button"><span class="course-selection-course-button-add">+</span><span>Add</span>
-                </button>
-              </div>
-            </div>
+            {% endfor %}
           </div>
         </div>
         <div class="ssl-container">
