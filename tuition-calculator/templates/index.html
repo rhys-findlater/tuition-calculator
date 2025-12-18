@@ -189,6 +189,28 @@
               Search and select courses to add to your cost calculation
             </p>
           </div>
+
+          <!-- Selected Courses -->
+          <div class="selected-courses-container">
+            <div class="selected-courses-header">
+              <p class="selected-courses-title">
+                Selected Courses (<span id="selectedCoursesCount">0</span>)
+              </p>
+
+              <button 
+                type="button"
+                class="selected-courses-clear"
+                id="clearSelectedCourses"
+                disabled>
+                <span class="selected-courses-clear-x">×</span>
+                Clear ALL  
+              </button>
+            </div>
+
+            <div class="selected-courses-list" id="selectedCoursesList"></div>
+          </div>
+          <!-- end Selected Courses -->
+
           <div class="course-selection-search-container">
             <form class="course-search" role="search">
               <label for="course-search" class="course-search-label"
