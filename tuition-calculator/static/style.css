@@ -1,13 +1,26 @@
 /* ==================== Global ==================== */
 
+:root {
+  /* Border radius */
+  --radius-card: 0.5rem;
+  --radius-card-lg: 0.75rem;
+  --radius-control: 0.25rem;
+  --radius-chip: 0.5rem;
+
+  /* Shadow */
+  --shadow-card-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-card-md: 0 3px 6px 0 rgb(0 0 0 / 0.1);
+
+  /* Border color */
+  --border-subtle: #e5e7eb;
+}
+
 *,
 *::before,
 *::after {
-  box-sizing: border-box;
-}
-* {
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
 }
 
 html {
@@ -74,7 +87,6 @@ main {
 
 .header-text {
   font-size: 1.42rem;
-  font-weight: 900;
   font-weight: bold;
   color: white;
 }
@@ -91,9 +103,9 @@ main {
 /* ==================== Welcome-section ==================== */
 
 .welcome-section-container {
-  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-  border-radius: 0.5rem;
-  border: 1px solid #e5e7eb;
+  box-shadow: var(--shadow-card-sm);
+  border-radius: var(--radius-card);
+  border: 1px solid var(--border-subtle);
   padding: 1.5rem;
   margin-bottom: 1.25rem;
   margin-top: 1.75rem;
@@ -128,9 +140,9 @@ main {
 /* ==================== Learner-info ==================== */
 
 .learner-info-container {
-  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
+  box-shadow: var(--shadow-card-sm);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-card);
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
@@ -180,8 +192,8 @@ main {
 .learner-info-option {
   font-size: 0.875rem;
   padding: 16px 20px;
-  border: 1px solid #e5e7eb;
-  border-radius: 10px;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-card-lg);
   margin-bottom: 0.75rem;
   cursor: pointer;
   display: flex;
@@ -202,9 +214,9 @@ main {
 .cost-summary-container {
   padding: 1.5rem;
   height: 40%;
-  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-  border-radius: 10px;
-  border: 1px solid #e5e7eb;
+  box-shadow: var(--shadow-card-sm);
+  border-radius: var(--radius-card-lg);
+  border: 1px solid var(--border-subtle);
   display: flex;
   flex-direction: column;
 }
@@ -232,9 +244,9 @@ main {
 
 .course-selection-container {
   padding: 1.5rem;
-  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-  border: 1px solid #e5e7eb;
-  border-radius: 10px;
+  box-shadow: var(--shadow-card-sm);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-card-lg);
 
   grid-column: span 2 / span 2;
 }
@@ -265,7 +277,7 @@ main {
 
 .search-input {
   padding: 0.5rem 0.75rem 0.5rem 2.5rem;
-  border-radius: 4px;
+  border-radius: var(--radius-control);
   border: 1.2px solid #d1d5db;
   background: url("icons/search-grey.svg") no-repeat 10px center;
   background-size: 1rem 1rem;
@@ -293,7 +305,7 @@ main {
   background-color: #fff;
   padding: 7px 10px;
   border: 1.2px solid #ce3e2e;
-  border-radius: 8px;
+  border-radius: var(--radius-card);
   cursor: pointer;
 }
 
@@ -315,8 +327,8 @@ main {
 
 .course-selection-course {
   padding: 0.55rem 0.65rem;
-  border: 1.2px solid #e5e7eb;
-  border-radius: 8px;
+  border: 1.2px solid var(--border-subtle);
+  border-radius: var(--radius-card);
   display: flex;
   justify-content: space-between;
 }
@@ -338,7 +350,7 @@ main {
   font-size: 0.75rem;
   padding: 0.1rem 0.7rem;
   border: 1.2px solid #000;
-  border-radius: 8px;
+  border-radius: var(--radius-card);
 }
 
 .course-selection-course-points {
@@ -359,7 +371,7 @@ main {
   background-color: #ce3e2e;
   padding: 2.5px 10px;
   border: 1px solid #ce3e2e;
-  border-radius: 8px;
+  border-radius: var(--radius-card);
   display: flex;
   align-items: center;
   gap: 0.75rem;
@@ -375,16 +387,23 @@ main {
   background-color: #d35143;
 }
 
-/* ==================== Learner-info ==================== */
+/* ==================== Selected Courses ==================== */
+
+.selected-courses-container {
+  display: none;
+}
+
+/* ==================== Student-Levy-Pannel ==================== */
+
 .ssl-container {
   padding-inline: 1.5rem;
   padding-top: 1.5rem;
   padding-bottom: 1.5rem;
   margin-bottom: 7rem;
-  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-  border-radius: 10px;
+  box-shadow: var(--shadow-card-sm);
+  border-radius: var(--radius-card-lg);
   background-color: #ededed;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--border-subtle);
   grid-column: span 2 / span 2;
 }
 
@@ -401,7 +420,7 @@ main {
 
 .ssl-container-icon-wrapper {
   background-color: rgba(206, 62, 46, 0.1);
-  border-radius: 0.5rem;
+  border-radius: var(--radius-card);
   padding: 0.5rem;
   line-height: 0;
 }
@@ -425,11 +444,11 @@ main {
 
 .ssl-panel-onshore,
 .ssl-panel-offshore {
-  box-shadow: 0 3px 6px 0 rgb(0 0 0 / 0.1);
+  box-shadow: var(--shadow-card-md);
   background-color: #ffffff;
-  border-radius: 0.75rem;
+  border-radius: var(--radius-card-lg);
   padding: 1rem;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--border-subtle);
 }
 
 .ssl-panel-header {
@@ -441,7 +460,7 @@ main {
 
 .ssl-panel-icon-wrapper {
   background-color: rgba(206, 62, 46, 0.1);
-  border-radius: 0.5rem;
+  border-radius: var(--radius-card);
   padding: 0.5rem;
   line-height: 0;
 }
