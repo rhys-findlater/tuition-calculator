@@ -46,7 +46,7 @@ def create_app(test_config=None):
         },
     ]
 
-    @app.route("/")
+    @app.route("/", methods=['GET', 'POST']) 
     def index():
         # pass courses into the template
         return render_template("index.html", courses=COURSES)

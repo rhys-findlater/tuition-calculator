@@ -4,10 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Tuition Calculator</title>
-    <meta
-      name="description"
-      content="Calculate UC Online course costs with SSL & GST"
-    />
+    <meta name="description" content="Calculate UC Online tuition costs" />
     <link
       rel="icon"
       type="image/x-icon"
@@ -81,7 +78,11 @@
                 />
                 <p class="learner-info-select-text">Learner Type</p>
               </div>
-              <form method="post">
+              <form
+                method="post"
+                action="{{ url_for('index')}}"
+                aria-label="Learner type selection"
+              >
                 <div class="learner-info-label-container">
                   <label class="learner-info-option">
                     <input
@@ -92,12 +93,12 @@
                       value="domestic"
                       checked
                     />
-                    <div class="learner-info-text">
+                    <span class="learner-info-text">
                       <p class="learner-info-option-text">Domestic Learner</p>
                       <p class="learner-info-option-text">
                         New Zealand citizen or resident
                       </p>
-                    </div>
+                    </span>
                   </label>
 
                   <label class="learner-info-option">
@@ -108,14 +109,14 @@
                       name="learner_type"
                       value="international"
                     />
-                    <div class="learner-info-text">
+                    <span class="learner-info-text">
                       <p class="learner-info-option-text">
                         International Learner
                       </p>
                       <p class="learner-info-option-text">
                         International Student
                       </p>
-                    </div>
+                    </span>
                   </label>
                 </div>
               </form>
@@ -132,7 +133,11 @@
                   Current Physical Location
                 </p>
               </div>
-              <form method="post">
+              <form
+                method="post"
+                action="{{ url_for('index')}}"
+                aria-label="Learner type selection"
+              >
                 <label class="learner-info-option">
                   <input
                     class="radio-button"
@@ -142,12 +147,12 @@
                     value="onshore"
                     checked
                   />
-                  <div class="learner-info-text">
+                  <span class="learner-info-text">
                     <p class="learner-info-option-text">
                       Onshore (In New Zealand)
                     </p>
                     <p class="learner-info-option-text">GST applies</p>
-                  </div>
+                  </span>
                 </label>
 
                 <label class="learner-info-option">
@@ -158,12 +163,12 @@
                     name="location"
                     value="offshore"
                   />
-                  <div class="learner-info-text">
+                  <span class="learner-info-text">
                     <p class="learner-info-option-text">
                       Offshore (Outside New Zealand)
                     </p>
                     <p class="learner-info-option-text">GST does not apply</p>
-                  </div>
+                  </span>
                 </label>
               </form>
             </div>
@@ -227,7 +232,11 @@
           <!-- end Selected Courses -->
 
           <div class="course-selection-search-container">
-            <form class="course-search" role="search">
+            <form
+              class="course-search"
+              role="search"
+              aria-label="Course search"
+            >
               <label for="course-search" class="course-search-label"
                 >Available Courses</label
               >
