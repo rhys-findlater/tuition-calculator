@@ -16,7 +16,7 @@ The application is hosted at:
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/Rhys-Findlater/tuition-calculator.git
+git clone https://github.com/rhys-findlater/tuition-calculator.git
 cd tuition-calculator
 ```
 
