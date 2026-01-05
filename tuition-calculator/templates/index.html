@@ -221,7 +221,7 @@
                 id="clearSelectedCourses"
                 disabled
               >
-                <span class="selected-courses-clear-x">×</span>
+                <span class="selected-courses-clear-x"></span>
                 Clear ALL
               </button>
             </div>
@@ -275,13 +275,12 @@
                     {{ course['Faculty'] }}
                   </p>
                   {% if course['Points'] == 'TBC' %}
-                  <p class="course-selection-course-points">
-                    {{ course['Points'] }}
-                  </p>
+                    <p class="course-selection-course-points">{{ course['Points'] }}</p>
                   {% else %}
-                  <p class="course-selection-course-points">
-                    {{ course['Points'] }} pts
-                  </p>
+                    {% set p = course['Points']|float %}
+                    <p class="course-selection-course-points">
+                      {{ (p|int) if p == (p|int) else p }} pts
+                    </p>
                   {% endif %}
                 </div>
                 <p>{{ course['Course Title'] }}</p>

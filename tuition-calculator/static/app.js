@@ -76,7 +76,7 @@ function renderSelected() {
             </div>
             <div class="selected-course-price">
                 <span class="selected-course-price-label"></span>
-                <span class="selected-course-price-value">$${course.price}</span>
+                <span class="selected-course-price-value">$${course.price.toFixed(2)}</span>
             </div>
             <button
                 type="button"
@@ -141,8 +141,12 @@ function initAvailableCourseCards() {
     const price = Number(card.dataset.coursePrice || "0");
     const faculty = card.dataset.courseFaculty || "";
 
-    // When a card is clicked, add that course
-    card.addEventListener("click", () => {
+    const addBtn = card.querySelector("[data-course-toggle]");
+    if (!addBtn) return;
+
+    addBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      e.stopPropagation(); 
       addCourse({ code, title, points, price, faculty });
     });
   });
