@@ -96,3 +96,68 @@ function renderSelected() {
     }
 }
 
+/**
+ * Add a course to the selected Map and update the UI.
+ *
+ * @param course - Course data.
+ */
+function addCourse(course) {
+  selected.set(course.code, course);
+  setAvailableCardVisibility(course.code, true);
+  renderSelected();
+}
+
+/**
+ * Clear all selected courses.
+ */
+function clearSelected() {
+  // Show all course cards again
+  for (const course of selected.values()) {
+    setAvailableCardVisibility(course.code, false);
+  }
+
+  // Empty the Map and re-render
+  selected.clear();
+  renderSelected();
+}
+
+/**
+ * Initialise click handlers for each course card
+ * in the "Available courses" section.
+ */
+function initAvailableCourseCards() {
+  const cards = document.querySelectorAll(".course-selection-course");
+
+  cards.forEach(card => {
+    const code = card.dataset.courseCode;
+    const title = card.dataset.courseTitle;
+    const points = Number(card.dataset.coursePoints || "0");
+    const price = Number(card.dataset.coursePrice || "0");
+    const faculty = card.dataset.courseFaculty || "";
+
+    // When a card is clicked, add that course
+    card.addEventListener("click", () => {
+      addCourse({ code, title, points, price, faculty });
+    });
+  });
+}
+
+/**
+ * Attach event listeners to buttons and perform initial render.
+ */
+function initTuitionSelection() {
+  initAvailableCourseCards();
+
+  if (clearBtn) {
+    clearBtn.addEventListener("click", clearSelected);
+  }
+
+  renderSelected();
+}
+
+// Run init once the DOM is ready
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", initTuitionSelection);
+} else {
+  initTuitionSelection();
+}
