@@ -244,7 +244,7 @@
                 class="search-input"
                 name="q"
                 type="search"
-                placeholder="Search by course code or name..."
+                placeholder="Search by course code or title..."
               />
             </form>
           </div>
@@ -252,37 +252,42 @@
             <button class="course-degree-filter course-degree-filter-active">
               All Faculties
             </button>
-            <button class="course-degree-filter">Arts</button>
-            <button class="course-degree-filter">Business</button>
-            <button class="course-degree-filter">Science</button>
-            <button class="course-degree-filter">Education</button>
-            <button class="course-degree-filter">Health Sciences</button>
-            <button class="course-degree-filter">Law</button>
+            {% for faculty in unique_faculties %}
+            <button class="course-degree-filter">{{ faculty }}</button>
+            {% endfor %}
           </div>
           <div class="course-selection-course-list">
             {% for course in courses %}
             <div
               class="course-selection-course"
-              data-course-code="{{ course.code }}"
-              data-course-title="{{ course.title }}"
-              data-course-points="{{ course.points }}"
-              data-course-price="{{ course.price }}"
-              data-course-faculty="{{ course.faculty }}"
+              data-course-code="{{ course['UC Code'] }}"
+              data-course-title="{{ course['Course Title'] }}"
+              data-course-points="{{ course['Points'] }}"
+              data-dom-price="{{ course['Dom Fees - 2026'] }}"
+              data-int-price="{{ course['Int Fees - 2026'] }}"
+              data-course-price="{{ course['Dom Fees - 2026'] }}"
+              data-course-faculty="{{ course['Faculty'] }}"
             >
               <div class="course-selection-course-info-container">
                 <div class="course-selection-course-code-container">
-                  <p>{{ course.code }}</p>
+                  <p>{{ course['UC Code'] }}</p>
                   <p class="course-selection-course-degree">
-                    {{ course.faculty }}
+                    {{ course['Faculty'] }}
                   </p>
+                  {% if course['Points'] == 'TBC' %}
                   <p class="course-selection-course-points">
-                    {{ course.points }} pts
+                    {{ course['Points'] }}
                   </p>
+                  {% else %}
+                  <p class="course-selection-course-points">
+                    {{ course['Points'] }} pts
+                  </p>
+                  {% endif %}
                 </div>
-                <p>{{ course.title }}</p>
+                <p>{{ course['Course Title'] }}</p>
               </div>
               <div class="course-selection-course-button-container">
-                <p>${{ "%.2f"|format(course.price) }}</p>
+                <p>${{ "%.2f"|format(course['Dom Fees - 2026']) }}</p>
                 <button
                   class="course-selection-course-button"
                   type="button"

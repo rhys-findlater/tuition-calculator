@@ -1,5 +1,5 @@
-from flask import Flask, render_template
-import pandas 
+from flask import Flask, render_template, request, redirect, url_for
+import pandas as pd
 import os
 import json
 
@@ -10,12 +10,39 @@ def create_app(test_config=None):
         SECRET_KEY="dev",
     )
 
-    
-    
-
+    DATA_DIR = os.getenv('RAILWAY_VOLUME_MOUNT_PATH', 'data')
+    csv_path = os.path.join('tuition-calculator', DATA_DIR, 'tuition_fees.csv') 
+   
     @app.route("/", methods=['GET', 'POST']) 
     def index():
-        # pass courses into the template
-        return render_template("index.html", courses=COURSES)
+        # Read in CSV
+        df = pd.read_csv(csv_path)
+
+        # Clean and filter data
+        fee_columns = ['Int Fees - 2026', 'Dom Fees - 2026'] 
+        for col in fee_columns:
+            df[col] = (
+                df[col].astype(str)
+                .str.replace(r'[\$,]', '', regex=True)
+                .str.strip()
+                .replace('nan', pd.NA)
+                .pipe(pd.to_numeric, errors='coerce')
+                .fillna(0).astype(int)
+            )
+        df['Faculty'] = df['Faculty'].fillna('Other').replace('None', 'Other')
+        df['UC Code'] = df['UC Code'].fillna('TBC').replace('nan', 'TBC')
+        df['Points'] = df['Points'].fillna('TBC').replace('nan', 'TBC');
+
+        # Create course data for templates and JavaScript 
+        COURSES = df.to_dict('records')
+        UNIQUE_FACULTIES = list(df['Faculty'].drop_duplicates())
+        COURSES_JSON = json.dumps(COURSES)
+      
+        # Prevent redirect form alert
+        if request.method == "POST":
+            return redirect(url_for("index"))
+
+        # Pass data into template 
+        return render_template("index.html", courses=COURSES, courses_json=COURSES_JSON, unique_faculties=UNIQUE_FACULTIES)
 
     return app
