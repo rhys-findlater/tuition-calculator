@@ -19,12 +19,12 @@ const clearBtn = document.getElementById("clearSelectedCourses");
 const showAllBtn = document.getElementById("showAllCourses");
 const showLessBtn = document.getElementById("showLessCourses");
 
-function limitCourses(initalLimit = 5) {
+function limitCourses(initialLimit = 5) {
   const cards = document.querySelectorAll(".course-selection-course");
   let shown = 0;
-  cards.forEach((card, index) => {
+  cards.forEach((card) => {
     if (card.style.display === "none") return;
-    if (shown < initalLimit) {
+    if (shown < initialLimit) {
       card.style.display = "flex";
       shown++;
     } else {
@@ -37,6 +37,7 @@ function getCurrentLearnerType() {
   const checked = document.querySelector('input[name="learner_type"]:checked');
   return checked ? checked.value : "domestic";
 }
+const selectedHeaderEl = document.querySelector(".selected-courses-header");
 
 /**
  * Show or hide a course card in the "Available courses" list.
@@ -61,21 +62,19 @@ function setAvailableCardVisibility(code, isSelected) {
  * - Enables/disables the Clear button
  * - Rebuilds the list of selected courses
  */
-function renderSelected(learnerType = "domestic") {
+function renderSelected(learnerType = getCurrentLearnerType()) {
   if (!selectedListEl || !selectedCountEl || !clearBtn) return;
 
   const isDomestic = learnerType === "domestic";
-
-  // Update selected count label
   selectedCountEl.textContent = String(selected.size);
-
-  // Disable clear button if nothing is selected
   clearBtn.disabled = selected.size === 0;
 
-  // Clear the existing list before re-rendering
+  if (selectedHeaderEl) {
+    selectedHeaderEl.style.display = selected.size === 0 ? "none" : "flex";
+  }
+
   selectedListEl.innerHTML = "";
 
-  // Build one row per selected course
   for (const course of selected.values()) {
     const displayPrice = isDomestic ? course.domPrice : course.intPrice;
 
@@ -84,46 +83,35 @@ function renderSelected(learnerType = "domestic") {
     row.dataset.courseCode = course.code;
 
     row.innerHTML = `
-            <div class="selected-course-main">
-                <div class="selected-course-title">
-                    <span class="selected-course-code">${course.code}</span>
-                    <span class="selected-course-name">${course.title}</span>
-                </div>
-                <div class="selected-course-meta">
-                    <span class="selected-course-points">${
-                      course.points
-                    } points</span>
-                    <span class="selected-course-faculty">${
-                      course.faculty
-                    }</span>
-                </div>
-            </div>
-            <div class="selected-course-price">
-                <span class="selected-course-price-label">Tuition</span>
-                <span class="selected-course-price-value">$${displayPrice.toFixed(
-                  2
-                )}</span>
-            </div>
-            <button
-                type="button"
-                class="selected-course-remove"
-                aria-label="Remove ${course.code}"
-            >✕</button>
-        `;
+      <div class="selected-course-main">
+        <div class="selected-course-title">
+          <span class="selected-course-code">${course.code}</span>
+          <span class="selected-course-name">${course.title}</span>
+        </div>
+        <div class="selected-course-meta">
+          <span class="selected-course-points">${course.points} points</span>
+          <span class="selected-course-faculty">${course.faculty}</span>
+        </div>
+      </div>
+      <div class="selected-course-price">
+        <span class="selected-course-price-label"></span>
+        <span class="selected-course-price-value">$${displayPrice.toFixed(
+          2
+        )}</span>
+      </div>
+      <button type="button" class="selected-course-remove" aria-label="Remove ${
+        course.code
+      }">✕</button>
+    `;
 
-    // Wire up the remove button inside this row
     const removeBtn = row.querySelector(".selected-course-remove");
     if (removeBtn) {
       removeBtn.addEventListener("click", () => {
-        // Remove from Map
         selected.delete(course.code);
-        // Show course again in the available list
         setAvailableCardVisibility(course.code, false);
-        // Re-render panel
         renderSelected();
       });
     }
-    // Add this course row to the selected-courses list in the UI
     selectedListEl.appendChild(row);
   }
 }
@@ -159,7 +147,6 @@ function clearSelected() {
  */
 function initAvailableCourseCards() {
   const cards = document.querySelectorAll(".course-selection-course");
-
   cards.forEach((card) => {
     const code = card.dataset.courseCode;
     const title = card.dataset.courseTitle;
@@ -168,10 +155,15 @@ function initAvailableCourseCards() {
     const intPrice = Number(card.dataset.intPrice || "0");
     const faculty = card.dataset.courseFaculty || "";
 
-    // When a card is clicked, add that course
-    card.addEventListener("click", () => {
-      addCourse({ code, title, points, domPrice, intPrice, faculty });
-    });
+    // Direct button handler only—no outer card click to avoid duplicates
+    const addBtn = card.querySelector("[data-course-toggle]");
+    if (addBtn) {
+      addBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        addCourse({ code, title, points, domPrice, intPrice, faculty });
+      });
+    }
   });
 }
 
@@ -181,65 +173,19 @@ function initAvailableCourseCards() {
 function initTuitionSelection() {
   initAvailableCourseCards();
 
-  document
-    .querySelectorAll(".course-degree-filter")
-    .forEach((pill) => pill.classList.remove("course-degree-filter-active"));
-  const allPill = document.querySelector("[data-faculty='All Faculties']");
-  if (allPill) allPill.classList.add("course-degree-filter-active");
-
   if (clearBtn) {
     clearBtn.addEventListener("click", clearSelected);
   }
 
   renderSelected("domestic");
-
   limitCourses();
 
-  // In initTuitionSelection(), replace Show All handler:
-  if (showAllBtn) {
-    showAllBtn.addEventListener("click", () => {
-      // Show all matching courses
-      document.querySelectorAll(".course-selection-course").forEach((card) => {
-        const code = card.dataset.courseCode;
-        const cardFaculty = card.dataset.courseFaculty;
-        const facultyMatch =
-          currentFaculty === "All Faculties" || cardFaculty === currentFaculty;
-        const isSelected = selected.has(code);
-        card.style.display = facultyMatch && !isSelected ? "flex" : "none";
-      });
-
-      // Toggle: Hide Show All → Show Show Less
-      showAllBtn.style.display = "none";
-      if (showLessBtn) {
-        showLessBtn.style.display = "block";
-        showLessBtn.disabled = false;
-      }
-    });
-  }
-
-  // NEW: Show Less handler
-  if (showLessBtn) {
-    showLessBtn.addEventListener("click", () => {
-      limitCourses(); // Re-apply 5-course limit
-
-      // Toggle back: Hide Show Less → Show Show All (if needed)
-      showLessBtn.style.display = "none";
-      const totalMatching =
-        Array.from(
-          document.querySelectorAll(".course-selection-course")
-        ).filter((card) => {
-          const cardFaculty = card.dataset.courseFaculty;
-          return (
-            currentFaculty === "All Faculties" || cardFaculty === currentFaculty
-          );
-        }).length - selected.size;
-      const needsShowAll = totalMatching > 5;
-      if (showAllBtn && needsShowAll) {
-        showAllBtn.style.display = "block";
-        showAllBtn.disabled = false;
-      }
-    });
-  }
+  // Initial active pill only
+  document
+    .querySelectorAll(".course-degree-filter")
+    .forEach((pill) => pill.classList.remove("course-degree-filter-active"));
+  const allPill = document.querySelector("[data-faculty='All Faculties']");
+  if (allPill) allPill.classList.add("course-degree-filter-active");
 }
 
 /**
@@ -280,6 +226,7 @@ document.querySelectorAll('input[name="learner_type"]').forEach((radio) => {
  */
 document.querySelectorAll(".course-degree-filter").forEach((btn) => {
   btn.addEventListener("click", () => {
+    // Active state
     document
       .querySelectorAll(".course-degree-filter")
       .forEach((pill) => pill.classList.remove("course-degree-filter-active"));
@@ -287,6 +234,7 @@ document.querySelectorAll(".course-degree-filter").forEach((btn) => {
 
     currentFaculty = btn.dataset.faculty;
 
+    // Filter + hide selected
     document.querySelectorAll(".course-selection-course").forEach((card) => {
       const code = card.dataset.courseCode;
       const cardFaculty = card.dataset.courseFaculty;
@@ -296,9 +244,11 @@ document.querySelectorAll(".course-degree-filter").forEach((btn) => {
       card.style.display = facultyMatch && !isSelected ? "flex" : "none";
     });
 
-    limitCourses();
+    limitCourses(); // Limit visible to 5
 
-    // Show All visibility
+    // Reset buttons to correct state for NEW faculty
+    showLessBtn.style.display = "none"; // Always hide Show Less on pill switch
+
     const totalMatching =
       Array.from(document.querySelectorAll(".course-selection-course")).filter(
         (card) => {
@@ -307,18 +257,59 @@ document.querySelectorAll(".course-degree-filter").forEach((btn) => {
             currentFaculty === "All Faculties" || cardFaculty === currentFaculty
           );
         }
-      ).length - selected.size; // Subtract selected
+      ).length - selected.size;
 
     if (showAllBtn) {
       const needsShowAll = totalMatching > 5;
       showAllBtn.style.display = needsShowAll ? "block" : "none";
       showAllBtn.disabled = !needsShowAll;
     }
-    if (showLessBtn) {
-      showLessBtn.style.display = "none"; // Hide Show Less after pill switch
-    }
   });
 });
+
+// Global Show All/Show Less handlers (run once)
+if (showAllBtn) {
+  showAllBtn.addEventListener("click", () => {
+    document.querySelectorAll(".course-selection-course").forEach((card) => {
+      const code = card.dataset.courseCode;
+      const cardFaculty = card.dataset.courseFaculty;
+      const facultyMatch =
+        currentFaculty === "All Faculties" || cardFaculty === currentFaculty;
+      const isSelected = selected.has(code);
+      card.style.display = facultyMatch && !isSelected ? "flex" : "none";
+    });
+
+    // Always hide Show All, show Show Less
+    showAllBtn.style.display = "none";
+    showLessBtn.style.display = "block";
+    showLessBtn.disabled = false;
+  });
+}
+
+if (showLessBtn) {
+  showLessBtn.addEventListener("click", () => {
+    limitCourses();
+
+    // Always reset to limited state + correct Show All visibility
+    showLessBtn.style.display = "none";
+
+    const totalMatching =
+      Array.from(document.querySelectorAll(".course-selection-course")).filter(
+        (card) => {
+          const cardFaculty = card.dataset.courseFaculty;
+          return (
+            currentFaculty === "All Faculties" || cardFaculty === currentFaculty
+          );
+        }
+      ).length - selected.size;
+
+    const needsShowAll = totalMatching > 5;
+    if (showAllBtn) {
+      showAllBtn.style.display = needsShowAll ? "block" : "none";
+      showAllBtn.disabled = !needsShowAll;
+    }
+  });
+}
 
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", initTuitionSelection);

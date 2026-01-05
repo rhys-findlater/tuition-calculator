@@ -221,14 +221,13 @@
                 id="clearSelectedCourses"
                 disabled
               >
-                <span class="selected-courses-clear-x">×</span>
-                Clear ALL
+                <span class="selected-courses-clear-x">Clear All</span>
               </button>
             </div>
 
             <div class="selected-courses-list" id="selectedCoursesList"></div>
           </div>
-          <!-- end Selected Courses -->
+          <!-- End selected courses -->
 
           <div class="course-selection-search-container">
             <form
@@ -254,7 +253,8 @@
             </button>
             {% for faculty in unique_faculties %}
             <button class="course-degree-filter" data-faculty="{{ faculty }}">
-              {{ faculty }}
+              {{ faculty[:12] }}...{{ faculty[-4:] if faculty|length > 12 else
+              '' }}
             </button>
             {% endfor %}
           </div>
@@ -280,9 +280,9 @@
                   <p class="course-selection-course-points">
                     {{ course['Points'] }}
                   </p>
-                  {% else %}
+                  {% else %} {% set p = course['Points']|float %}
                   <p class="course-selection-course-points">
-                    {{ course['Points'] }} points
+                    {{ (p|int) if p == (p|int) else p }} pts
                   </p>
                   {% endif %}
                 </div>
