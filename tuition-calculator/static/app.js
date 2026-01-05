@@ -39,8 +39,10 @@ function setAvailableCardVisibility(code, isSelected) {
  * - Enables/disables the Clear button
  * - Rebuilds the list of selected courses
  */
-function renderSelected() {
+function renderSelected(learnerType = "domestic") {
   if (!selectedListEl || !selectedCountEl || !clearBtn) return;
+
+  const isDomestic = learnerType === "domestic";
 
   // Update selected count label
   selectedCountEl.textContent = String(selected.size);
@@ -53,6 +55,8 @@ function renderSelected() {
 
   // Build one row per selected course
   for (const course of selected.values()) {
+    const displayPrice = isDomestic ? course.domPrice : course.intPrice;
+
     const row = document.createElement("div");
     row.className = "selected-course-row";
     row.dataset.courseCode = course.code;
@@ -64,13 +68,19 @@ function renderSelected() {
                     <span class="selected-course-name">${course.title}</span>
                 </div>
                 <div class="selected-course-meta">
-                    <span class="selected-course-points">${course.points} points</span>
-                    <span class="selected-course-faculty">${course.faculty}</span>
+                    <span class="selected-course-points">${
+                      course.points
+                    } points</span>
+                    <span class="selected-course-faculty">${
+                      course.faculty
+                    }</span>
                 </div>
             </div>
             <div class="selected-course-price">
                 <span class="selected-course-price-label">Tuition</span>
-                <span class="selected-course-price-value">$${course.price}</span>
+                <span class="selected-course-price-value">$${displayPrice.toFixed(
+                  2
+                )}</span>
             </div>
             <button
                 type="button"
@@ -132,12 +142,13 @@ function initAvailableCourseCards() {
     const code = card.dataset.courseCode;
     const title = card.dataset.courseTitle;
     const points = Number(card.dataset.coursePoints || "0");
-    const price = Number(card.dataset.coursePrice || "0");
+    const domPrice = Number(card.dataset.domPrice || "0");
+    const intPrice = Number(card.dataset.intPrice || "0");
     const faculty = card.dataset.courseFaculty || "";
 
     // When a card is clicked, add that course
     card.addEventListener("click", () => {
-      addCourse({ code, title, points, price, faculty });
+      addCourse({ code, title, points, domPrice, intPrice, faculty });
     });
   });
 }
@@ -152,7 +163,7 @@ function initTuitionSelection() {
     clearBtn.addEventListener("click", clearSelected);
   }
 
-  renderSelected();
+  renderSelected("domestic");
 }
 
 // Run init once the DOM is ready
@@ -196,18 +207,31 @@ function updatePrices(value) {
       priceEl.textContent = `$${selectedPrice.toFixed(2)}`;
     }
   });
+
+  renderSelected(value);
 }
 
-/**
- * Save learner_type value on page refresh
- */
-window.addEventListener("DOMContentLoaded", () => {
-  const saved = localStorage.getItem("learner_type") || "domestic";
+document.querySelectorAll('input[name="learner_type"]').forEach((radio) => {
+  radio.addEventListener("change", function (e) {
+    e.preventDefault();
+    updatePrices(this.value);
+  });
+});
 
-  const radio = document.querySelector(
-    `input[name="learner_type"][value="${saved}"]`
-  );
-  if (radio) radio.checked = true;
+document.querySelectorAll(".course-degree-filter").forEach((btn) => {
+  btn.addEventListener("click", () => {
+    const selectedFaculty = btn.dataset.faculty; // e.g. "Arts" or "Science"
 
-  updatePrices(saved);
+    document.querySelectorAll(".course-selection-course").forEach((card) => {
+      const cardFaculty = card.dataset.courseFaculty;
+
+      // Show if matches or if "All Faculties" button clicked
+      const shouldShow =
+        !selectedFaculty ||
+        selectedFaculty === "All Faculties" ||
+        cardFaculty === selectedFaculty;
+
+      card.style.display = shouldShow ? "flex" : "none";
+    });
+  });
 });

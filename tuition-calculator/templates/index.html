@@ -253,7 +253,9 @@
               All Faculties
             </button>
             {% for faculty in unique_faculties %}
-            <button class="course-degree-filter">{{ faculty }}</button>
+            <button class="course-degree-filter" data-faculty="{{ faculty }}">
+              {{ faculty }}
+            </button>
             {% endfor %}
           </div>
           <div class="course-selection-course-list">
