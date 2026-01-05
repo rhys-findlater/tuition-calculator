@@ -1,4 +1,7 @@
 from flask import Flask, render_template
+import pandas 
+import os
+import json
 
 def create_app(test_config=None):
     # Create and configure the app
@@ -7,44 +10,8 @@ def create_app(test_config=None):
         SECRET_KEY="dev",
     )
 
-    # Temporary course data
-    COURSES = [
-        {
-            "code": "ARTS101",
-            "title": "Introduction to Art History",
-            "faculty": "Arts",
-            "points": 15,
-            "price": 892.50,
-        },
-        {
-            "code": "ENGL201",
-            "title": "English Literature and Culture",
-            "faculty": "Arts",
-            "points": 15,
-            "price": 892.50,
-        },
-        {
-            "code": "HIST102",
-            "title": "Modern World History",
-            "faculty": "Arts",
-            "points": 15,
-            "price": 892.50,
-        },
-        {
-            "code": "BSNS101",
-            "title": "Foundations of Business",
-            "faculty": "Business",
-            "points": 15,
-            "price": 1050.00,
-        },
-        {
-            "code": "ECON104",
-            "title": "Introduction to Economics",
-            "faculty": "Business",
-            "points": 15,
-            "price": 1050.00,
-        },
-    ]
+    
+    
 
     @app.route("/", methods=['GET', 'POST']) 
     def index():
