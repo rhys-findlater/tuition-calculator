@@ -252,8 +252,7 @@ main {
 }
 
 .course-selection-heading-container {
-  margin-bottom: 1.5rem;
-
+  margin-bottom: 0.5rem;
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
@@ -387,7 +386,147 @@ main {
   background-color: #d35143;
 }
 
-/* ==================== Selected Courses ==================== */
+/* ==================== Selected-Courses-Container ==================== */
+.selected-courses-container {
+  margin-bottom: 1.25rem;
+}
+
+.selected-courses-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.selected-courses-title {
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+.selected-courses-clear {
+  font-size: 0.875rem;
+  color: #374151;
+  background-color: #e5eef5;
+  padding: 2.5px 10px;
+  border: 1px solid #cbd5e1;
+  border-radius: var(--radius-card);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  cursor: pointer;
+}
+
+.selected-courses-clear-x {
+  font-size: 1.2rem;
+}
+
+.selected-courses-clear:hover {
+  background-color: #d7e6f4; 
+  border-color: #b8cadd;     
+}
+
+.selected-courses-clear:disabled {
+  display: none;
+  cursor: default;
+}
+
+.selected-courses-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+/* ==================== Individual-Selected-Courses ==================== */
+
+.selected-course-row {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0.85rem 1.1rem;
+  border-radius: var(--radius-card-lg);
+  background: #f3f4f6;
+  border: 1px solid #e5e7eb;
+}
+
+.selected-course-main {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 0; 
+}
+
+.selected-course-title {
+  display: flex;
+  align-items: baseline;
+  gap: 0.55rem;
+  min-width: 0;
+}
+.selected-course-code {
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: #111827;
+  white-space: nowrap;
+}
+
+.selected-course-name {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #4b5563;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.selected-course-meta {
+  display: flex;
+  gap: 0.75rem;
+  font-size: 0.78rem;
+  color: #6b7280;
+}
+
+.selected-course-points,
+.selected-course-faculty {
+  white-space: nowrap;
+  font-weight: bold;
+}
+
+.selected-course-price {
+  display: flex;
+  align-items: baseline;
+  gap: 0.35rem;
+  margin-left: auto;
+  white-space: nowrap;
+}
+
+.selected-course-price-label {
+  font-size: 0.75rem;
+  color: #6b7280;
+}
+
+.selected-course-price-value {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #374151;
+}
+.selected-course-remove {
+  border: none;
+  background: transparent;
+  color: #111827;
+  font-size: 1.05rem;
+  line-height: 1;
+  padding: 0.25rem 0.35rem;
+  border-radius: 0.4rem;
+  cursor: pointer;
+}
+
+.selected-course-remove:hover {
+  background: rgba(0, 0, 0, 0.06);
+}
+
+.selected-course-remove:active {
+  background: rgba(0, 0, 0, 0.1);
+}
 
 /* ==================== Student-Levy-Pannel ==================== */
 

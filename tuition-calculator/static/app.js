@@ -15,6 +15,7 @@ const selected = new Map();
 const selectedListEl = document.getElementById("selectedCoursesList");
 const selectedCountEl = document.getElementById("selectedCoursesCount");
 const clearBtn = document.getElementById("clearSelectedCourses");
+const selectedHeaderEl = document.querySelector(".selected-courses-header");
 
 /**
  * Show or hide a course card in the "Available courses" list.
@@ -48,6 +49,11 @@ function renderSelected() {
   // Disable clear button if nothing is selected
   clearBtn.disabled = selected.size === 0;
 
+  // Hide/show the Selected Courses header (title + clear button area)
+  if (selectedHeaderEl) {
+    selectedHeaderEl.style.display = selected.size === 0 ? "none" : "flex";
+  }
+
   // Clear the existing list before re-rendering
   selectedListEl.innerHTML = "";
 
@@ -69,7 +75,7 @@ function renderSelected() {
                 </div>
             </div>
             <div class="selected-course-price">
-                <span class="selected-course-price-label">Tuition</span>
+                <span class="selected-course-price-label"></span>
                 <span class="selected-course-price-value">$${course.price}</span>
             </div>
             <button
