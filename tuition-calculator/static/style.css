@@ -297,16 +297,92 @@ main {
   display: flex;
   gap: 0.5rem;
   margin-bottom: 1.5rem;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 12px 8px;
+  scrollbar-width: thin;
+  scrollbar-color: #ccc transparent;
+  scroll-snap-type: x proximity;
+}
+
+.course-degree-filters::-webkit-scrollbar {
+  height: 4px;
+}
+
+.course-degree-filters::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.course-degree-filters::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 2px;
+  opacity: 0.5;
+}
+
+.course-degree-filters::-webkit-scrollbar-thumb:hover {
+  background: #999;
+  opacity: 1;
+}
+
+/* Scroll shadow indicators */
+.course-degree-filters {
+  position: relative;
+}
+
+.course-degree-filters::before,
+.course-degree-filters::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 24px;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.course-degree-filters::before {
+  left: 0;
+  background: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 1),
+    rgba(255, 255, 255, 0)
+  );
+}
+
+.course-degree-filters::after {
+  right: 0;
+  background: linear-gradient(
+    to left,
+    rgba(255, 255, 255, 1),
+    rgba(255, 255, 255, 0)
+  );
+}
+
+.course-degree-filters:not([scrollbar-hidden])::before,
+.course-degree-filters:not([scrollbar-hidden])::after {
+  opacity: 1;
 }
 
 .course-degree-filter {
-  font-size: 0.875rem;
-  color: #ce3e2e;
-  background-color: #fff;
-  padding: 7px 10px;
-  border: 1.2px solid #ce3e2e;
-  border-radius: var(--radius-card);
+  flex: 0 0 130px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 12px;
+  border: 2px solid #e0e0e0;
+  background: white;
+  color: #666;
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  border-radius: 20px;
   cursor: pointer;
+  transition: all 0.2s ease;
 }
 
 .course-degree-filter:hover {
@@ -320,6 +396,7 @@ main {
 }
 
 .course-selection-course-list {
+  margin-bottom: 0.65rem;
   display: flex;
   flex-direction: column;
   gap: 0.65rem;
@@ -387,7 +464,16 @@ main {
   background-color: #d35143;
 }
 
-/* ==================== Selected Courses ==================== */
+.course-degree-showall,
+.course-degree-showless {
+  font-size: 0.875rem;
+  color: #ce3e2e;
+  background-color: #fff;
+  padding: 7px 10px;
+  border: 1.2px solid #ce3e2e;
+  border-radius: var(--radius-card);
+  cursor: pointer;
+}
 
 /* ==================== Student-Levy-Pannel ==================== */
 

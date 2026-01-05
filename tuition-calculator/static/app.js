@@ -10,11 +10,33 @@
 // Key = course code
 // Value = { code, title, points, price, faculty}
 const selected = new Map();
+let currentFaculty = "All Faculties";
 
 // Cached DOM elements
 const selectedListEl = document.getElementById("selectedCoursesList");
 const selectedCountEl = document.getElementById("selectedCoursesCount");
 const clearBtn = document.getElementById("clearSelectedCourses");
+const showAllBtn = document.getElementById("showAllCourses");
+const showLessBtn = document.getElementById("showLessCourses");
+
+function limitCourses(initalLimit = 5) {
+  const cards = document.querySelectorAll(".course-selection-course");
+  let shown = 0;
+  cards.forEach((card, index) => {
+    if (card.style.display === "none") return;
+    if (shown < initalLimit) {
+      card.style.display = "flex";
+      shown++;
+    } else {
+      card.style.display = "none";
+    }
+  });
+}
+
+function getCurrentLearnerType() {
+  const checked = document.querySelector('input[name="learner_type"]:checked');
+  return checked ? checked.value : "domestic";
+}
 
 /**
  * Show or hide a course card in the "Available courses" list.
@@ -114,7 +136,7 @@ function renderSelected(learnerType = "domestic") {
 function addCourse(course) {
   selected.set(course.code, course);
   setAvailableCardVisibility(course.code, true);
-  renderSelected();
+  renderSelected(getCurrentLearnerType());
 }
 
 /**
@@ -128,7 +150,7 @@ function clearSelected() {
 
   // Empty the Map and re-render
   selected.clear();
-  renderSelected();
+  renderSelected(getCurrentLearnerType());
 }
 
 /**
@@ -159,31 +181,66 @@ function initAvailableCourseCards() {
 function initTuitionSelection() {
   initAvailableCourseCards();
 
+  document
+    .querySelectorAll(".course-degree-filter")
+    .forEach((pill) => pill.classList.remove("course-degree-filter-active"));
+  const allPill = document.querySelector("[data-faculty='All Faculties']");
+  if (allPill) allPill.classList.add("course-degree-filter-active");
+
   if (clearBtn) {
     clearBtn.addEventListener("click", clearSelected);
   }
 
   renderSelected("domestic");
-}
 
-// Run init once the DOM is ready
-if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", initTuitionSelection);
-} else {
-  initTuitionSelection();
-}
+  limitCourses();
 
-/**
- * Attach event listeners to form and perform course price update.
- */
-document.querySelectorAll('input[name="learner_type"]').forEach((radio) => {
-  radio.addEventListener("change", async function (e) {
-    e.preventDefault();
-    const value = this.value;
-    localStorage.setItem("learner_type", value);
-    updatePrices(value);
-  });
-});
+  // In initTuitionSelection(), replace Show All handler:
+  if (showAllBtn) {
+    showAllBtn.addEventListener("click", () => {
+      // Show all matching courses
+      document.querySelectorAll(".course-selection-course").forEach((card) => {
+        const code = card.dataset.courseCode;
+        const cardFaculty = card.dataset.courseFaculty;
+        const facultyMatch =
+          currentFaculty === "All Faculties" || cardFaculty === currentFaculty;
+        const isSelected = selected.has(code);
+        card.style.display = facultyMatch && !isSelected ? "flex" : "none";
+      });
+
+      // Toggle: Hide Show All → Show Show Less
+      showAllBtn.style.display = "none";
+      if (showLessBtn) {
+        showLessBtn.style.display = "block";
+        showLessBtn.disabled = false;
+      }
+    });
+  }
+
+  // NEW: Show Less handler
+  if (showLessBtn) {
+    showLessBtn.addEventListener("click", () => {
+      limitCourses(); // Re-apply 5-course limit
+
+      // Toggle back: Hide Show Less → Show Show All (if needed)
+      showLessBtn.style.display = "none";
+      const totalMatching =
+        Array.from(
+          document.querySelectorAll(".course-selection-course")
+        ).filter((card) => {
+          const cardFaculty = card.dataset.courseFaculty;
+          return (
+            currentFaculty === "All Faculties" || cardFaculty === currentFaculty
+          );
+        }).length - selected.size;
+      const needsShowAll = totalMatching > 5;
+      if (showAllBtn && needsShowAll) {
+        showAllBtn.style.display = "block";
+        showAllBtn.disabled = false;
+      }
+    });
+  }
+}
 
 /**
  * Update course prices based on form value.
@@ -218,20 +275,53 @@ document.querySelectorAll('input[name="learner_type"]').forEach((radio) => {
   });
 });
 
+/**
+ * Pill filtering functionality
+ */
 document.querySelectorAll(".course-degree-filter").forEach((btn) => {
   btn.addEventListener("click", () => {
-    const selectedFaculty = btn.dataset.faculty; // e.g. "Arts" or "Science"
+    document
+      .querySelectorAll(".course-degree-filter")
+      .forEach((pill) => pill.classList.remove("course-degree-filter-active"));
+    btn.classList.add("course-degree-filter-active");
+
+    currentFaculty = btn.dataset.faculty;
 
     document.querySelectorAll(".course-selection-course").forEach((card) => {
+      const code = card.dataset.courseCode;
       const cardFaculty = card.dataset.courseFaculty;
-
-      // Show if matches or if "All Faculties" button clicked
-      const shouldShow =
-        !selectedFaculty ||
-        selectedFaculty === "All Faculties" ||
-        cardFaculty === selectedFaculty;
-
-      card.style.display = shouldShow ? "flex" : "none";
+      const facultyMatch =
+        currentFaculty === "All Faculties" || cardFaculty === currentFaculty;
+      const isSelected = selected.has(code);
+      card.style.display = facultyMatch && !isSelected ? "flex" : "none";
     });
+
+    limitCourses();
+
+    // Show All visibility
+    const totalMatching =
+      Array.from(document.querySelectorAll(".course-selection-course")).filter(
+        (card) => {
+          const cardFaculty = card.dataset.courseFaculty;
+          return (
+            currentFaculty === "All Faculties" || cardFaculty === currentFaculty
+          );
+        }
+      ).length - selected.size; // Subtract selected
+
+    if (showAllBtn) {
+      const needsShowAll = totalMatching > 5;
+      showAllBtn.style.display = needsShowAll ? "block" : "none";
+      showAllBtn.disabled = !needsShowAll;
+    }
+    if (showLessBtn) {
+      showLessBtn.style.display = "none"; // Hide Show Less after pill switch
+    }
   });
 });
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", initTuitionSelection);
+} else {
+  initTuitionSelection();
+}

@@ -249,7 +249,7 @@
             </form>
           </div>
           <div class="course-selection-degree-filter">
-            <button class="course-degree-filter course-degree-filter-active">
+            <button class="course-degree-filter" data-faculty="All Faculties">
               All Faculties
             </button>
             {% for faculty in unique_faculties %}
@@ -282,7 +282,7 @@
                   </p>
                   {% else %}
                   <p class="course-selection-course-points">
-                    {{ course['Points'] }} pts
+                    {{ course['Points'] }} points
                   </p>
                   {% endif %}
                 </div>
@@ -302,6 +302,17 @@
             </div>
             {% endfor %}
           </div>
+          <button id="showAllCourses" class="course-degree-showall">
+            Show all courses
+          </button>
+          <button
+            id="showLessCourses"
+            style="display: none"
+            class="course-degree-showless"
+            disabled
+          >
+            Show less courses
+          </button>
         </div>
         <div class="ssl-container">
           <div class="ssl-container-header">
