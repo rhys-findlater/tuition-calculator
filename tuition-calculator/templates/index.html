@@ -253,8 +253,7 @@
             </button>
             {% for faculty in unique_faculties %}
             <button class="course-degree-filter" data-faculty="{{ faculty }}">
-              {{ faculty[:12] }}...{{ faculty[-4:] if faculty|length > 12 else
-              '' }}
+              <span class="course-degree-filter-label">{{ faculty }}</span>
             </button>
             {% endfor %}
           </div>
