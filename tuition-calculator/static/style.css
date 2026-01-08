@@ -1,20 +1,22 @@
 /* ==================== Global ==================== */
+/* Global design tokens and resets */
 
 :root {
-  /* Border radius */
+  /* Border radius scale */
   --radius-card: 0.5rem;
   --radius-card-lg: 0.75rem;
   --radius-control: 0.25rem;
   --radius-chip: 0.5rem;
 
-  /* Shadow */
+  /* Shadow scale */
   --shadow-card-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
   --shadow-card-md: 0 3px 6px 0 rgb(0 0 0 / 0.1);
 
-  /* Border color */
+  /* Neutral border color */
   --border-subtle: #e5e7eb;
 }
 
+/* Basic reset and box model */
 *,
 *::before,
 *::after {
@@ -23,11 +25,13 @@
   box-sizing: border-box;
 }
 
+/* Root document defaults */
 html {
   font-size: 16px;
   background-color: #ffffff;
 }
 
+/* App shell layout and typography */
 body {
   font-size: 1rem;
   color: #2c2c2c;
@@ -41,20 +45,22 @@ body {
   justify-content: space-between;
 }
 
+/* Main content column centered on large screens */
 main {
   max-width: 80rem;
   margin-inline: auto;
-
   display: flex;
   flex-direction: column;
 }
 
+/* 3-column main layout for form + summary */
 .main-content-container {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 1.25rem;
 }
 
+/* Icon sizing utilities */
 .main-icon {
   width: 1.15rem;
 }
@@ -63,7 +69,9 @@ main {
   width: 0.95rem;
 }
 
+
 /* ==================== Header ==================== */
+/* Global header bar with logo and title */
 
 .header {
   width: 100vw;
@@ -100,7 +108,9 @@ main {
   height: 4rem;
 }
 
+
 /* ==================== Welcome-section ==================== */
+/* Introductory panel explaining the tool */
 
 .welcome-section-container {
   box-shadow: var(--shadow-card-sm);
@@ -137,7 +147,9 @@ main {
   margin-left: 1.65rem;
 }
 
+
 /* ==================== Learner-info ==================== */
+/* Card for learner type, location, and related options */
 
 .learner-info-container {
   box-shadow: var(--shadow-card-sm);
@@ -209,17 +221,20 @@ main {
   flex-direction: column;
 }
 
-/* ==================== Cost Summary - shared styles ==================== */
 
-/* Remove later! */
+/* ==================== Cost Summary - shared styles ==================== */
+/* Right-hand cost summary card used by both idle and active states */
+
+/* Temporary rule to toggle idle summary visibility (hooked up via JS) */
 .cost-summary-container-active .cost-summary-idle-container {
   display: none;
 }
 
+/* Sticky positioning so summary stays visible while scrolling */
 .cost-summary-sticky-wrapper {
   position: sticky;
-  top: 1.5rem; 
-  align-self: flex-start; 
+  top: 1.5rem;
+  align-self: flex-start;
 }
 
 .cost-summary-container {
@@ -242,7 +257,9 @@ main {
   font-size: 1rem;
 }
 
+
 /* ==================== Cost Summary - idle state ==================== */
+/* Placeholder content shown before any course is selected */
 
 .cost-summary-idle-container {
   text-align: center;
@@ -262,8 +279,9 @@ main {
 
 
 /* ==================== Cost Summary - active state ==================== */
+/* Detailed cost breakdown once courses have been added */
 
-/* Pills and stats block */
+/* Selection context “pills” and high-level totals */
 .cost-summary-pills {
   display: flex;
   gap: 0.5rem;
@@ -279,10 +297,14 @@ main {
   background-color: #ffffff;
 }
 
+/* Highlighted stats block for totals (e.g. points, GST, SSL) */
 .cost-summary-stats {
-  border-radius: 0.7rem;
+  border-radius: 0.5rem;
+  border-width: 1px;
+  border-style: solid;
+  border-color: rgba(71, 122, 126, 0.2);
   background-color: #ededed;
-  padding: 0.9rem 1.1rem;
+  padding: 1rem;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
@@ -295,7 +317,7 @@ main {
   font-size: 1rem;
 }
 
-/* Line items and helpers */
+/* Line items and helper text below the stats block */
 .cost-summary-lines {
   display: flex;
   flex-direction: column;
@@ -315,6 +337,7 @@ main {
   gap: 0.25rem;
 }
 
+/* Small inline icon used for notes/tooltips */
 .cost-summary-icon-inline {
   width: 0.7rem;
   height: 0.7rem;
@@ -330,6 +353,7 @@ main {
 }
 
 /* Total strip and export button */
+/* Prominent total row at bottom of summary */
 .cost-summary-total {
   margin-top: 0.25rem;
   margin-bottom: 0.9rem;
@@ -343,6 +367,7 @@ main {
   font-size: 1rem;
 }
 
+/* Secondary action to export the breakdown (e.g. PDF) */
 .cost-summary-export {
   width: 100%;
   border-radius: 0.7rem;
@@ -366,14 +391,15 @@ main {
   gap: 0.15rem;
 }
 
+
 /* ==================== Course Selection ==================== */
+/* Main course search, filtering, and add-to-summary flows */
 
 .course-selection-container {
   padding: 1.5rem;
   box-shadow: var(--shadow-card-sm);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-card-lg);
-
   grid-column: span 2 / span 2;
 }
 
@@ -389,9 +415,9 @@ main {
   gap: 0.4rem;
 }
 
+/* Search input and label above course list */
 .course-search {
   margin-bottom: 0.75rem;
-
   display: flex;
   flex-direction: column;
 }
@@ -400,6 +426,7 @@ main {
   margin-bottom: 1rem;
 }
 
+/* Text input with embedded search icon */
 .search-input {
   padding: 0.5rem 0.75rem 0.5rem 2.5rem;
   border-radius: var(--radius-control);
@@ -418,6 +445,7 @@ main {
   outline: none;
 }
 
+/* Horizontal filter chips for degree type */
 .course-selection-degree-filter {
   display: flex;
   gap: 0.5rem;
@@ -430,6 +458,7 @@ main {
   scroll-snap-type: x proximity;
 }
 
+/* Custom scrollbar styling for degree filters */
 .course-degree-filters::-webkit-scrollbar {
   height: 4px;
 }
@@ -450,6 +479,7 @@ main {
 }
 
 /* Scroll shadow indicators */
+/* Fades at left/right edges to hint that the filter list is scrollable */
 .course-degree-filters {
   position: relative;
 }
@@ -485,24 +515,23 @@ main {
   );
 }
 
+/* Only show shadows when container is scrollable (toggled via JS/attr) */
 .course-degree-filters:not([scrollbar-hidden])::before,
 .course-degree-filters:not([scrollbar-hidden])::after {
   opacity: 1;
 }
 
+/* Individual degree filter “pill” */
 .course-degree-filter {
-  flex: 0 0 130px;       /* fixed width pills */
+  flex: 0 0 130px;       /* Fixed width pills for consistent layout */
   height: 42px;
-
   display: flex;
   align-items: center;
   justify-content: center;
-
   padding: 0 12px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-
   border: 2px solid #e0e0e0;
   background: white;
   color: #666;
@@ -513,6 +542,7 @@ main {
   transition: all 0.2s ease;
 }
 
+/* Text wrapper inside degree filter pill */
 .course-degree-filter-label {
   flex: 1 1 auto;
   min-width: 0;
@@ -532,6 +562,7 @@ main {
   background-color: #ce3e2e;
 }
 
+/* Vertical list of course cards */
 .course-selection-course-list {
   margin-bottom: 0.65rem;
   display: flex;
@@ -539,6 +570,7 @@ main {
   gap: 0.65rem;
 }
 
+/* Single course result row */
 .course-selection-course {
   padding: 0.55rem 0.65rem;
   border: 1.2px solid var(--border-subtle);
@@ -574,12 +606,14 @@ main {
   margin-left: 0.5rem;
 }
 
+/* Container for add/remove buttons on each course */
 .course-selection-course-button-container {
   display: flex;
   align-items: center;
   gap: 0.65rem;
 }
 
+/* Primary “Add course” CTA */
 .course-selection-course-button {
   font-size: 0.875rem;
   color: #fff;
@@ -602,6 +636,7 @@ main {
   background-color: #d35143;
 }
 
+/* Show more/less degree filters */
 .course-degree-showall,
 .course-degree-showless {
   font-size: 0.875rem;
@@ -612,7 +647,11 @@ main {
   border-radius: var(--radius-card);
   cursor: pointer;
 }
+
+
 /* ==================== Selected-Courses-Container ==================== */
+/* Summary list of courses the user has chosen */
+
 .selected-courses-container {
   margin-bottom: 1.25rem;
 }
@@ -629,6 +668,7 @@ main {
   font-weight: bold;
 }
 
+/* Clear-all action for selected courses */
 .selected-courses-clear {
   font-size: 0.875rem;
   color: #374151;
@@ -646,6 +686,7 @@ main {
   border-color: #cbd5e1;
 }
 
+/* Hidden when there are no selected courses */
 .selected-courses-clear:disabled {
   display: none;
   cursor: default;
@@ -657,7 +698,9 @@ main {
   gap: 0.55rem;
 }
 
+
 /* ==================== Individual-Selected-Courses ==================== */
+/* Styles for each selected course row in the summary */
 
 .selected-course-row {
   display: flex;
@@ -676,12 +719,14 @@ main {
   min-width: 0;
 }
 
+/* Code + title wrapping inside a row */
 .selected-course-title {
   display: flex;
   align-items: baseline;
   gap: 0.55rem;
   min-width: 0;
 }
+
 .selected-course-code {
   font-size: 0.9rem;
   font-weight: 600;
@@ -699,6 +744,7 @@ main {
   white-space: nowrap;
 }
 
+/* Meta line for points and faculty chip */
 .selected-course-meta {
   display: flex;
   gap: 0.75rem;
@@ -722,6 +768,7 @@ main {
   border-radius: var(--radius-card);
 }
 
+/* Price block aligned to the right of the row */
 .selected-course-price {
   display: flex;
   align-items: baseline;
@@ -740,6 +787,8 @@ main {
   font-weight: 600;
   color: #2c2c2c;
 }
+
+/* Remove button for a single selected course */
 .selected-course-remove {
   border: none;
   background: transparent;
@@ -759,7 +808,9 @@ main {
   background: rgba(0, 0, 0, 0.1);
 }
 
+
 /* ==================== Student-Levy-Pannel ==================== */
+/* Student Services Levy (SSL) explanation and onshore/offshore breakdown */
 
 .ssl-container {
   padding-inline: 1.5rem;
@@ -799,15 +850,18 @@ main {
   font-size: 0.875rem;
 }
 
+/* Grid wrapper for onshore vs offshore panels */
 .ssl-container-content {
   display: grid;
   gap: 1rem;
 }
 
+/* Form radio styling for SSL selection */
 .radio-button {
   accent-color: #374151;
 }
 
+/* Onshore and offshore breakdown cards */
 .ssl-panel-onshore,
 .ssl-panel-offshore {
   box-shadow: var(--shadow-card-md);
@@ -845,6 +899,7 @@ main {
   color: rgba(44, 44, 44, 0.8);
 }
 
+/* Line items inside each SSL panel (per-points, caps, etc.) */
 .ssl-panel-rows {
   display: flex;
   flex-direction: column;
@@ -868,7 +923,9 @@ main {
   font-size: 1rem;
 }
 
+
 /* ==================== Footer ==================== */
+/* Simple global footer for legal and credits */
 
 .footer {
   width: 100vw;
