@@ -174,7 +174,7 @@
           </div>
         </div>
         <div class="cost-summary-sticky-wrapper">
-          <div class="cost-summary-container">
+          <div id="costSummary" class="cost-summary-container cost-summary-container-active">
             <div class="cost-summary-header-container">
               <img
                 src="{{ url_for('static', filename='icons/receipt.svg') }}"
@@ -183,6 +183,68 @@
               />
               <p class="cost-summary-header">Cost Summary</p>
             </div>
+            <!-- Learner pills -->
+            <div class="cost-summary-pills">
+              <span class="cost-summary-pill">Domestic</span>
+              <span class="cost-summary-pill">Onshore</span>
+            </div>
+
+            <!-- Top stats -->
+            <div class="cost-summary-stats">
+              <div class="cost-summary-stats-row">
+                <span>Courses selected</span>
+                <span id="costSummaryCoursesSelected">8</span>
+              </div>
+              <div class="cost-summary-stats-row">
+                <span>Total points</span>
+                <span id="costSummaryTotalPoints">120</span>
+              </div>
+            </div>
+
+            <!-- Line items -->
+            <div class="cost-summary-lines">
+              <div class="cost-summary-line">
+                <span>Course fees</span>
+                <span id="costSummaryCourseFees">$9999.00</span>
+              </div>
+
+              <div class="cost-summary-line">
+                <div class="cost-summary-line-main">
+                  <span>Student Services Levy</span>
+                  <span class="cost-summary-help">ⓘ</span>
+                </div>
+                <span id="costSummaryLevy">$999</span>
+              </div>
+              <p class="cost-summary-subtext" id="costSummaryLevyNote">
+                Based on 0 points
+              </p>
+
+              <div class="cost-summary-line">
+                <span>Subtotal</span>
+                <span id="costSummarySubtotal">$9999.00</span>
+              </div>
+
+              <div class="cost-summary-line">
+                <div class="cost-summary-line-main">
+                  <span>GST (15%)</span>
+                  <span class="cost-summary-help">ⓘ</span>
+                </div>
+                <span id="costSummaryGst">$999</span>
+              </div>
+            </div>
+
+            <!-- Total + export -->
+            <div class="cost-summary-total">
+              <span>Total cost</span>
+              <span id="costSummaryTotal">$9999.00</span>
+            </div>
+
+            <button class="cost-summary-export">
+              <span class="cost-summary-export-icon">⬇</span>
+              <span>Export to PDF</span>
+            </button>
+
+            <!-- Idle state -->
             <div class="cost-summary-idle-container">
               <img
                 src="{{ url_for('static', filename='icons/circle-alert.svg') }}"

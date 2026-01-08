@@ -211,6 +211,11 @@ main {
 
 /* ==================== Cost Breakdown ==================== */
 
+/* Remove later! */
+.cost-summary-container-active .cost-summary-idle-container {
+  display: none;
+}
+
 .cost-summary-sticky-wrapper {
   position: sticky;
   top: 1.5rem; 
