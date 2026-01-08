@@ -210,8 +210,12 @@
 
               <div class="cost-summary-line">
                 <div class="cost-summary-line-main">
-                  <span>Student Services Levy</span>
-                  <span class="cost-summary-help">ⓘ</span>
+                  <span>Student services levy</span>
+                  <img
+                    src="{{ url_for('static', filename='icons/info-grey.svg') }}"
+                    alt=""
+                    class="cost-summary-icon-inline"
+                  />
                 </div>
                 <span id="costSummaryLevy">$999</span>
               </div>
@@ -227,7 +231,11 @@
               <div class="cost-summary-line">
                 <div class="cost-summary-line-main">
                   <span>GST (15%)</span>
-                  <span class="cost-summary-help">ⓘ</span>
+                  <img
+                    src="{{ url_for('static', filename='icons/info-grey.svg') }}"
+                    alt=""
+                    class="cost-summary-icon-inline"
+                  />
                 </div>
                 <span id="costSummaryGst">$999</span>
               </div>
@@ -240,7 +248,11 @@
             </div>
 
             <button class="cost-summary-export">
-              <span class="cost-summary-export-icon">⬇</span>
+              <img
+                src="{{ url_for('static', filename='icons/download.svg') }}"
+                alt=""
+                class="cost-summary-icon-inline"
+              />              
               <span>Export to PDF</span>
             </button>
 
