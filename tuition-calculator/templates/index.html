@@ -5,17 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Tuition Calculator</title>
     <meta name="description" content="Calculate UC Online tuition costs" />
+    <!-- Favicon -->
     <link
       rel="icon"
       type="image/x-icon"
       href="{{ url_for('static', filename='favicon.ico') }}"
     />
+    <!-- Main application stylesheet -->
     <link
       rel="stylesheet"
       href="{{ url_for('static', filename='style.css') }}"
     />
   </head>
   <body>
+    <!-- Global site header with logo and title -->
     <header class="header">
       <div class="header-container">
         <div class="header-subcontainer">
@@ -29,7 +32,9 @@
       </div>
     </header>
 
+    <!-- Main application content -->
     <main>
+      <!-- Introductory welcome panel explaining the tool -->
       <div class="welcome-section-container">
         <div class="welcome-content">
           <div class="welcome-content-icon-container">
@@ -50,7 +55,9 @@
         </div>
       </div>
 
+      <!-- 3-column layout: learner info, cost summary, course selection + SSL -->
       <div class="main-content-container">
+        <!-- Learner information card (type + location) -->
         <div class="learner-info-container">
           <div class="learner-info-header-container">
             <div class="learner-info-header-logo-container">
@@ -68,6 +75,7 @@
           </div>
 
           <div class="learner-info-selection-container">
+            <!-- Learner type radio options -->
             <div class="learner-info-select-container">
               <div class="learner-info-select-icon-container">
                 <img
@@ -121,6 +129,7 @@
               </form>
             </div>
 
+            <!-- Physical location radio options (affects GST + SSL logic) -->
             <div class="learner-info-select-container">
               <div class="learner-info-select-icon-container">
                 <img
@@ -173,7 +182,10 @@
             </div>
           </div>
         </div>
+
+        <!-- Sticky cost summary column -->
         <div class="cost-summary-sticky-wrapper">
+          <!-- Cost summary card (idle + active states controlled via JS) -->
           <div id="costSummary" class="cost-summary-container cost-summary-container-active">
             <div class="cost-summary-header-container">
               <img
@@ -247,12 +259,13 @@
               <span id="costSummaryTotal">$9999.00</span>
             </div>
 
+            <!-- Export to PDF action (wired in app.js) -->
             <button class="cost-summary-export">
               <img
                 src="{{ url_for('static', filename='icons/download.svg') }}"
                 alt=""
                 class="cost-summary-icon-inline"
-              />              
+              />               
               <span>Export to PDF</span>
             </button>
 
@@ -275,6 +288,8 @@
             </div>
           </div>
         </div>
+
+        <!-- Course selection and search column -->
         <div class="course-selection-container">
           <div class="course-selection-heading-container">
             <div class="course-selection-heading-icon-container">
@@ -297,6 +312,7 @@
                 Selected Courses (<span id="selectedCoursesCount">0</span>)
               </p>
 
+              <!-- Clear all selected courses (disabled when none selected) -->
               <button
                 type="button"
                 class="selected-courses-clear"
@@ -307,10 +323,12 @@
               </button>
             </div>
 
+            <!-- Populated dynamically via JavaScript -->
             <div class="selected-courses-list" id="selectedCoursesList"></div>
           </div>
           <!-- End selected courses -->
 
+          <!-- Course search input -->
           <div class="course-selection-search-container">
             <form
               class="course-search"
@@ -329,6 +347,8 @@
               />
             </form>
           </div>
+
+          <!-- Faculty filter pills (All Faculties + dynamic list) -->
           <div class="course-selection-degree-filter">
             <button class="course-degree-filter" data-faculty="All Faculties">
               All Faculties
@@ -339,6 +359,8 @@
             </button>
             {% endfor %}
           </div>
+
+          <!-- Course results list rendered from SharePoint/Excel data -->
           <div class="course-selection-course-list">
             {% for course in courses %}
             <div
@@ -362,6 +384,7 @@
                     {{ course['Points'] }}
                   </p>
                   {% else %} {% set p = course['Points']|float %}
+                  <!-- Render whole numbers without decimal, otherwise show full value -->
                   <p class="course-selection-course-points">
                     {{ (p|int) if p == (p|int) else p }} pts
                   </p>
@@ -371,6 +394,7 @@
               </div>
               <div class="course-selection-course-button-container">
                 <p>${{ "%.2f"|format(course['Dom Fees - 2026']) }}</p>
+                <!-- Toggle button used by JS to add/remove course from selection -->
                 <button
                   class="course-selection-course-button"
                   type="button"
@@ -383,6 +407,8 @@
             </div>
             {% endfor %}
           </div>
+
+          <!-- Pagination/visibility controls for long course lists -->
           <button id="showAllCourses" class="course-degree-showall">
             Show all courses
           </button>
@@ -395,6 +421,8 @@
             Show less courses
           </button>
         </div>
+
+        <!-- Student Services Levy explanation panel -->
         <div class="ssl-container">
           <div class="ssl-container-header">
             <div class="ssl-container-header-row">
@@ -416,8 +444,8 @@
             </div>
           </div>
           <div class="ssl-container-content">
-            <!-- On-campus (Onshore) -->
-            <!-- <div class="ssl-panel-onshore">
+            <!-- On-campus (Onshore) reference panel (kept as commented example)
+            <div class="ssl-panel-onshore">
               <div class="ssl-panel-header">
                 <div class="ssl-panel-icon-wrapper">
                   <img
@@ -446,7 +474,8 @@
                   <p class="ssl-panel-value">$1166.40</p>
                 </div>
               </div>
-            </div> -->
+            </div>
+            -->
             <!-- Off-campus (Offshore) -->
             <div class="ssl-panel-offshore">
               <div class="ssl-panel-header">
@@ -483,11 +512,13 @@
       </div>
     </main>
 
+    <!-- Global footer -->
     <footer class="footer">
       <p class="footer-text">
         UC Online Course Costing Application | UC Online
       </p>
     </footer>
+    <!-- Main application script (handles selection, filtering, and cost logic) -->
     <script src="{{ url_for('static', filename='app.js') }}"></script>
   </body>
 </html>
