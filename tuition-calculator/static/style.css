@@ -211,6 +211,12 @@ main {
 
 /* ==================== Cost Breakdown ==================== */
 
+.cost-summary-sticky-wrapper {
+  position: sticky;
+  top: 1.5rem; 
+  align-self: flex-start; 
+}
+
 .cost-summary-container {
   padding: 1.5rem;
   height: 40%;

@@ -173,24 +173,26 @@
             </div>
           </div>
         </div>
-        <div class="cost-summary-container">
-          <div class="cost-summary-header-container">
-            <img
-              src="{{ url_for('static', filename='icons/receipt.svg') }}"
-              alt="Receipt icon"
-              class="main-icon"
-            />
-            <p class="cost-summary-header">Cost Summary</p>
-          </div>
-          <div class="cost-summary-idle-container">
-            <img
-              src="{{ url_for('static', filename='icons/circle-alert.svg') }}"
-              alt="Alert pin icon"
-              class="cost-summary-icon"
-            />
-            <p class="cost-summary-text-idle">
-              Select courses to see a full cost breakdown
-            </p>
+        <div class="cost-summary-sticky-wrapper">
+          <div class="cost-summary-container">
+            <div class="cost-summary-header-container">
+              <img
+                src="{{ url_for('static', filename='icons/receipt.svg') }}"
+                alt="Receipt icon"
+                class="main-icon"
+              />
+              <p class="cost-summary-header">Cost Summary</p>
+            </div>
+            <div class="cost-summary-idle-container">
+              <img
+                src="{{ url_for('static', filename='icons/circle-alert.svg') }}"
+                alt="Alert pin icon"
+                class="cost-summary-icon"
+              />
+              <p class="cost-summary-text-idle">
+                Select courses to see a full cost breakdown
+              </p>
+            </div>
           </div>
         </div>
         <div class="course-selection-container">
