@@ -349,6 +349,38 @@ main {
   vertical-align: middle;
 }
 
+.info-icon-wrapper {
+  position: relative;
+  border: none;
+  background: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.info-tooltip {
+  position: absolute;
+  left: 50%;
+  top: 125%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  padding: 0.4rem 0.6rem;
+  background: #111827;
+  color: #f9fafb;
+  font-size: 0.75rem;
+  border-radius: 0.4rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 120ms ease-out;
+  z-index: 10;
+}
+
+/* Show on hover or keyboard focus */
+.info-icon-wrapper:hover .info-tooltip,
+.info-icon-wrapper:focus-visible .info-tooltip {
+  opacity: 1;
+}
+
 .cost-summary-subtext {
   font-size: 0.75rem;
   color: rgba(44, 44, 44, 0.8);

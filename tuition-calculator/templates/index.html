@@ -151,7 +151,7 @@
                     class="radio-button"
                     type="radio"
                     id="onshore"
-                    name="location"
+                    name="learner_location"
                     value="onshore"
                     checked
                   />
@@ -168,7 +168,7 @@
                     class="radio-button"
                     type="radio"
                     id="offshore"
-                    name="location"
+                    name="learner_location"
                     value="offshore"
                   />
                   <span class="learner-info-text">
@@ -201,8 +201,12 @@
             <!-- Learner pills -->
             <div class="cost-summary-active-content" id="costSummaryActive">
               <div class="cost-summary-pills">
-                <span class="cost-summary-pill">Domestic</span>
-                <span class="cost-summary-pill">Onshore</span>
+                <span class="cost-summary-pill" id="costSummaryPillType"
+                  >Domestic</span
+                >
+                <span class="cost-summary-pill" id="costSummaryPillLocation"
+                  >Onshore</span
+                >
               </div>
 
               <!-- Top stats -->
@@ -220,18 +224,27 @@
               <!-- Line items -->
               <div class="cost-summary-lines">
                 <div class="cost-summary-line">
-                  <span>Course fees</span>
+                  <span>Total course fees</span>
                   <span id="costSummaryCourseFees">$9999.00</span>
                 </div>
 
                 <div class="cost-summary-line">
                   <div class="cost-summary-line-main">
-                    <span>Student services levy</span>
-                    <img
-                      src="{{ url_for('static', filename='icons/info-grey.svg') }}"
-                      alt=""
-                      class="cost-summary-icon-inline"
-                    />
+                    <span>Student services levy (SSL)</span>
+                    <button
+                      type="button"
+                      class="info-icon-wrapper"
+                      aria-label="More information about GST"
+                    >
+                      <img
+                        src="{{ url_for('static', filename='icons/info-grey.svg') }}"
+                        alt=""
+                        class="cost-summary-icon-inline"
+                      />
+                      <span class="info-tooltip">
+                        Compulsory fee charged in addition to tuition fees
+                      </span>
+                    </button>
                   </div>
                   <span id="costSummaryLevy">$999</span>
                 </div>
@@ -247,11 +260,21 @@
                 <div class="cost-summary-line">
                   <div class="cost-summary-line-main">
                     <span>GST (15%)</span>
-                    <img
-                      src="{{ url_for('static', filename='icons/info-grey.svg') }}"
-                      alt=""
-                      class="cost-summary-icon-inline"
-                    />
+                    <button
+                      type="button"
+                      class="info-icon-wrapper"
+                      aria-label="More information about GST"
+                    >
+                      <img
+                        src="{{ url_for('static', filename='icons/info-grey.svg') }}"
+                        alt=""
+                        class="cost-summary-icon-inline"
+                      />
+                      <span class="info-tooltip" id="GstInfoToolTip">
+                        GST is calculated at 15% of the subtotal excluding the
+                        levy.
+                      </span>
+                    </button>
                   </div>
                   <span id="costSummaryGst">$999</span>
                 </div>
@@ -362,11 +385,14 @@
             <button class="course-degree-filter" data-faculty="All Faculties">
               All Faculties
             </button>
-            {% for faculty in unique_faculties %}
+            {% for faculty in unique_faculties %} {% if faculty != 'Other' %}
             <button class="course-degree-filter" data-faculty="{{ faculty }}">
               <span class="course-degree-filter-label">{{ faculty }}</span>
             </button>
-            {% endfor %}
+            {% endif %} {% endfor %}
+            <button class="course-degree-filter" data-faculty="Other">
+              Other
+            </button>
           </div>
 
           <!-- Course results list rendered from SharePoint/Excel data -->

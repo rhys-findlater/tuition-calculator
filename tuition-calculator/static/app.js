@@ -15,14 +15,27 @@ let currentFaculty = "All Faculties";
 // Cached DOM elements
 const selectedListEl = document.getElementById("selectedCoursesList");
 const selectedCountEl = document.getElementById("selectedCoursesCount");
-const clearBtn = document.getElementById("clearSelectedCourses");
-const showAllBtn = document.getElementById("showAllCourses");
-const showLessBtn = document.getElementById("showLessCourses");
-const costSummary = document.getElementById("costSummary");
+const clearBtnEl = document.getElementById("clearSelectedCourses");
+const showAllBtnEl = document.getElementById("showAllCourses");
+const showLessBtnEl = document.getElementById("showLessCourses");
 
-const costSummaryCoursesSelected = document.getElementById(
+const costSummaryPillTypeEl = document.getElementById("costSummaryPillType");
+const costSummaryPillLocationEl = document.getElementById(
+  "costSummaryPillLocation"
+);
+const gstInfoTooltipEl = document.getElementById("GstInfoToolTip");
+const costSummaryCoursesSelectedEl = document.getElementById(
   "costSummaryCoursesSelected"
 );
+const costSummaryTotalPointsEl = document.getElementById(
+  "costSummaryTotalPoints"
+);
+const costSummaryTotalCostEl = document.getElementById("costSummaryCourseFees");
+const costSummaryLevyEl = document.getElementById("costSummaryLevy");
+const costSummaryLevyNoteEl = document.getElementById("costSummaryLevyNote");
+const costSummarySubtotalEl = document.getElementById("costSummarySubtotal");
+const costSummaryGstEl = document.getElementById("costSummaryGst");
+const costSummaryTotalEl = document.getElementById("costSummaryTotal");
 
 function limitCourses(initialLimit = 5) {
   const cards = document.querySelectorAll(".course-selection-course");
@@ -42,6 +55,14 @@ function getCurrentLearnerType() {
   const checked = document.querySelector('input[name="learner_type"]:checked');
   return checked ? checked.value : "domestic";
 }
+
+function getCurrentLearnerLocation() {
+  const checked = document.querySelector(
+    'input[name="learner_location"]:checked'
+  );
+  return checked ? checked.value : "onshore";
+}
+
 const selectedHeaderEl = document.querySelector(".selected-courses-header");
 
 /**
@@ -68,11 +89,11 @@ function setAvailableCardVisibility(code, isSelected) {
  * - Rebuilds the list of selected courses
  */
 function renderSelected(learnerType = getCurrentLearnerType()) {
-  if (!selectedListEl || !selectedCountEl || !clearBtn) return;
+  if (!selectedListEl || !selectedCountEl || !clearBtnEl) return;
 
   const isDomestic = learnerType === "domestic";
   selectedCountEl.textContent = String(selected.size);
-  clearBtn.disabled = selected.size === 0;
+  clearBtnEl.disabled = selected.size === 0;
 
   // If no courses selected, hide clear all button and selected courses count
   if (selectedHeaderEl) {
@@ -110,9 +131,9 @@ function renderSelected(learnerType = getCurrentLearnerType()) {
       }">✕</button>
     `;
 
-    const removeBtn = row.querySelector(".selected-course-remove");
-    if (removeBtn) {
-      removeBtn.addEventListener("click", () => {
+    const removeBtnEl = row.querySelector(".selected-course-remove");
+    if (removeBtnEl) {
+      removeBtnEl.addEventListener("click", () => {
         selected.delete(course.code);
         setAvailableCardVisibility(course.code, false);
         renderSelected();
@@ -164,9 +185,9 @@ function initAvailableCourseCards() {
     const faculty = card.dataset.courseFaculty || "";
 
     // Direct button handler only—no outer card click to avoid duplicates
-    const addBtn = card.querySelector("[data-course-toggle]");
-    if (addBtn) {
-      addBtn.addEventListener("click", (e) => {
+    const addBtnEl = card.querySelector("[data-course-toggle]");
+    if (addBtnEl) {
+      addBtnEl.addEventListener("click", (e) => {
         e.preventDefault();
         e.stopPropagation();
         addCourse({ code, title, points, domPrice, intPrice, faculty });
@@ -181,8 +202,8 @@ function initAvailableCourseCards() {
 function initTuitionSelection() {
   initAvailableCourseCards();
 
-  if (clearBtn) {
-    clearBtn.addEventListener("click", clearSelected);
+  if (clearBtnEl) {
+    clearBtnEl.addEventListener("click", clearSelected);
   }
 
   renderSelected("domestic");
@@ -192,8 +213,8 @@ function initTuitionSelection() {
   document
     .querySelectorAll(".course-degree-filter")
     .forEach((pill) => pill.classList.remove("course-degree-filter-active"));
-  const allPill = document.querySelector("[data-faculty='All Faculties']");
-  if (allPill) allPill.classList.add("course-degree-filter-active");
+  const allPillEl = document.querySelector("[data-faculty='All Faculties']");
+  if (allPillEl) allPillEl.classList.add("course-degree-filter-active");
 }
 
 /**
@@ -229,18 +250,25 @@ document.querySelectorAll('input[name="learner_type"]').forEach((radio) => {
   });
 });
 
+document.querySelectorAll('input[name="learner_location"]').forEach((radio) => {
+  radio.addEventListener("change", function () {
+    // Just re-render summary with updated location
+    renderSummary(selected);
+  });
+});
+
 /**
  * Pill filtering functionality
  */
-document.querySelectorAll(".course-degree-filter").forEach((btn) => {
-  btn.addEventListener("click", () => {
+document.querySelectorAll(".course-degree-filter").forEach((btnEl) => {
+  btnEl.addEventListener("click", () => {
     // Active state
     document
       .querySelectorAll(".course-degree-filter")
       .forEach((pill) => pill.classList.remove("course-degree-filter-active"));
-    btn.classList.add("course-degree-filter-active");
+    btnEl.classList.add("course-degree-filter-active");
 
-    currentFaculty = btn.dataset.faculty;
+    currentFaculty = btnEl.dataset.faculty;
 
     // Filter + hide selected
     document.querySelectorAll(".course-selection-course").forEach((card) => {
@@ -255,7 +283,7 @@ document.querySelectorAll(".course-degree-filter").forEach((btn) => {
     limitCourses(); // Limit visible to 5
 
     // Reset buttons to correct state for NEW faculty
-    showLessBtn.style.display = "none"; // Always hide Show Less on pill switch
+    showLessBtnEl.style.display = "none"; // Always hide Show Less on pill switch
 
     const totalMatching =
       Array.from(document.querySelectorAll(".course-selection-course")).filter(
@@ -267,17 +295,17 @@ document.querySelectorAll(".course-degree-filter").forEach((btn) => {
         }
       ).length - selected.size;
 
-    if (showAllBtn) {
+    if (showAllBtnEl) {
       const needsShowAll = totalMatching > 5;
-      showAllBtn.style.display = needsShowAll ? "block" : "none";
-      showAllBtn.disabled = !needsShowAll;
+      showAllBtnEl.style.display = needsShowAll ? "block" : "none";
+      showAllBtnEl.disabled = !needsShowAll;
     }
   });
 });
 
 // Global Show All/Show Less handlers (run once)
-if (showAllBtn) {
-  showAllBtn.addEventListener("click", () => {
+if (showAllBtnEl) {
+  showAllBtnEl.addEventListener("click", () => {
     document.querySelectorAll(".course-selection-course").forEach((card) => {
       const code = card.dataset.courseCode;
       const cardFaculty = card.dataset.courseFaculty;
@@ -288,18 +316,18 @@ if (showAllBtn) {
     });
 
     // Always hide Show All, show Show Less
-    showAllBtn.style.display = "none";
-    showLessBtn.style.display = "block";
-    showLessBtn.disabled = false;
+    showAllBtnEl.style.display = "none";
+    showLessBtnEl.style.display = "block";
+    showLessBtnEl.disabled = false;
   });
 }
 
-if (showLessBtn) {
-  showLessBtn.addEventListener("click", () => {
+if (showLessBtnEl) {
+  showLessBtnEl.addEventListener("click", () => {
     limitCourses();
 
     // Always reset to limited state + correct Show All visibility
-    showLessBtn.style.display = "none";
+    showLessBtnEl.style.display = "none";
 
     const totalMatching =
       Array.from(document.querySelectorAll(".course-selection-course")).filter(
@@ -312,22 +340,88 @@ if (showLessBtn) {
       ).length - selected.size;
 
     const needsShowAll = totalMatching > 5;
-    if (showAllBtn) {
-      showAllBtn.style.display = needsShowAll ? "block" : "none";
-      showAllBtn.disabled = !needsShowAll;
+    if (showAllBtnEl) {
+      showAllBtnEl.style.display = needsShowAll ? "block" : "none";
+      showAllBtnEl.disabled = !needsShowAll;
     }
   });
 }
 
-function renderSummary(selectedCourses) {
-  if (!costSummary) return;
+function capitalize(word) {
+  return word.charAt(0).toUpperCase() + word.slice(1);
+}
+
+function calculateLevy(selectedCoursesSize, totalCoursePoints) {
+  if (selectedCoursesSize === 1 && totalCoursePoints === 15) return 29.1;
+  if (totalCoursePoints === 60) return 116.4;
+  if (totalCoursePoints === 120) return 232.8;
+  return "TBD";
+}
+
+function calculateCoursesTotals(selectedCourses, isDomestic) {
+  let points = 0;
+  let cost = 0;
+
+  for (const course of selectedCourses.values()) {
+    const coursePrice = isDomestic ? course.domPrice : course.intPrice;
+    points += course.points;
+    cost += coursePrice;
+  }
+
+  return { points, cost };
+}
+
+function renderSummary(
+  selectedCourses,
+  learnerType = getCurrentLearnerType(),
+  learnerLocation = getCurrentLearnerLocation()
+) {
+  if (!costSummaryTotalEl) return; // using one known element as guard
 
   const isIdle = selectedCourses.size === 0;
-  costSummary.classList.toggle("cost-summary-idle", isIdle);
+  const costSummaryContainerEl = document.getElementById("costSummary");
+  costSummaryContainerEl.classList.toggle("cost-summary-idle", isIdle);
+  if (isIdle) return;
 
-  if (!isIdle) {
-    costSummaryCoursesSelected.textContent = String(selectedCourses.size);
-  }
+  const isDomestic = learnerType === "domestic";
+
+  // Header pills
+  costSummaryPillTypeEl.textContent = capitalize(learnerType);
+  costSummaryPillLocationEl.textContent = capitalize(learnerLocation);
+
+  // GST tooltip
+  gstInfoTooltipEl.textContent =
+    learnerLocation === "offshore"
+      ? "GST does not apply to offshore learners"
+      : "GST is calculated at 15% of the subtotal excluding the levy.";
+
+  costSummaryCoursesSelectedEl.textContent = String(selectedCourses.size);
+
+  // Course totals
+  const { points: totalCoursePoints, cost: totalCourseCost } =
+    calculateCoursesTotals(selectedCourses, isDomestic);
+
+  costSummaryTotalPointsEl.textContent = String(totalCoursePoints);
+  costSummaryTotalCostEl.textContent = `$${totalCourseCost.toFixed(2)}`;
+
+  // Levy
+  const levy = calculateLevy(selectedCourses.size, totalCoursePoints);
+  costSummaryLevyEl.textContent =
+    levy === "TBD" ? "TBD" : `$${levy.toFixed(2)}`;
+  costSummaryLevyNoteEl.textContent = `Based on ${totalCoursePoints} points`;
+
+  // Subtotal
+  const levyAmount = levy === "TBD" ? 0 : Number(levy);
+  const subTotal = levyAmount + totalCourseCost;
+  costSummarySubtotalEl.textContent = `$${subTotal.toFixed(2)}`;
+
+  // GST
+  const gst = learnerLocation === "onshore" ? subTotal * 0.15 : 0;
+  costSummaryGstEl.textContent = `$${gst.toFixed(2)}`;
+
+  // Total
+  const totalCost = subTotal + gst;
+  costSummaryTotalEl.textContent = `$${totalCost.toFixed(2)}`;
 }
 
 if (document.readyState === "loading") {
