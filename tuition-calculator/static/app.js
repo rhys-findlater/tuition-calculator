@@ -18,6 +18,11 @@ const selectedCountEl = document.getElementById("selectedCoursesCount");
 const clearBtn = document.getElementById("clearSelectedCourses");
 const showAllBtn = document.getElementById("showAllCourses");
 const showLessBtn = document.getElementById("showLessCourses");
+const costSummary = document.getElementById("costSummary");
+
+const costSummaryCoursesSelected = document.getElementById(
+  "costSummaryCoursesSelected"
+);
 
 function limitCourses(initialLimit = 5) {
   const cards = document.querySelectorAll(".course-selection-course");
@@ -69,6 +74,7 @@ function renderSelected(learnerType = getCurrentLearnerType()) {
   selectedCountEl.textContent = String(selected.size);
   clearBtn.disabled = selected.size === 0;
 
+  // If no courses selected, hide clear all button and selected courses count
   if (selectedHeaderEl) {
     selectedHeaderEl.style.display = selected.size === 0 ? "none" : "flex";
   }
@@ -114,6 +120,8 @@ function renderSelected(learnerType = getCurrentLearnerType()) {
     }
     selectedListEl.appendChild(row);
   }
+
+  renderSummary(selected);
 }
 
 /**
@@ -309,6 +317,17 @@ if (showLessBtn) {
       showAllBtn.disabled = !needsShowAll;
     }
   });
+}
+
+function renderSummary(selectedCourses) {
+  if (!costSummary) return;
+
+  const isIdle = selectedCourses.size === 0;
+  costSummary.classList.toggle("cost-summary-idle", isIdle);
+
+  if (!isIdle) {
+    costSummaryCoursesSelected.textContent = String(selectedCourses.size);
+  }
 }
 
 if (document.readyState === "loading") {

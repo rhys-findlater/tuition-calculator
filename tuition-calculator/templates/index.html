@@ -186,7 +186,10 @@
         <!-- Sticky cost summary column -->
         <div class="cost-summary-sticky-wrapper">
           <!-- Cost summary card (idle + active states controlled via JS) -->
-          <div id="costSummary" class="cost-summary-container cost-summary-container-active">
+          <div
+            id="costSummary"
+            class="cost-summary-container cost-summary-idle"
+          >
             <div class="cost-summary-header-container">
               <img
                 src="{{ url_for('static', filename='icons/receipt.svg') }}"
@@ -196,87 +199,93 @@
               <p class="cost-summary-header">Cost Summary</p>
             </div>
             <!-- Learner pills -->
-            <div class="cost-summary-pills">
-              <span class="cost-summary-pill">Domestic</span>
-              <span class="cost-summary-pill">Onshore</span>
-            </div>
-
-            <!-- Top stats -->
-            <div class="cost-summary-stats">
-              <div class="cost-summary-stats-row">
-                <span>Courses selected</span>
-                <span id="costSummaryCoursesSelected">8</span>
-              </div>
-              <div class="cost-summary-stats-row">
-                <span>Total points</span>
-                <span id="costSummaryTotalPoints">120</span>
-              </div>
-            </div>
-
-            <!-- Line items -->
-            <div class="cost-summary-lines">
-              <div class="cost-summary-line">
-                <span>Course fees</span>
-                <span id="costSummaryCourseFees">$9999.00</span>
+            <div class="cost-summary-active-content" id="costSummaryActive">
+              <div class="cost-summary-pills">
+                <span class="cost-summary-pill">Domestic</span>
+                <span class="cost-summary-pill">Onshore</span>
               </div>
 
-              <div class="cost-summary-line">
-                <div class="cost-summary-line-main">
-                  <span>Student services levy</span>
-                  <img
-                    src="{{ url_for('static', filename='icons/info-grey.svg') }}"
-                    alt=""
-                    class="cost-summary-icon-inline"
-                  />
+              <!-- Top stats -->
+              <div class="cost-summary-stats">
+                <div class="cost-summary-stats-row">
+                  <span>Courses selected</span>
+                  <span id="costSummaryCoursesSelected">8</span>
                 </div>
-                <span id="costSummaryLevy">$999</span>
-              </div>
-              <p class="cost-summary-subtext" id="costSummaryLevyNote">
-                Based on 0 points
-              </p>
-
-              <div class="cost-summary-line">
-                <span>Subtotal</span>
-                <span id="costSummarySubtotal">$9999.00</span>
-              </div>
-
-              <div class="cost-summary-line">
-                <div class="cost-summary-line-main">
-                  <span>GST (15%)</span>
-                  <img
-                    src="{{ url_for('static', filename='icons/info-grey.svg') }}"
-                    alt=""
-                    class="cost-summary-icon-inline"
-                  />
+                <div class="cost-summary-stats-row">
+                  <span>Total points</span>
+                  <span id="costSummaryTotalPoints">120</span>
                 </div>
-                <span id="costSummaryGst">$999</span>
+              </div>
+
+              <!-- Line items -->
+              <div class="cost-summary-lines">
+                <div class="cost-summary-line">
+                  <span>Course fees</span>
+                  <span id="costSummaryCourseFees">$9999.00</span>
+                </div>
+
+                <div class="cost-summary-line">
+                  <div class="cost-summary-line-main">
+                    <span>Student services levy</span>
+                    <img
+                      src="{{ url_for('static', filename='icons/info-grey.svg') }}"
+                      alt=""
+                      class="cost-summary-icon-inline"
+                    />
+                  </div>
+                  <span id="costSummaryLevy">$999</span>
+                </div>
+                <p class="cost-summary-subtext" id="costSummaryLevyNote">
+                  Based on 0 points
+                </p>
+
+                <div class="cost-summary-line">
+                  <span>Subtotal</span>
+                  <span id="costSummarySubtotal">$9999.00</span>
+                </div>
+
+                <div class="cost-summary-line">
+                  <div class="cost-summary-line-main">
+                    <span>GST (15%)</span>
+                    <img
+                      src="{{ url_for('static', filename='icons/info-grey.svg') }}"
+                      alt=""
+                      class="cost-summary-icon-inline"
+                    />
+                  </div>
+                  <span id="costSummaryGst">$999</span>
+                </div>
+              </div>
+
+              <!-- Total + export -->
+              <div class="cost-summary-total">
+                <span>Total cost</span>
+                <span id="costSummaryTotal">$9999.00</span>
+              </div>
+
+              <!-- Export to PDF action (wired in app.js) -->
+              <button class="cost-summary-export">
+                <img
+                  src="{{ url_for('static', filename='icons/download.svg') }}"
+                  alt=""
+                  class="cost-summary-icon-inline"
+                />
+                <span>Export to PDF</span>
+              </button>
+
+              <!-- Footnote -->
+              <div class="cost-summary-footnotes">
+                <p>* Fees are indicative and subject to change.</p>
+                <p>
+                  * Additional costs such as textbooks and materials may apply.
+                </p>
               </div>
             </div>
-
-            <!-- Total + export -->
-            <div class="cost-summary-total">
-              <span>Total cost</span>
-              <span id="costSummaryTotal">$9999.00</span>
-            </div>
-
-            <!-- Export to PDF action (wired in app.js) -->
-            <button class="cost-summary-export">
-              <img
-                src="{{ url_for('static', filename='icons/download.svg') }}"
-                alt=""
-                class="cost-summary-icon-inline"
-              />               
-              <span>Export to PDF</span>
-            </button>
-
-            <!-- Footnote -->
-            <div class="cost-summary-footnotes">
-              <p>* Fees are indicative and subject to change.</p>
-              <p>* Additional costs such as textbooks and materials may apply.</p>
-            </div>
-
             <!-- Idle state -->
-            <div class="cost-summary-idle-container">
+            <div
+              class="cost-summary-idle-container cost-summary-idle-content"
+              id="costSummaryIdle"
+            >
               <img
                 src="{{ url_for('static', filename='icons/circle-alert.svg') }}"
                 alt="Alert pin icon"

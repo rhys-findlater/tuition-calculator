@@ -69,7 +69,6 @@ main {
   width: 0.95rem;
 }
 
-
 /* ==================== Header ==================== */
 /* Global header bar with logo and title */
 
@@ -108,7 +107,6 @@ main {
   height: 4rem;
 }
 
-
 /* ==================== Welcome-section ==================== */
 /* Introductory panel explaining the tool */
 
@@ -146,7 +144,6 @@ main {
   font-size: 0.875rem;
   margin-left: 1.65rem;
 }
-
 
 /* ==================== Learner-info ==================== */
 /* Card for learner type, location, and related options */
@@ -221,13 +218,22 @@ main {
   flex-direction: column;
 }
 
-
 /* ==================== Cost Summary - shared styles ==================== */
 /* Right-hand cost summary card used by both idle and active states */
-
-/* Temporary rule to toggle idle summary visibility (hooked up via JS) */
-.cost-summary-container-active .cost-summary-idle-container {
+.cost-summary-idle .cost-summary-active-content {
   display: none;
+}
+
+.cost-summary-idle .cost-summary-idle-content {
+  display: block;
+}
+
+.cost-summary-container:not(.cost-summary-idle) .cost-summary-idle-content {
+  display: none;
+}
+
+.cost-summary-container:not(.cost-summary-idle) .cost-summary-active-content {
+  display: block; /* or flex */
 }
 
 /* Sticky positioning so summary stays visible while scrolling */
@@ -257,7 +263,6 @@ main {
   font-size: 1rem;
 }
 
-
 /* ==================== Cost Summary - idle state ==================== */
 /* Placeholder content shown before any course is selected */
 
@@ -276,7 +281,6 @@ main {
   max-width: 16rem;
   margin: 0 auto;
 }
-
 
 /* ==================== Cost Summary - active state ==================== */
 /* Detailed cost breakdown once courses have been added */
@@ -390,7 +394,6 @@ main {
   flex-direction: column;
   gap: 0.15rem;
 }
-
 
 /* ==================== Course Selection ==================== */
 /* Main course search, filtering, and add-to-summary flows */
@@ -523,7 +526,7 @@ main {
 
 /* Individual degree filter “pill” */
 .course-degree-filter {
-  flex: 0 0 130px;       /* Fixed width pills for consistent layout */
+  flex: 0 0 130px; /* Fixed width pills for consistent layout */
   height: 42px;
   display: flex;
   align-items: center;
@@ -648,7 +651,6 @@ main {
   cursor: pointer;
 }
 
-
 /* ==================== Selected-Courses-Container ==================== */
 /* Summary list of courses the user has chosen */
 
@@ -697,7 +699,6 @@ main {
   flex-direction: column;
   gap: 0.55rem;
 }
-
 
 /* ==================== Individual-Selected-Courses ==================== */
 /* Styles for each selected course row in the summary */
@@ -807,7 +808,6 @@ main {
 .selected-course-remove:active {
   background: rgba(0, 0, 0, 0.1);
 }
-
 
 /* ==================== Student-Levy-Pannel ==================== */
 /* Student Services Levy (SSL) explanation and onshore/offshore breakdown */
@@ -922,7 +922,6 @@ main {
   color: #ce3e2e;
   font-size: 1rem;
 }
-
 
 /* ==================== Footer ==================== */
 /* Simple global footer for legal and credits */
