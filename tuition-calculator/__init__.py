@@ -31,7 +31,13 @@ def create_app(test_config=None):
             )
         df['Faculty'] = df['Faculty'].fillna('Other').replace('None', 'Other')
         df['UC Code'] = df['UC Code'].fillna('TBC').replace('nan', 'TBC')
-        df['Points'] = df['Points'].fillna('TBC').replace('nan', 'TBC');
+        df['Points'] = df['Points'].fillna('TBC').replace('nan', 'TBC')
+    
+        df = df[df['UC Code'] != 'TBC']
+        df = df[df['Points'] != 'TBC']
+        df = df[df['Course Title'] != 'TBC']
+        df = df[df['Int Fees - 2026'] != 0]
+        df = df[df['Dom Fees - 2026'] != 0]
 
         # Create course data for templates and JavaScript 
         COURSES = df.to_dict('records')
@@ -41,7 +47,7 @@ def create_app(test_config=None):
         # Prevent redirect form alert
         if request.method == "POST":
             return redirect(url_for("index"))
-
+        print(COURSES)
         # Pass data into template 
         return render_template("index.html", courses=COURSES, courses_json=COURSES_JSON, unique_faculties=UNIQUE_FACULTIES)
 
