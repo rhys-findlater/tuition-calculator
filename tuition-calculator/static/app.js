@@ -51,6 +51,37 @@ function limitCourses(initialLimit = 5) {
   });
 }
 
+// Shared filtering function
+const applySearch = () => {
+  const searchInput = document.getElementById("course-search");
+  const query = searchInput ? searchInput.value.trim().toLowerCase() : "";
+
+  document.querySelectorAll(".course-selection-course").forEach((card) => {
+    const code = (card.dataset.courseCode || "").toLowerCase();
+    const title = (card.dataset.courseTitle || "").toLowerCase();
+
+    const matches =
+      query === "" || code.includes(query) || title.includes(query);
+
+    const cardFaculty = card.dataset.courseFaculty;
+    const facultyMatch =
+      currentFaculty === "All Faculties" || cardFaculty === currentFaculty;
+    const isSelected = selected.has(card.dataset.courseCode);
+
+    card.style.display =
+      matches && facultyMatch && !isSelected ? "flex" : "none";
+  });
+
+  if (query === "") {
+    // restore limited view + buttons when search cleared
+    limitCourses();
+    if (showAllBtnEl) showAllBtnEl.style.display = "block";
+  } else {
+    if (showAllBtnEl) showAllBtnEl.style.display = "none";
+    if (showLessBtnEl) showLessBtnEl.style.display = "none";
+  }
+};
+
 function getCurrentLearnerType() {
   const checked = document.querySelector('input[name="learner_type"]:checked');
   return checked ? checked.value : "domestic";
@@ -207,6 +238,31 @@ function initAvailableCourseCards() {
   });
 }
 
+function initCourseSearch() {
+  const searchInput = document.getElementById("course-search");
+  const clearBtn = document.querySelector(".search-clear-btn");
+  const searchForm = document.querySelector(".course-search");
+  if (!searchInput) return;
+
+  if (searchForm) {
+    searchForm.addEventListener("submit", (e) => e.preventDefault());
+  }
+
+  searchInput.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") e.preventDefault();
+  });
+
+  searchInput.addEventListener("input", applySearch);
+
+  if (clearBtn) {
+    clearBtn.addEventListener("click", () => {
+      searchInput.value = "";
+      searchInput.focus();
+      applySearch();
+    });
+  }
+}
+
 /**
  * Attach event listeners to buttons and perform initial render.
  */
@@ -226,6 +282,8 @@ function initTuitionSelection() {
     .forEach((pill) => pill.classList.remove("course-degree-filter-active"));
   const allPillEl = document.querySelector("[data-faculty='All Faculties']");
   if (allPillEl) allPillEl.classList.add("course-degree-filter-active");
+
+  initCourseSearch();
 }
 
 /**
@@ -287,36 +345,9 @@ document.querySelectorAll(".course-degree-filter").forEach((btnEl) => {
 
     currentFaculty = btnEl.dataset.faculty;
 
-    // Filter + hide selected
-    document.querySelectorAll(".course-selection-course").forEach((card) => {
-      const code = card.dataset.courseCode;
-      const cardFaculty = card.dataset.courseFaculty;
-      const facultyMatch =
-        currentFaculty === "All Faculties" || cardFaculty === currentFaculty;
-      const isSelected = selected.has(code);
-      card.style.display = facultyMatch && !isSelected ? "flex" : "none";
-    });
-
-    limitCourses(); // Limit visible to 5
-
-    // Reset buttons to correct state for NEW faculty
-    showLessBtnEl.style.display = "none"; // Always hide Show Less on pill switch
-
-    const totalMatching =
-      Array.from(document.querySelectorAll(".course-selection-course")).filter(
-        (card) => {
-          const cardFaculty = card.dataset.courseFaculty;
-          return (
-            currentFaculty === "All Faculties" || cardFaculty === currentFaculty
-          );
-        }
-      ).length - selected.size;
-
-    if (showAllBtnEl) {
-      const needsShowAll = totalMatching > 5;
-      showAllBtnEl.style.display = needsShowAll ? "block" : "none";
-      showAllBtnEl.disabled = !needsShowAll;
-    }
+    // Instead of doing your own card.style.display logic here,
+    // just reapply the combined faculty + search filter:
+    applySearch();
   });
 });
 

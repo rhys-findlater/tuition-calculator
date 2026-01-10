@@ -370,13 +370,26 @@
               <label for="course-search" class="course-search-label"
                 >Available Courses</label
               >
-              <input
-                id="course-search"
-                class="search-input"
-                name="q"
-                type="search"
-                placeholder="Search by course code or title..."
-              />
+              <div class="search-input-wrapper">
+                <input
+                  id="course-search"
+                  class="search-input"
+                  name="q"
+                  type="search"
+                  placeholder="Search by course code or title..."
+                />
+                <button
+                  type="button"
+                  class="search-clear-btn"
+                  aria-label="Clear search"
+                >
+                  <img
+                    src="{{ url_for('static', filename='icons/x.svg') }}"
+                    alt="Open book icon"
+                    class="search-clear-btn-icon"
+                  />
+                </button>
+              </div>
             </form>
           </div>
 

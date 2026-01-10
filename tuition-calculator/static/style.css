@@ -69,6 +69,16 @@ main {
   width: 0.95rem;
 }
 
+/* Chrome, Edge, Safari */
+.search-input::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+}
+
+/* Firefox removes special search styling when you use -moz-appearance: none on the input */
+.search-input[type="search"] {
+  -moz-appearance: textfield;
+}
+
 /* ==================== Header ==================== */
 /* Global header bar with logo and title */
 
@@ -461,8 +471,15 @@ main {
   margin-bottom: 1rem;
 }
 
+.search-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
 /* Text input with embedded search icon */
 .search-input {
+  width: 100%;
   padding: 0.5rem 0.75rem 0.5rem 2.5rem;
   border-radius: var(--radius-control);
   border: 1.2px solid #d1d5db;
@@ -478,6 +495,31 @@ main {
   border-color: #757575;
   background-color: #fff;
   outline: none;
+}
+
+.search-clear-btn {
+  position: absolute;
+  right: 1rem;
+  background: transparent;
+  border: none;
+  color: #000; /* UC blue-ish */
+  width: 0.75rem;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+  display: none;
+}
+
+.search-clear-btn:hover {
+  color: #1e40af;
+}
+
+.search-clear-btn-icon {
+  width: 0.9rem;
+}
+
+.search-input-wrapper:focus-within .search-clear-btn {
+  display: flex;
 }
 
 /* Horizontal filter chips for degree type */
