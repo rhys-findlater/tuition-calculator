@@ -428,7 +428,7 @@
                 <p>{{ course['Course Title'] }}</p>
               </div>
               <div class="course-selection-course-button-container">
-                <p>${{ "%.2f"|format(course['Dom Fees - 2026']) }}</p>
+                <p>${{ "{:,.2f}".format(course['Dom Fees - 2026']) }}</p>
                 <!-- Toggle button used by JS to add/remove course from selection -->
                 <button
                   class="course-selection-course-button"

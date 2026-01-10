@@ -122,8 +122,12 @@ function renderSelected(learnerType = getCurrentLearnerType()) {
       </div>
       <div class="selected-course-price">
         <span class="selected-course-price-label"></span>
-        <span class="selected-course-price-value">$${displayPrice.toFixed(
-          2
+        <span class="selected-course-price-value">$${displayPrice.toLocaleString(
+          "en-NZ",
+          {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          }
         )}</span>
       </div>
       <button type="button" class="selected-course-remove" aria-label="Remove ${
@@ -190,7 +194,14 @@ function initAvailableCourseCards() {
       addBtnEl.addEventListener("click", (e) => {
         e.preventDefault();
         e.stopPropagation();
-        addCourse({ code, title, points, domPrice, intPrice, faculty });
+        addCourse({
+          code,
+          title,
+          points,
+          domPrice,
+          intPrice,
+          faculty,
+        });
       });
     }
   });
@@ -235,8 +246,14 @@ function updatePrices(value) {
     const priceEl = card.querySelector(
       ".course-selection-course-button-container p"
     );
+
     if (priceEl) {
-      priceEl.textContent = `$${selectedPrice.toFixed(2)}`;
+      priceEl.textContent = selectedPrice.toLocaleString("en-NZ", {
+        style: "currency",
+        currency: "NZD",
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      });
     }
   });
 
@@ -402,26 +419,53 @@ function renderSummary(
     calculateCoursesTotals(selectedCourses, isDomestic);
 
   costSummaryTotalPointsEl.textContent = String(totalCoursePoints);
-  costSummaryTotalCostEl.textContent = `$${totalCourseCost.toFixed(2)}`;
+  costSummaryTotalCostEl.textContent = totalCourseCost.toLocaleString("en-NZ", {
+    style: "currency",
+    currency: "NZD",
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
 
   // Levy
   const levy = calculateLevy(selectedCourses.size, totalCoursePoints);
   costSummaryLevyEl.textContent =
-    levy === "TBD" ? "TBD" : `$${levy.toFixed(2)}`;
+    levy === "TBD"
+      ? "TBD"
+      : Number(levy).toLocaleString("en-NZ", {
+          style: "currency",
+          currency: "NZD",
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        });
   costSummaryLevyNoteEl.textContent = `Based on ${totalCoursePoints} points`;
 
   // Subtotal
   const levyAmount = levy === "TBD" ? 0 : Number(levy);
   const subTotal = levyAmount + totalCourseCost;
-  costSummarySubtotalEl.textContent = `$${subTotal.toFixed(2)}`;
+  costSummarySubtotalEl.textContent = subTotal.toLocaleString("en-NZ", {
+    style: "currency",
+    currency: "NZD",
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
 
   // GST
   const gst = learnerLocation === "onshore" ? subTotal * 0.15 : 0;
-  costSummaryGstEl.textContent = `$${gst.toFixed(2)}`;
+  costSummaryGstEl.textContent = gst.toLocaleString("en-NZ", {
+    style: "currency",
+    currency: "NZD",
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
 
   // Total
   const totalCost = subTotal + gst;
-  costSummaryTotalEl.textContent = `$${totalCost.toFixed(2)}`;
+  costSummaryTotalEl.textContent = totalCost.toLocaleString("en-NZ", {
+    style: "currency",
+    currency: "NZD",
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
 }
 
 if (document.readyState === "loading") {

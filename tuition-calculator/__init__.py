@@ -47,7 +47,7 @@ def create_app(test_config=None):
         # Prevent redirect form alert
         if request.method == "POST":
             return redirect(url_for("index"))
-        print(COURSES)
+
         # Pass data into template 
         return render_template("index.html", courses=COURSES, courses_json=COURSES_JSON, unique_faculties=UNIQUE_FACULTIES)
 
