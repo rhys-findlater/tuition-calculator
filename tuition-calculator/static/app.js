@@ -37,40 +37,43 @@ const costSummarySubtotalEl = document.getElementById("costSummarySubtotal");
 const costSummaryGstEl = document.getElementById("costSummaryGst");
 const costSummaryTotalEl = document.getElementById("costSummaryTotal");
 
-const selectDegreesBtnEl = document.getElementById("selectDegreesDropdown");
-const selectedDegreeBodyEl = document.getElementById(
-  "selectedDegreeBodyContainer"
-);
-const chevronEl = document.getElementById("degreesChevron");
+// Course and degree dropdown buttons
+const degreeDropdownBtnEl = document.getElementById("degreeDropdown");
+const courseDropdownBtnEl = document.getElementById("courseDropdown");
 
-function toggleDegreeDropdown() {
-  if (!selectDegreesBtnEl) return;
+// Course and degree body containers used for toggling idle/active states
+const degreeBodyEl = document.getElementById("degreeBodyContainer");
+const courseBodyEl = document.getElementById("courseBodyContainer");
 
-  selectDegreesBtnEl.addEventListener("click", () => {
-    const isIdle = selectedDegreeBodyEl.classList.toggle(
-      "selected-degree-body-container-idle"
-    );
+// Course and degree chevron icon used for displaying current dropdown states
+const courseChevronEl = document.getElementById("coursesChevron");
+const degreeChevronEl = document.getElementById("degreesChevron");
 
-    chevronEl.src = isIdle
-      ? chevronEl.dataset.chevronUp
-      : chevronEl.dataset.chevronDown;
+// Helper function for dropdown toggling
+function toggleDropdown(chevEl, btnEl, bodyEl) {
+  if (!btnEl) return;
+
+  btnEl.addEventListener("click", () => {
+    const isIdle = bodyEl.classList.toggle("selection-body-container-idle");
+
+    chevEl.src = isIdle ? chevEl.dataset.chevronUp : chevEl.dataset.chevronDown;
   });
 }
 
 function getPotentialVisibleCount() {
-  return Array.from(
-    document.querySelectorAll(".course-selection-course")
-  ).filter((card) => {
-    const cardFaculty = card.dataset.courseFaculty;
-    const facultyMatch =
-      currentFaculty === "All Faculties" || cardFaculty === currentFaculty;
-    const isSelected = selected.has(card.dataset.courseCode);
-    return facultyMatch && !isSelected;
-  }).length;
+  return Array.from(document.querySelectorAll(".selection-course")).filter(
+    (card) => {
+      const cardFaculty = card.dataset.courseFaculty;
+      const facultyMatch =
+        currentFaculty === "All Faculties" || cardFaculty === currentFaculty;
+      const isSelected = selected.has(card.dataset.courseCode);
+      return facultyMatch && !isSelected;
+    }
+  ).length;
 }
 
 function limitCourses(initialLimit = 5) {
-  const cards = document.querySelectorAll(".course-selection-course");
+  const cards = document.querySelectorAll(".selection-course");
   let shown = 0;
   cards.forEach((card) => {
     if (card.style.display === "none") return;
@@ -84,9 +87,9 @@ function limitCourses(initialLimit = 5) {
 }
 
 function getVisibleCourseCount() {
-  return Array.from(
-    document.querySelectorAll(".course-selection-course")
-  ).filter((card) => card.style.display !== "none").length;
+  return Array.from(document.querySelectorAll(".selection-course")).filter(
+    (card) => card.style.display !== "none"
+  ).length;
 }
 
 // Shared filtering function
@@ -94,7 +97,7 @@ const applySearch = () => {
   const searchInput = document.getElementById("course-search");
   const query = searchInput ? searchInput.value.trim().toLowerCase() : "";
 
-  document.querySelectorAll(".course-selection-course").forEach((card) => {
+  document.querySelectorAll(".selection-course").forEach((card) => {
     const code = (card.dataset.courseCode || "").toLowerCase();
     const title = (card.dataset.courseTitle || "").toLowerCase();
 
@@ -152,7 +155,7 @@ const selectedHeaderEl = document.querySelector(".selected-courses-header");
  */
 function setAvailableCardVisibility(code, isSelected) {
   const card = document.querySelector(
-    `.course-selection-course[data-course-code="${code}"]`
+    `.selection-course[data-course-code="${code}"]`
   );
 
   if (!card) return;
@@ -258,7 +261,7 @@ function clearSelected() {
  * in the "Available courses" section.
  */
 function initAvailableCourseCards() {
-  const cards = document.querySelectorAll(".course-selection-course");
+  const cards = document.querySelectorAll(".selection-course");
   cards.forEach((card) => {
     const code = card.dataset.courseCode;
     const title = card.dataset.courseTitle;
@@ -289,7 +292,7 @@ function initAvailableCourseCards() {
 function initCourseSearch() {
   const searchInput = document.getElementById("course-search");
   const clearBtn = document.querySelector(".search-clear-btn");
-  const searchForm = document.querySelector(".course-search");
+  const searchForm = document.querySelector(".selection-search");
   if (!searchInput) return;
 
   if (searchForm) {
@@ -335,13 +338,18 @@ function initTuitionSelection() {
 
   // Initial active pill only
   document
-    .querySelectorAll(".course-faculty-filter")
-    .forEach((pill) => pill.classList.remove("course-faculty-filter-active"));
+    .querySelectorAll(".faculty-btn-course")
+    .forEach((pill) =>
+      pill.classList.remove("selection-faculty-filter-active")
+    );
   const allPillEl = document.querySelector("[data-faculty='All Faculties']");
-  if (allPillEl) allPillEl.classList.add("course-faculty-filter-active");
+  if (allPillEl) allPillEl.classList.add("selection-faculty-filter-active");
 
   initCourseSearch();
-  toggleDegreeDropdown();
+
+  // Toggle course and degree dropdowns
+  toggleDropdown(degreeChevronEl, degreeDropdownBtnEl, degreeBodyEl);
+  toggleDropdown(courseChevronEl, courseDropdownBtnEl, courseBodyEl);
 }
 
 /**
@@ -351,7 +359,7 @@ function initTuitionSelection() {
 function updatePrices(value) {
   const isDomestic = value === "domestic";
 
-  document.querySelectorAll(".course-selection-course").forEach((card) => {
+  document.querySelectorAll(".selection-course").forEach((card) => {
     const domPrice = parseFloat(card.dataset.domPrice);
     const intPrice = parseFloat(card.dataset.intPrice);
 
@@ -359,9 +367,7 @@ function updatePrices(value) {
 
     card.dataset.coursePrice = selectedPrice;
 
-    const priceEl = card.querySelector(
-      ".course-selection-course-button-container p"
-    );
+    const priceEl = card.querySelector(".selection-course-button-container p");
 
     if (priceEl) {
       priceEl.textContent = selectedPrice.toLocaleString("en-NZ", {
@@ -392,13 +398,15 @@ document.querySelectorAll('input[name="learner_location"]').forEach((radio) => {
 /**
  * Pill filtering functionality
  */
-document.querySelectorAll(".course-faculty-filter").forEach((btnEl) => {
+document.querySelectorAll(".faculty-btn-course").forEach((btnEl) => {
   btnEl.addEventListener("click", () => {
     // Active state
     document
-      .querySelectorAll(".course-faculty-filter")
-      .forEach((pill) => pill.classList.remove("course-faculty-filter-active"));
-    btnEl.classList.add("course-faculty-filter-active");
+      .querySelectorAll(".faculty-btn-course")
+      .forEach((pill) =>
+        pill.classList.remove("selection-faculty-filter-active")
+      );
+    btnEl.classList.add("selection-faculty-filter-active");
 
     currentFaculty = btnEl.dataset.faculty;
 
@@ -409,7 +417,7 @@ document.querySelectorAll(".course-faculty-filter").forEach((btnEl) => {
 // Global Show All/Show Less handlers (run once)
 if (showAllBtnEl) {
   showAllBtnEl.addEventListener("click", () => {
-    document.querySelectorAll(".course-selection-course").forEach((card) => {
+    document.querySelectorAll(".selection-course").forEach((card) => {
       const code = card.dataset.courseCode;
       const cardFaculty = card.dataset.courseFaculty;
       const facultyMatch =

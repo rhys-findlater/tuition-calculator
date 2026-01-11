@@ -321,219 +321,244 @@
           </div>
         </div>
 
-        <!-- Course selection and search column -->
-        <div class="course-selection-container">
-          <div class="course-selection-heading-container">
-            <div class="course-selection-heading-icon-container">
-              <img
-                src="{{ url_for('static', filename='icons/book-open.svg') }}"
-                alt="Open book icon"
-                class="main-icon"
-              />
-              <p class="course-selection-heading">Select Courses</p>
+        <!-- Course selection heading and search column -->
+        <div class="selection-container">
+          <div class="selection-desc-icon-container">
+            <div class="selection-heading-container">
+              <div class="selection-heading-icon-container">
+                <img
+                  src="{{ url_for('static', filename='icons/book-open.svg') }}"
+                  class="main-icon"
+                  alt="Open book icon"
+                />
+                <p>Select Courses</p>
+              </div>
+              <p>
+                Search and select individual courses to add to your cost
+                calculation
+              </p>
             </div>
-            <p class="course-selection-container-text">
-              Search and select individual courses to add to your cost
-              calculation
-            </p>
+            <button
+              id="courseDropdown"
+              class="course-desc-btn"
+              type="button"
+              aria-label="course dropdown"
+            >
+              <img
+                src="{{ url_for('static', filename='icons/chevron-down.svg') }}"
+                id="coursesChevron"
+                class="chev-icon"
+                alt="Chevron down icon"
+                data-chevron-down="{{ url_for('static', filename='icons/chevron-down.svg') }}"
+                data-chevron-up="{{ url_for('static', filename='icons/chevron-up.svg') }}"
+              />
+            </button>
           </div>
 
-          <div class="selected-courses-container">
-            <div class="selected-courses-header">
-              <p class="selected-courses-title">
-                Selected Courses (<span id="selectedCoursesCount">0</span>)
-              </p>
+          <!-- Course selection main content -->
+          <div id="courseBodyContainer">
+            <div class="selected-courses-container">
+              <div class="selected-courses-header">
+                <p class="selected-courses-title">
+                  Selected Courses (<span id="selectedCoursesCount">0</span>)
+                </p>
 
-              <!-- Clear all selected courses (disabled when none selected) -->
-              <button
-                type="button"
-                class="selected-courses-clear"
-                id="clearSelectedCourses"
-                disabled
+                <!-- Clear all selected courses (disabled when none selected) -->
+                <button
+                  type="button"
+                  class="selected-courses-clear-btn"
+                  id="clearSelectedCourses"
+                  disabled
+                >
+                  Clear All
+                </button>
+              </div>
+
+              <!-- Populated dynamically via JavaScript -->
+              <div class="selected-list" id="selectedCoursesList"></div>
+            </div>
+            <!-- End selected courses -->
+
+            <!-- Course search input -->
+            <div>
+              <form
+                class="course-search"
+                role="search"
+                aria-label="Course search"
               >
-                <span class="selected-courses-clear-x">Clear All</span>
+                <label for="course-search" class="search-label"
+                  >Available Courses</label
+                >
+                <div class="search-input-wrapper">
+                  <input
+                    id="course-search"
+                    class="search-input"
+                    name="q"
+                    type="search"
+                    placeholder="Search by course code or title..."
+                  />
+                  <button
+                    type="button"
+                    class="search-clear-btn"
+                    aria-label="Clear search"
+                  >
+                    <img
+                      src="{{ url_for('static', filename='icons/x.svg') }}"
+                      alt="clear icon"
+                      class="search-clear-btn-icon"
+                    />
+                  </button>
+                </div>
+              </form>
+            </div>
+
+            <!-- Faculty filter pills (All Faculties + dynamic list) -->
+            <div class="selection-faculty-filter">
+              <button
+                class="selection-faculty-filter-btn faculty-btn-course"
+                data-faculty="All Faculties"
+              >
+                All Faculties
+              </button>
+              {% for faculty in unique_faculties %} {% if faculty != 'Other' %}
+              <button
+                class="selection-faculty-filter-btn faculty-btn-course"
+                data-faculty="{{ faculty }}"
+              >
+                <span class="selection-faculty-filter-label"
+                  >{{ faculty }}</span
+                >
+              </button>
+              {% endif %} {% endfor %}
+              <button
+                class="selection-faculty-filter-btn faculty-btn-course"
+                data-faculty="Other"
+              >
+                Other
               </button>
             </div>
 
-            <!-- Populated dynamically via JavaScript -->
-            <div class="selected-courses-list" id="selectedCoursesList"></div>
-          </div>
-          <!-- End selected courses -->
-
-          <!-- Course search input -->
-          <div class="course-selection-search-container">
-            <form
-              class="course-search"
-              role="search"
-              aria-label="Course search"
-            >
-              <label for="course-search" class="course-search-label"
-                >Available Courses</label
+            <!-- Course results list rendered from SharePoint/Excel data -->
+            <div class="item-list-container">
+              {% for course in courses %}
+              <div
+                class="selection-item selection-course"
+                data-course-code="{{ course['UC Code'] }}"
+                data-course-title="{{ course['Course Title'] }}"
+                data-course-points="{{ course['Points'] }}"
+                data-dom-price="{{ course['Dom Fees - 2026'] }}"
+                data-int-price="{{ course['Int Fees - 2026'] }}"
+                data-course-price="{{ course['Dom Fees - 2026'] }}"
+                data-course-faculty="{{ course['Faculty'] }}"
               >
-              <div class="search-input-wrapper">
-                <input
-                  id="course-search"
-                  class="search-input"
-                  name="q"
-                  type="search"
-                  placeholder="Search by course code or title..."
-                />
-                <button
-                  type="button"
-                  class="search-clear-btn"
-                  aria-label="Clear search"
-                >
-                  <img
-                    src="{{ url_for('static', filename='icons/x.svg') }}"
-                    alt="x icon"
-                    class="search-clear-btn-icon"
-                  />
-                </button>
-              </div>
-            </form>
-          </div>
-
-          <!-- Faculty filter pills (All Faculties + dynamic list) -->
-          <div class="course-selection-faculty-filter">
-            <button class="course-faculty-filter" data-faculty="All Faculties">
-              All Faculties
-            </button>
-            {% for faculty in unique_faculties %} {% if faculty != 'Other' %}
-            <button class="course-faculty-filter" data-faculty="{{ faculty }}">
-              <span class="course-faculty-filter-label">{{ faculty }}</span>
-            </button>
-            {% endif %} {% endfor %}
-            <button class="course-faculty-filter" data-faculty="Other">
-              Other
-            </button>
-          </div>
-
-          <!-- Course results list rendered from SharePoint/Excel data -->
-          <div class="course-selection-course-list">
-            {% for course in courses %}
-            <div
-              class="course-selection-course"
-              data-course-code="{{ course['UC Code'] }}"
-              data-course-title="{{ course['Course Title'] }}"
-              data-course-points="{{ course['Points'] }}"
-              data-dom-price="{{ course['Dom Fees - 2026'] }}"
-              data-int-price="{{ course['Int Fees - 2026'] }}"
-              data-course-price="{{ course['Dom Fees - 2026'] }}"
-              data-course-faculty="{{ course['Faculty'] }}"
-            >
-              <div class="course-selection-course-info-container">
-                <div class="course-selection-course-code-container">
-                  <p>{{ course['UC Code'] }}</p>
-                  <p class="course-selection-course-faculty">
-                    {{ course['Faculty'] }}
-                  </p>
-                  {% if course['Points'] == 'TBC' %}
-                  <p class="course-selection-course-points">
-                    {{ course['Points'] }}
-                  </p>
-                  {% else %} {% set p = course['Points']|float %}
-                  <!-- Render whole numbers without decimal, otherwise show full value -->
-                  <p class="course-selection-course-points">
-                    {{ (p|int) if p == (p|int) else p }} pts
-                  </p>
-                  {% endif %}
+                <div class="item-info-container">
+                  <div class="item-container">
+                    <p>{{ course['UC Code'] }}</p>
+                    <p class="item-faculty">{{ course['Faculty'] }}</p>
+                    {% if course['Points'] == 'TBC' %}
+                    <p class="item-points">{{ course['Points'] }}</p>
+                    {% else %} {% set p = course['Points']|float %}
+                    <!-- Render whole numbers without decimal, otherwise show full value -->
+                    <p class="item-points">
+                      {{ (p|int) if p == (p|int) else p }} pts
+                    </p>
+                    {% endif %}
+                  </div>
+                  <p>{{ course['Course Title'] }}</p>
                 </div>
-                <p>{{ course['Course Title'] }}</p>
+                <div class="item-button-container">
+                  <p>${{ "{:,.2f}".format(course['Dom Fees - 2026']) }}</p>
+                  <!-- Toggle button used by JS to add/remove course from selection -->
+                  <button class="item-button" type="button" data-course-toggle>
+                    <span class="item-button-add">+</span>
+                    <span>Add</span>
+                  </button>
+                </div>
               </div>
-              <div class="course-selection-course-button-container">
-                <p>${{ "{:,.2f}".format(course['Dom Fees - 2026']) }}</p>
-                <!-- Toggle button used by JS to add/remove course from selection -->
-                <button
-                  class="course-selection-course-button"
-                  type="button"
-                  data-course-toggle
-                >
-                  <span class="course-selection-course-button-add">+</span>
-                  <span class="course-selection-course-button-label">Add</span>
-                </button>
-              </div>
+              {% endfor %}
             </div>
-            {% endfor %}
-          </div>
 
-          <!-- Pagination/visibility controls for long course lists -->
-          <button id="showAllCourses" class="course-degree-showall">
-            Show all courses
-          </button>
-          <button
-            id="showLessCourses"
-            style="display: none"
-            class="course-degree-showless"
-            disabled
-          >
-            Show less courses
-          </button>
+            <!-- Pagination/visibility controls for long course lists -->
+            <button id="showAllCourses" class="selection-showall">
+              Show all courses
+            </button>
+            <button
+              id="showLessCourses"
+              style="display: none"
+              class="selection-showless"
+              disabled
+            >
+              Show less courses
+            </button>
+          </div>
         </div>
 
-        <!-- Course selection and search column -->
-        <div class="course-selection-container">
-          <div class="course-desc-icon-container">
-            <div class="course-selection-heading-container">
-              <div class="course-selection-heading-icon-container">
+        <!-- Degree selection and search column -->
+        <div class="selection-container">
+          <div class="selection-desc-icon-container">
+            <div class="selection-heading-container">
+              <div class="selection-heading-icon-container">
                 <img
                   src="{{ url_for('static', filename='icons/square-pen.svg') }}"
-                  alt="Open book icon"
                   class="main-icon"
+                  alt="Square pen icon"
                 />
-                <p class="course-selection-heading">Select Degrees</p>
+                <p>Select Degrees</p>
               </div>
-              <p class="course-selection-container-text">
+              <p>
                 Search and select individual degrees to add to your cost
                 calculation
               </p>
             </div>
-            <button id="selectDegreesDropdown" class="course-desc-btn">
+            <button
+              id="degreeDropdown"
+              class="course-desc-btn"
+              type="button"
+              aria-label="degree dropdown"
+            >
               <img
-                id="degreesChevron"
                 src="{{ url_for('static', filename='icons/chevron-up.svg') }}"
+                id="degreesChevron"
+                class="chev-icon"
+                alt="Chevron icon"
                 data-chevron-down="{{ url_for('static', filename='icons/chevron-down.svg') }}"
                 data-chevron-up="{{ url_for('static', filename='icons/chevron-up.svg') }}"
-                alt="Chevron icon"
-                class="chev-icon"
               />
             </button>
           </div>
 
           <!-- Selected Courses -->
-          <div
-            id="selectedDegreeBodyContainer"
-            class="selected-degree-body-container-idle"
-          >
+          <div id="degreeBodyContainer" class="selection-body-container-idle">
             <div class="selected-courses-container">
               <div class="selected-courses-header">
                 <p class="selected-courses-title">
                   Selected Degrees (<span id="selectedDegreesCount">0</span>)
                 </p>
 
-                <!-- Clear all selected courses (disabled when none selected) -->
+                <!-- Clear all selected degrees (disabled when none selected) -->
                 <button
                   type="button"
-                  class="selected-courses-clear"
+                  class="selected-courses-clear-btn"
                   id="clearSelectedDegrees"
                   disabled
                 >
-                  <span class="selected-courses-clear-x">Clear All</span>
+                  Clear All
                 </button>
               </div>
 
               <!-- Populated dynamically via JavaScript -->
-              <div class="selected-courses-list" id="selectedDegreesList"></div>
+              <div class="selected-list" id="selectedDegreesList"></div>
             </div>
             <!-- End selected courses -->
 
-            <!-- Course search input -->
-            <div class="course-selection-search-container">
+            <!-- Degree search input -->
+            <div>
               <form
-                class="course-search"
+                class="degree-search"
                 role="search"
                 aria-label="Degree search"
               >
-                <label for="degree-search" class="course-search-label"
+                <label for="degreeSearch" class="search-label"
                   >Available Degrees</label
                 >
                 <div class="search-input-wrapper">
@@ -560,62 +585,63 @@
             </div>
 
             <!-- Faculty filter pills (All Faculties + dynamic list) -->
-            <div class="course-selection-degree-filter">
-              <button class="course-degree-filter" data-faculty="All Faculties">
+            <div class="selection-faculty-filter">
+              <button
+                class="selection-faculty-filter-btn faculty-btn-degree"
+                data-faculty="All Faculties"
+              >
                 All Degrees
               </button>
               {% for faculty in unique_faculties %} {% if faculty != 'Other' %}
-              <button class="course-degree-filter" data-faculty="{{ faculty }}">
-                <span class="course-degree-filter-label">{{ faculty }}</span>
+              <button
+                class="selection-faculty-filter-btn faculty-btn-degree"
+                data-faculty="{{ faculty }}"
+              >
+                <span class="selection-faculty-filter-label"
+                  >{{ faculty }}</span
+                >
               </button>
               {% endif %} {% endfor %}
-              <button class="course-degree-filter" data-faculty="Other">
+              <button
+                class="selection-faculty-filter-btn faculty-btn-degree"
+                data-faculty="Other"
+              >
                 Other
               </button>
             </div>
 
-            <!-- Course results list rendered from SharePoint/Excel data -->
-            <div class="course-selection-course-list">
+            <!-- Degree results list rendered from SharePoint/Excel data -->
+            <div class="item-list-container">
               {% for degree in degrees %}
               <div
-                class="course-selection-course"
-                data-course-title="{{ degree['Course Title'] }}"
-                data-course-points="{{ degree['Points'] }}"
+                class="selection-item selection-degree"
+                data-degree-title="{{ degree['Course Title'] }}"
+                data-degree-points="{{ degree['Points'] }}"
                 data-dom-price="{{ degree['Dom Fees - 2026'] }}"
                 data-int-price="{{ degree['Int Fees - 2026'] }}"
-                data-course-price="{{ degree['Dom Fees - 2026'] }}"
-                data-course-faculty="{{ degree['Faculty'] }}"
+                data-degree-price="{{ degree['Dom Fees - 2026'] }}"
+                data-degree-faculty="{{ degree['Faculty'] }}"
               >
-                <div class="course-selection-course-info-container">
-                  <div class="course-selection-course-code-container">
-                    <p class="course-selection-course-degree">
-                      {{ degree['Faculty'] }}
-                    </p>
+                <div class="item-info-container">
+                  <div class="item-container">
+                    <p class="item-faculty">{{ degree['Faculty'] }}</p>
                     {% if degree['Points'] == 'TBC' %}
-                    <p class="course-selection-course-points">
-                      {{ degree['Points'] }}
-                    </p>
+                    <p class="item-points">{{ degree['Points'] }}</p>
                     {% else %} {% set p = degree['Points']|float %}
                     <!-- Render whole numbers without decimal, otherwise show full value -->
-                    <p class="course-selection-course-points">
+                    <p class="item-points">
                       {{ (p|int) if p == (p|int) else p }} pts
                     </p>
                     {% endif %}
                   </div>
                   <p>{{ degree['Degree Title'] }}</p>
                 </div>
-                <div class="course-selection-course-button-container">
+                <div class="item-button-container">
                   <p>${{ "{:,.2f}".format(degree['Dom Fees - 2026']) }}</p>
                   <!-- Toggle button used by JS to add/remove course from selection -->
-                  <button
-                    class="course-selection-course-button"
-                    type="button"
-                    data-course-toggle
-                  >
-                    <span class="course-selection-course-button-add">+</span>
-                    <span class="course-selection-course-button-label"
-                      >Add</span
-                    >
+                  <button class="item-button" type="button" data-course-toggle>
+                    <span class="item-button-add">+</span>
+                    <span>Add</span>
                   </button>
                 </div>
               </div>
@@ -623,16 +649,16 @@
             </div>
 
             <!-- Pagination/visibility controls for long course lists -->
-            <button id="showAllDegrees" class="course-degree-showall">
+            <button id="showAllDegrees" class="selection-showall">
               Show all degrees
             </button>
             <button
               id="showLessDegrees"
               style="display: none"
-              class="course-degree-showless"
+              class="selection-showless"
               disabled
             >
-              Show less courses
+              Show less degrees
             </button>
           </div>
         </div>

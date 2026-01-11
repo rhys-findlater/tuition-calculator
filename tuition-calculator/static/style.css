@@ -83,6 +83,10 @@ main {
   -moz-appearance: textfield;
 }
 
+.selection-body-container-idle {
+  display: none;
+}
+
 /* ==================== Header ==================== */
 /* Global header bar with logo and title */
 
@@ -444,12 +448,29 @@ main {
 /* ==================== Course Selection ==================== */
 /* Main course search, filtering, and add-to-summary flows */
 
-.course-selection-container {
+.selection-container {
   padding: 1.5rem;
   box-shadow: var(--shadow-card-sm);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-card-lg);
   grid-column: span 2 / span 2;
+}
+
+.selection-desc-icon-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.selection-heading-container {
+  margin-bottom: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.selection-heading-icon-container {
+  display: flex;
+  gap: 0.4rem;
 }
 
 .course-desc-btn {
@@ -460,35 +481,15 @@ main {
   cursor: pointer;
 }
 
-.course-desc-icon-container {
-  display: flex;
-  justify-content: space-between;
-}
-
-.course-selection-heading-icon-container {
-  display: flex;
-  gap: 0.4rem;
-}
-
-.selected-degree-body-container-idle {
-  display: none;
-}
-
-.course-selection-heading-container {
-  margin-bottom: 0.5rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-}
-
 /* Search input and label above course list */
-.course-search {
+.selection-search {
   margin-bottom: 0.75rem;
   display: flex;
   flex-direction: column;
 }
 
-.course-search-label {
+.search-label {
+  display: block;
   margin-bottom: 1rem;
 }
 
@@ -544,7 +545,7 @@ main {
 }
 
 /* Horizontal filter chips for degree type */
-.course-selection-faculty-filter {
+.selection-faculty-filter {
   display: flex;
   gap: 0.5rem;
   margin-bottom: 1.5rem;
@@ -620,7 +621,7 @@ main {
 }
 
 /* Individual degree filter “pill” */
-.course-faculty-filter {
+.selection-faculty-filter-btn {
   flex: 0 0 130px; /* Fixed width pills for consistent layout */
   height: 42px;
   display: flex;
@@ -640,8 +641,13 @@ main {
   transition: all 0.2s ease;
 }
 
+.selection-faculty-filter-btn:hover {
+  color: #fff;
+  background-color: #ce3e2e;
+}
+
 /* Text wrapper inside degree filter pill */
-.course-faculty-filter-label {
+.selection-faculty-filter-label {
   flex: 1 1 auto;
   min-width: 0;
   white-space: nowrap;
@@ -650,18 +656,13 @@ main {
   text-align: center;
 }
 
-.course-faculty-filter:hover {
-  color: #fff;
-  background-color: #ce3e2e;
-}
-
-.course-faculty-filter-active {
+.selection-faculty-filter-active {
   color: #fff;
   background-color: #ce3e2e;
 }
 
 /* Vertical list of course cards */
-.course-selection-course-list {
+.item-list-container {
   margin-bottom: 0.65rem;
   display: flex;
   flex-direction: column;
@@ -669,7 +670,7 @@ main {
 }
 
 /* Single course result row */
-.course-selection-course {
+.selection-item {
   padding: 0.55rem 0.65rem;
   border: 1.2px solid var(--border-subtle);
   border-radius: var(--radius-card);
@@ -678,19 +679,19 @@ main {
   justify-content: space-between;
 }
 
-.course-selection-course-info-container {
+.item-info-container {
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
 }
 
-.course-selection-course-code-container {
+.item-container {
   display: flex;
   gap: 0.6rem;
   align-items: center;
 }
 
-.course-selection-course-faculty {
+.item-faculty {
   color: #2c2c2c;
   font-size: 0.75rem;
   padding: 0.1rem 0.7rem;
@@ -698,21 +699,21 @@ main {
   border-radius: var(--radius-card);
 }
 
-.course-selection-course-points {
+.item-points {
   font-size: 0.8rem;
   font-weight: 600;
   margin-left: 0.5rem;
 }
 
 /* Container for add/remove buttons on each course */
-.course-selection-course-button-container {
+.item-button-container {
   display: flex;
   align-items: center;
   gap: 0.65rem;
 }
 
 /* Primary “Add course” CTA */
-.course-selection-course-button {
+.item-button {
   font-size: 0.875rem;
   color: #fff;
   background-color: #ce3e2e;
@@ -725,18 +726,18 @@ main {
   cursor: pointer;
 }
 
-.course-selection-course-button-add {
+.item-button-add {
   font-size: 1.35rem;
 }
 
-.course-selection-course-button:hover {
+.item-button:hover {
   border: 1.2px solid #d35143;
   background-color: #d35143;
 }
 
 /* Show more/less degree filters */
-.course-degree-showall,
-.course-degree-showless {
+.selection-showall,
+.selection-showless {
   font-size: 0.875rem;
   color: #ce3e2e;
   background-color: #fff;
@@ -766,7 +767,7 @@ main {
 }
 
 /* Clear-all action for selected courses */
-.selected-courses-clear {
+.selected-courses-clear-btn {
   font-size: 0.875rem;
   color: #374151;
   background-color: #f3f4f6;
@@ -778,18 +779,18 @@ main {
   cursor: pointer;
 }
 
-.selected-courses-clear:hover {
+.selected-courses-clear-btn:hover {
   background-color: #e5e7eb;
   border-color: #cbd5e1;
 }
 
 /* Hidden when there are no selected courses */
-.selected-courses-clear:disabled {
+.selected-courses-clear-btn:disabled {
   display: none;
   cursor: default;
 }
 
-.selected-courses-list {
+.selected-list {
   display: flex;
   flex-direction: column;
   gap: 0.55rem;
