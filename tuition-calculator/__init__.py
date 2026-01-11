@@ -1,7 +1,10 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, send_file
+from weasyprint import HTML, CSS
+from datetime import datetime
 import pandas as pd
 import os
 import json
+import io
 
 def create_app(test_config=None):
     # Create and configure the app
@@ -49,6 +52,35 @@ def create_app(test_config=None):
             return redirect(url_for("index"))
 
         # Pass data into template 
-        return render_template("index.html", courses=COURSES, courses_json=COURSES_JSON, unique_faculties=UNIQUE_FACULTIES)
+        return render_template(
+            "index.html", 
+            courses=COURSES, 
+            courses_json=COURSES_JSON, 
+            unique_faculties=UNIQUE_FACULTIES
+        )
+    
+    # ========== PDF EXPORT ========== #
+
+    @app.route("/export-pdf", methods=["POST"])
+    def export_pdf():
+
+        data=request.get_json()
+        
+        html_string = render_template("pdf_template.html", **data)
+
+        css_path = os.path.join(app.root_path, "static", "pdf", "pdf.css")
+        
+        pdf_bytes = HTML(string=html_string, base_url=app.root_path).write_pdf(
+            stylesheets=[CSS(filename=css_path)] 
+        ) 
+
+        return send_file(
+            io.BytesIO(pdf_bytes),
+            mimetype="application/pdf",
+            as_attachment=True,
+            download_name=f"Course_Cost_Summary_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf",
+        ) 
+    
+    # =================================#   
 
     return app
