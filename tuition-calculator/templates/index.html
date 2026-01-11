@@ -566,6 +566,30 @@
         UC Online Course Costing Application | UC Online
       </p>
     </footer>
+
+    <!-- PDF export name prompt -->
+    <div id="pdfNamePrompt" class="prompt-container">
+      <div class="prompt">
+        <div class="prompt-header">
+          <h1 id="pdfNameTitle" class="prompt-title">Export plan to PDF</h1>
+        </div>
+
+        <p class="prompt-text">Who is this plan for? (optional)</p>
+
+        <input 
+          id="promptInput"
+          class="prompt-input"
+          type="text"
+          placeholder="Name"
+        />
+
+        <div class="prompt-actions">
+          <button id="promptCancel" class="prompt-cancel">Cancel</button>
+          <button id="promptAccept" class="prompt-accept">Export</button>
+        </div>
+      </div>
+    </div>
+
     <!-- Main application script (handles selection, filtering, and cost logic) -->
     <script src="{{ url_for('static', filename='app.js') }}"></script>
   </body>
