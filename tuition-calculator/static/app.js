@@ -284,6 +284,11 @@ function initTuitionSelection() {
   if (allPillEl) allPillEl.classList.add("course-degree-filter-active");
 
   initCourseSearch();
+
+  const exportPDFButtonEl = document.getElementById("exportPDFButton");
+  if (exportPDFButtonEl) {
+    exportPDFButtonEl.addEventListener("click", exportToPDF)
+  }
 }
 
 /**
@@ -503,4 +508,29 @@ if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", initTuitionSelection);
 } else {
   initTuitionSelection();
+}
+
+async function exportToPDF() {
+  const response = await fetch("/export-pdf", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({}), 
+  });
+
+  if (!response.ok) {
+    const text = await response.text();
+    throw new Error(`Export failed: ${response.status} ${text}`);
+  }
+
+  const blob = await response.blob();
+  const url = URL.createObjectURL(blob);
+
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `Course_Cost_Summary_${Date.now()}.pdf`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+
+  URL.revokeObjectURL(url);
 }
