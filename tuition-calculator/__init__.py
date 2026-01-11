@@ -39,8 +39,18 @@ def create_app(test_config=None):
         df = df[df['Int Fees - 2026'] != 0]
         df = df[df['Dom Fees - 2026'] != 0]
 
+        degrees_data = {
+            'Course Title': ['Computer Science'],
+            'Points': ['120'],
+            'Int Fees - 2026': [8560],
+            'Dom Fees - 2026': [13890],
+            'Faculty': ['Science']
+        }
+        degrees_df = pd.DataFrame(degrees_data)
+
         # Create course data for templates and JavaScript 
         COURSES = df.to_dict('records')
+        DEGREES = degrees_df.to_dict('records')
         UNIQUE_FACULTIES = list(df['Faculty'].drop_duplicates())
         COURSES_JSON = json.dumps(COURSES)
       
@@ -49,6 +59,6 @@ def create_app(test_config=None):
             return redirect(url_for("index"))
 
         # Pass data into template 
-        return render_template("index.html", courses=COURSES, courses_json=COURSES_JSON, unique_faculties=UNIQUE_FACULTIES)
+        return render_template("index.html", courses=COURSES, courses_json=COURSES_JSON, unique_faculties=UNIQUE_FACULTIES, degrees=DEGREES)
 
     return app

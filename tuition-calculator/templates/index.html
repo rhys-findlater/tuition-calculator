@@ -48,9 +48,9 @@
             </p>
           </div>
           <p class="welcome-text">
-            Select courses and learner type below to receive an accurate,
-            comprehensive cost breakdown including Student Services Levy (SSL)
-            and GST where applicable then export your results to PDF.
+            Select courses or degrees and a learner type below to receive an
+            accurate, comprehensive cost breakdown including Student Services
+            Levy (SSL) and GST where applicable then export your results to PDF.
           </p>
         </div>
       </div>
@@ -315,7 +315,7 @@
                 class="cost-summary-icon"
               />
               <p class="cost-summary-text-idle">
-                Select courses to see a full cost breakdown
+                Select courses or a degree to see a full cost breakdown
               </p>
             </div>
           </div>
@@ -330,14 +330,14 @@
                 alt="Open book icon"
                 class="main-icon"
               />
-              <p class="course-selection-heading">Course Selection</p>
+              <p class="course-selection-heading">Select Courses</p>
             </div>
             <p class="course-selection-container-text">
-              Search and select courses to add to your cost calculation
+              Search and select individual courses to add to your cost
+              calculation
             </p>
           </div>
 
-          <!-- Selected Courses -->
           <div class="selected-courses-container">
             <div class="selected-courses-header">
               <p class="selected-courses-title">
@@ -385,7 +385,7 @@
                 >
                   <img
                     src="{{ url_for('static', filename='icons/x.svg') }}"
-                    alt="Open book icon"
+                    alt="x icon"
                     class="search-clear-btn-icon"
                   />
                 </button>
@@ -394,16 +394,16 @@
           </div>
 
           <!-- Faculty filter pills (All Faculties + dynamic list) -->
-          <div class="course-selection-degree-filter">
-            <button class="course-degree-filter" data-faculty="All Faculties">
+          <div class="course-selection-faculty-filter">
+            <button class="course-faculty-filter" data-faculty="All Faculties">
               All Faculties
             </button>
             {% for faculty in unique_faculties %} {% if faculty != 'Other' %}
-            <button class="course-degree-filter" data-faculty="{{ faculty }}">
-              <span class="course-degree-filter-label">{{ faculty }}</span>
+            <button class="course-faculty-filter" data-faculty="{{ faculty }}">
+              <span class="course-faculty-filter-label">{{ faculty }}</span>
             </button>
             {% endif %} {% endfor %}
-            <button class="course-degree-filter" data-faculty="Other">
+            <button class="course-faculty-filter" data-faculty="Other">
               Other
             </button>
           </div>
@@ -424,7 +424,7 @@
               <div class="course-selection-course-info-container">
                 <div class="course-selection-course-code-container">
                   <p>{{ course['UC Code'] }}</p>
-                  <p class="course-selection-course-degree">
+                  <p class="course-selection-course-faculty">
                     {{ course['Faculty'] }}
                   </p>
                   {% if course['Points'] == 'TBC' %}
@@ -468,6 +468,173 @@
           >
             Show less courses
           </button>
+        </div>
+
+        <!-- Course selection and search column -->
+        <div class="course-selection-container">
+          <div class="course-desc-icon-container">
+            <div class="course-selection-heading-container">
+              <div class="course-selection-heading-icon-container">
+                <img
+                  src="{{ url_for('static', filename='icons/square-pen.svg') }}"
+                  alt="Open book icon"
+                  class="main-icon"
+                />
+                <p class="course-selection-heading">Select Degrees</p>
+              </div>
+              <p class="course-selection-container-text">
+                Search and select individual degrees to add to your cost
+                calculation
+              </p>
+            </div>
+            <button id="selectDegreesDropdown" class="course-desc-btn">
+              <img
+                id="degreesChevron"
+                src="{{ url_for('static', filename='icons/chevron-up.svg') }}"
+                data-chevron-down="{{ url_for('static', filename='icons/chevron-down.svg') }}"
+                data-chevron-up="{{ url_for('static', filename='icons/chevron-up.svg') }}"
+                alt="Chevron icon"
+                class="chev-icon"
+              />
+            </button>
+          </div>
+
+          <!-- Selected Courses -->
+          <div
+            id="selectedDegreeBodyContainer"
+            class="selected-degree-body-container-idle"
+          >
+            <div class="selected-courses-container">
+              <div class="selected-courses-header">
+                <p class="selected-courses-title">
+                  Selected Degrees (<span id="selectedDegreesCount">0</span>)
+                </p>
+
+                <!-- Clear all selected courses (disabled when none selected) -->
+                <button
+                  type="button"
+                  class="selected-courses-clear"
+                  id="clearSelectedDegrees"
+                  disabled
+                >
+                  <span class="selected-courses-clear-x">Clear All</span>
+                </button>
+              </div>
+
+              <!-- Populated dynamically via JavaScript -->
+              <div class="selected-courses-list" id="selectedDegreesList"></div>
+            </div>
+            <!-- End selected courses -->
+
+            <!-- Course search input -->
+            <div class="course-selection-search-container">
+              <form
+                class="course-search"
+                role="search"
+                aria-label="Degree search"
+              >
+                <label for="degree-search" class="course-search-label"
+                  >Available Degrees</label
+                >
+                <div class="search-input-wrapper">
+                  <input
+                    id="degree-search"
+                    class="search-input"
+                    name="q"
+                    type="search"
+                    placeholder="Search by degree title..."
+                  />
+                  <button
+                    type="button"
+                    class="search-clear-btn"
+                    aria-label="Clear search"
+                  >
+                    <img
+                      src="{{ url_for('static', filename='icons/x.svg') }}"
+                      alt="Search icon"
+                      class="search-clear-btn-icon"
+                    />
+                  </button>
+                </div>
+              </form>
+            </div>
+
+            <!-- Faculty filter pills (All Faculties + dynamic list) -->
+            <div class="course-selection-degree-filter">
+              <button class="course-degree-filter" data-faculty="All Faculties">
+                All Degrees
+              </button>
+              {% for faculty in unique_faculties %} {% if faculty != 'Other' %}
+              <button class="course-degree-filter" data-faculty="{{ faculty }}">
+                <span class="course-degree-filter-label">{{ faculty }}</span>
+              </button>
+              {% endif %} {% endfor %}
+              <button class="course-degree-filter" data-faculty="Other">
+                Other
+              </button>
+            </div>
+
+            <!-- Course results list rendered from SharePoint/Excel data -->
+            <div class="course-selection-course-list">
+              {% for degree in degrees %}
+              <div
+                class="course-selection-course"
+                data-course-title="{{ degree['Course Title'] }}"
+                data-course-points="{{ degree['Points'] }}"
+                data-dom-price="{{ degree['Dom Fees - 2026'] }}"
+                data-int-price="{{ degree['Int Fees - 2026'] }}"
+                data-course-price="{{ degree['Dom Fees - 2026'] }}"
+                data-course-faculty="{{ degree['Faculty'] }}"
+              >
+                <div class="course-selection-course-info-container">
+                  <div class="course-selection-course-code-container">
+                    <p class="course-selection-course-degree">
+                      {{ degree['Faculty'] }}
+                    </p>
+                    {% if degree['Points'] == 'TBC' %}
+                    <p class="course-selection-course-points">
+                      {{ degree['Points'] }}
+                    </p>
+                    {% else %} {% set p = degree['Points']|float %}
+                    <!-- Render whole numbers without decimal, otherwise show full value -->
+                    <p class="course-selection-course-points">
+                      {{ (p|int) if p == (p|int) else p }} pts
+                    </p>
+                    {% endif %}
+                  </div>
+                  <p>{{ degree['Degree Title'] }}</p>
+                </div>
+                <div class="course-selection-course-button-container">
+                  <p>${{ "{:,.2f}".format(degree['Dom Fees - 2026']) }}</p>
+                  <!-- Toggle button used by JS to add/remove course from selection -->
+                  <button
+                    class="course-selection-course-button"
+                    type="button"
+                    data-course-toggle
+                  >
+                    <span class="course-selection-course-button-add">+</span>
+                    <span class="course-selection-course-button-label"
+                      >Add</span
+                    >
+                  </button>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+
+            <!-- Pagination/visibility controls for long course lists -->
+            <button id="showAllDegrees" class="course-degree-showall">
+              Show all degrees
+            </button>
+            <button
+              id="showLessDegrees"
+              style="display: none"
+              class="course-degree-showless"
+              disabled
+            >
+              Show less courses
+            </button>
+          </div>
         </div>
 
         <!-- Student Services Levy explanation panel -->

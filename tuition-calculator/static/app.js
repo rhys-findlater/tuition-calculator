@@ -37,6 +37,38 @@ const costSummarySubtotalEl = document.getElementById("costSummarySubtotal");
 const costSummaryGstEl = document.getElementById("costSummaryGst");
 const costSummaryTotalEl = document.getElementById("costSummaryTotal");
 
+const selectDegreesBtnEl = document.getElementById("selectDegreesDropdown");
+const selectedDegreeBodyEl = document.getElementById(
+  "selectedDegreeBodyContainer"
+);
+const chevronEl = document.getElementById("degreesChevron");
+
+function toggleDegreeDropdown() {
+  if (!selectDegreesBtnEl) return;
+
+  selectDegreesBtnEl.addEventListener("click", () => {
+    const isIdle = selectedDegreeBodyEl.classList.toggle(
+      "selected-degree-body-container-idle"
+    );
+
+    chevronEl.src = isIdle
+      ? chevronEl.dataset.chevronUp
+      : chevronEl.dataset.chevronDown;
+  });
+}
+
+function getPotentialVisibleCount() {
+  return Array.from(
+    document.querySelectorAll(".course-selection-course")
+  ).filter((card) => {
+    const cardFaculty = card.dataset.courseFaculty;
+    const facultyMatch =
+      currentFaculty === "All Faculties" || cardFaculty === currentFaculty;
+    const isSelected = selected.has(card.dataset.courseCode);
+    return facultyMatch && !isSelected;
+  }).length;
+}
+
 function limitCourses(initialLimit = 5) {
   const cards = document.querySelectorAll(".course-selection-course");
   let shown = 0;
@@ -49,6 +81,12 @@ function limitCourses(initialLimit = 5) {
       card.style.display = "none";
     }
   });
+}
+
+function getVisibleCourseCount() {
+  return Array.from(
+    document.querySelectorAll(".course-selection-course")
+  ).filter((card) => card.style.display !== "none").length;
 }
 
 // Shared filtering function
@@ -73,9 +111,19 @@ const applySearch = () => {
   });
 
   if (query === "") {
-    // restore limited view + buttons when search cleared
+    const potentialVisible = getPotentialVisibleCount();
+    const needsShowAll = potentialVisible > 5;
+
     limitCourses();
-    if (showAllBtnEl) showAllBtnEl.style.display = "block";
+
+    if (showAllBtnEl) {
+      showAllBtnEl.style.display = needsShowAll ? "block" : "none";
+      showAllBtnEl.disabled = !needsShowAll;
+    }
+    if (showLessBtnEl) {
+      showLessBtnEl.style.display = "none";
+      showLessBtnEl.disabled = true;
+    }
   } else {
     if (showAllBtnEl) showAllBtnEl.style.display = "none";
     if (showLessBtnEl) showLessBtnEl.style.display = "none";
@@ -276,14 +324,24 @@ function initTuitionSelection() {
   renderSelected("domestic");
   limitCourses();
 
+  if (showAllBtnEl) {
+    showAllBtnEl.style.display = "block";
+    showAllBtnEl.disabled = false;
+  }
+  if (showLessBtnEl) {
+    showLessBtnEl.style.display = "none";
+    showLessBtnEl.disabled = true;
+  }
+
   // Initial active pill only
   document
-    .querySelectorAll(".course-degree-filter")
-    .forEach((pill) => pill.classList.remove("course-degree-filter-active"));
+    .querySelectorAll(".course-faculty-filter")
+    .forEach((pill) => pill.classList.remove("course-faculty-filter-active"));
   const allPillEl = document.querySelector("[data-faculty='All Faculties']");
-  if (allPillEl) allPillEl.classList.add("course-degree-filter-active");
+  if (allPillEl) allPillEl.classList.add("course-faculty-filter-active");
 
   initCourseSearch();
+  toggleDegreeDropdown();
 }
 
 /**
@@ -327,7 +385,6 @@ document.querySelectorAll('input[name="learner_type"]').forEach((radio) => {
 
 document.querySelectorAll('input[name="learner_location"]').forEach((radio) => {
   radio.addEventListener("change", function () {
-    // Just re-render summary with updated location
     renderSummary(selected);
   });
 });
@@ -335,18 +392,16 @@ document.querySelectorAll('input[name="learner_location"]').forEach((radio) => {
 /**
  * Pill filtering functionality
  */
-document.querySelectorAll(".course-degree-filter").forEach((btnEl) => {
+document.querySelectorAll(".course-faculty-filter").forEach((btnEl) => {
   btnEl.addEventListener("click", () => {
     // Active state
     document
-      .querySelectorAll(".course-degree-filter")
-      .forEach((pill) => pill.classList.remove("course-degree-filter-active"));
-    btnEl.classList.add("course-degree-filter-active");
+      .querySelectorAll(".course-faculty-filter")
+      .forEach((pill) => pill.classList.remove("course-faculty-filter-active"));
+    btnEl.classList.add("course-faculty-filter-active");
 
     currentFaculty = btnEl.dataset.faculty;
 
-    // Instead of doing your own card.style.display logic here,
-    // just reapply the combined faculty + search filter:
     applySearch();
   });
 });
@@ -363,7 +418,6 @@ if (showAllBtnEl) {
       card.style.display = facultyMatch && !isSelected ? "flex" : "none";
     });
 
-    // Always hide Show All, show Show Less
     showAllBtnEl.style.display = "none";
     showLessBtnEl.style.display = "block";
     showLessBtnEl.disabled = false;
@@ -372,22 +426,14 @@ if (showAllBtnEl) {
 
 if (showLessBtnEl) {
   showLessBtnEl.addEventListener("click", () => {
+    const potentialVisible = getPotentialVisibleCount();
+    const needsShowAll = potentialVisible > 5;
+
     limitCourses();
 
-    // Always reset to limited state + correct Show All visibility
     showLessBtnEl.style.display = "none";
+    showLessBtnEl.disabled = true;
 
-    const totalMatching =
-      Array.from(document.querySelectorAll(".course-selection-course")).filter(
-        (card) => {
-          const cardFaculty = card.dataset.courseFaculty;
-          return (
-            currentFaculty === "All Faculties" || cardFaculty === currentFaculty
-          );
-        }
-      ).length - selected.size;
-
-    const needsShowAll = totalMatching > 5;
     if (showAllBtnEl) {
       showAllBtnEl.style.display = needsShowAll ? "block" : "none";
       showAllBtnEl.disabled = !needsShowAll;
@@ -424,7 +470,7 @@ function renderSummary(
   learnerType = getCurrentLearnerType(),
   learnerLocation = getCurrentLearnerLocation()
 ) {
-  if (!costSummaryTotalEl) return; // using one known element as guard
+  if (!costSummaryTotalEl) return;
 
   const isIdle = selectedCourses.size === 0;
   const costSummaryContainerEl = document.getElementById("costSummary");

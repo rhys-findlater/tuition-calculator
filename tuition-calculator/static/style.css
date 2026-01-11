@@ -69,6 +69,10 @@ main {
   width: 0.95rem;
 }
 
+.chev-icon {
+  width: 1.5rem;
+}
+
 /* Chrome, Edge, Safari */
 .search-input::-webkit-search-cancel-button {
   -webkit-appearance: none;
@@ -448,16 +452,33 @@ main {
   grid-column: span 2 / span 2;
 }
 
-.course-selection-heading-container {
-  margin-bottom: 0.5rem;
+.course-desc-btn {
+  background-color: transparent;
+  width: 0px;
+  margin-right: 1.5rem;
+  border: none;
+  cursor: pointer;
+}
+
+.course-desc-icon-container {
   display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
+  justify-content: space-between;
 }
 
 .course-selection-heading-icon-container {
   display: flex;
   gap: 0.4rem;
+}
+
+.selected-degree-body-container-idle {
+  display: none;
+}
+
+.course-selection-heading-container {
+  margin-bottom: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
 }
 
 /* Search input and label above course list */
@@ -523,7 +544,7 @@ main {
 }
 
 /* Horizontal filter chips for degree type */
-.course-selection-degree-filter {
+.course-selection-faculty-filter {
   display: flex;
   gap: 0.5rem;
   margin-bottom: 1.5rem;
@@ -599,7 +620,7 @@ main {
 }
 
 /* Individual degree filter “pill” */
-.course-degree-filter {
+.course-faculty-filter {
   flex: 0 0 130px; /* Fixed width pills for consistent layout */
   height: 42px;
   display: flex;
@@ -620,7 +641,7 @@ main {
 }
 
 /* Text wrapper inside degree filter pill */
-.course-degree-filter-label {
+.course-faculty-filter-label {
   flex: 1 1 auto;
   min-width: 0;
   white-space: nowrap;
@@ -629,12 +650,12 @@ main {
   text-align: center;
 }
 
-.course-degree-filter:hover {
+.course-faculty-filter:hover {
   color: #fff;
   background-color: #ce3e2e;
 }
 
-.course-degree-filter-active {
+.course-faculty-filter-active {
   color: #fff;
   background-color: #ce3e2e;
 }
@@ -669,7 +690,7 @@ main {
   align-items: center;
 }
 
-.course-selection-course-degree {
+.course-selection-course-faculty {
   color: #2c2c2c;
   font-size: 0.75rem;
   padding: 0.1rem 0.7rem;
