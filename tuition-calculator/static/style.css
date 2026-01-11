@@ -428,6 +428,11 @@ main {
   font-size: 0.9rem;
 }
 
+.cost-summary-export:hover {
+  background-color: #e5e7eb;
+  cursor: pointer;
+}
+
 .cost-summary-footnotes {
   margin-top: 0.9rem;
   font-size: 0.72rem;

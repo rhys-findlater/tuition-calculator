@@ -350,13 +350,11 @@ document.querySelectorAll(".course-degree-filter").forEach((btnEl) => {
 
     currentFaculty = btnEl.dataset.faculty;
 
-    // Instead of doing your own card.style.display logic here,
-    // just reapply the combined faculty + search filter:
     applySearch();
   });
 });
 
-// Global Show All/Show Less handlers (run once)
+// Global Show All/Show Less handlers
 if (showAllBtnEl) {
   showAllBtnEl.addEventListener("click", () => {
     document.querySelectorAll(".course-selection-course").forEach((card) => {
@@ -511,26 +509,31 @@ if (document.readyState === "loading") {
 }
 
 async function exportToPDF() {
+  // Sends an HTTP request and waits for a response 
   const response = await fetch("/export-pdf", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({}), 
+    body: JSON.stringify({}),
   });
 
+  // If status is not in the 200-299 range, failed. Surface the server message
   if (!response.ok) {
-    const text = await response.text();
-    throw new Error(`Export failed: ${response.status} ${text}`);
+    throw new Error(`Export failed: ${response.status} ${await response.text()}`);  
   }
 
-  const blob = await response.blob();
-  const url = URL.createObjectURL(blob);
+  // Turns the PDF response into a downloadable file
+  const pdfBlob = await response.blob();
+  const pdfUrl = URL.createObjectURL(pdfBlob);
 
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = `Course_Cost_Summary_${Date.now()}.pdf`;
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
+  // Todays date ("DD-MM-YYYY"), to attach to the file name
+  const today = new Date().toISOString().slice(0, 10); 
 
-  URL.revokeObjectURL(url);
+  // Trigger a download in the browser
+  const link = Object.assign(document.createElement("a"), {
+    href: pdfUrl,
+    download: `Course_Plan_Generated_${today}.pdf`,
+  }); 
+
+  link.click(); 
+  URL.revokeObjectURL(pdfUrl);
 }
