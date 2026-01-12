@@ -11,6 +11,10 @@
       type="image/x-icon"
       href="{{ url_for('static', filename='favicon.ico') }}"
     />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
     <!-- Main application stylesheet -->
     <link
       rel="stylesheet"
@@ -600,7 +604,7 @@
           </div>
         </div>
         
-        <label class="prompt-text">Who is this plan for? <span>(optional)</span></label>
+        <label class="prompt-text">Add recipient name <span class="optional">(optional)</span></label>
 
         <input 
           id="pdfPromptInput"
@@ -617,7 +621,7 @@
               alt="Off-campus location"
               class="sub-icon"
             />
-            Export
+            Download PDF
           </button>
         </div>
       </div>
