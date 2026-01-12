@@ -60,6 +60,17 @@ const courseBodyEl = document.getElementById("courseBodyContainer");
 const courseChevronEl = document.getElementById("coursesChevron");
 const degreeChevronEl = document.getElementById("degreesChevron");
 
+// Get elements
+const exportPDFButtonEl = document.getElementById("exportPDFButton");
+
+const pdfPromptEl = document.getElementById("pdfPrompt");
+const pdfPromptInputEl = document.getElementById("pdfPromptInput");
+const pdfPromptCancelBtnEl = document.getElementById("pdfPromptCancelBtn");
+const pdfPromptExportBtnEl = document.getElementById("pdfPromptExportBtn");
+const pdfPromptCloseBtnEl = document.getElementById("pdfPromptCloseBtn");
+const pdfPromptCoursesPillEl = document.getElementById("pdfPromptCoursesPill");
+const pdfPromptTotalCostEl = document.getElementById("pdfPromptTotalCost");
+
 // Central config per type
 const selectionConfigs = {
   course: {
@@ -173,6 +184,38 @@ function setAvailableCardVisibility(selector, dataKey, id, isSelected) {
   console.log(card);
   if (!card) return;
   card.style.display = isSelected ? "none" : "flex";
+}
+
+async function exportToPDF() {
+  // Sends an HTTP request and waits for a response
+  const response = await fetch("/export-pdf", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({}),
+  });
+
+  // If status is not in the 200-299 range, failed. Surface the server message
+  if (!response.ok) {
+    throw new Error(
+      `Export failed: ${response.status} ${await response.text()}`
+    );
+  }
+
+  // Turns the PDF response into a downloadable file
+  const pdfBlob = await response.blob();
+  const pdfUrl = URL.createObjectURL(pdfBlob);
+
+  // Todays date ("DD-MM-YYYY"), to attach to the file name
+  const today = new Date().toISOString().slice(0, 10);
+
+  // Trigger a download in the browser
+  const link = Object.assign(document.createElement("a"), {
+    href: pdfUrl,
+    download: `Course_Plan_Generated_${today}.pdf`,
+  });
+
+  link.click();
+  URL.revokeObjectURL(pdfUrl);
 }
 
 /* -------------------- Search -------------------- */
@@ -765,6 +808,82 @@ function initTuitionSelection() {
       }
     });
   }
+
+  function openPdfPrompt() {
+    if (!pdfPromptEl) return; // Guard clause
+
+    if (pdfPromptTotalCostEl && costSummaryTotalEl) {
+      pdfPromptTotalCostEl.textContent = costSummaryTotalEl.textContent; // Copy the displayed total cost text from the main summary
+    }
+
+    if (pdfPromptCoursesPillEl) {
+      const count = selectedCourses.size;
+      pdfPromptCoursesPillEl.textContent = `${count} course${
+        count === 1 ? "" : "s"
+      }`;
+    }
+
+    pdfPromptEl.classList.add("is-open");
+    if (pdfPromptInputEl) {
+      pdfPromptInputEl.value = "";
+      pdfPromptInputEl.focus();
+    }
+  }
+
+  // Hide the popup
+  function closePdfPrompt() {
+    pdfPromptEl.classList.remove("is-open");
+  }
+
+  // Open prompt on click of main "Export to PDF" btn
+  if (exportPDFButtonEl) {
+    exportPDFButtonEl.addEventListener("click", () => {
+      openPdfPrompt();
+    });
+  }
+
+  // Cancel, closes
+  if (pdfPromptCancelBtnEl) {
+    pdfPromptCancelBtnEl.addEventListener("click", closePdfPrompt);
+  }
+
+  // X button, closes
+  if (pdfPromptCloseBtnEl) {
+    pdfPromptCloseBtnEl.addEventListener("click", closePdfPrompt);
+  }
+
+  // Export: read name, close prompt, export PDF
+  if (pdfPromptExportBtnEl) {
+    pdfPromptExportBtnEl.addEventListener("click", async (e) => {
+      const planFor = (pdfPromptInputEl?.value || "").trim();
+      closePdfPrompt();
+      await exportToPDF(planFor);
+    });
+  }
+
+  // Press Enter in input
+  if (pdfPromptInputEl) {
+    pdfPromptInputEl.addEventListener("keydown", async (e) => {
+      if (e.key !== "Enter") return;
+      e.preventDefault();
+
+      const planFor = (pdfPromptInputEl.value || "").trim();
+      closePdfPrompt();
+      await exportToPDF(planFor);
+    });
+  }
+
+  // Click outside the prompt to close it
+  if (pdfPromptEl) {
+    pdfPromptEl.addEventListener("click", (e) => {
+      if (e.target === pdfPromptEl) closePdfPrompt();
+    });
+  }
+
+  // Press Escape to close prompt
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") closePdfPrompt();
+  });
 }
 
 if (document.readyState === "loading") {

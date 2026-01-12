@@ -450,6 +450,11 @@ main {
   font-size: 0.9rem;
 }
 
+.cost-summary-export:hover {
+  background-color: #e5e7eb;
+  cursor: pointer;
+}
+
 .cost-summary-footnotes {
   margin-top: 0.9rem;
   font-size: 0.72rem;
@@ -1034,8 +1039,8 @@ main {
 }
 
 /* ==================== Footer ==================== */
-/* Simple global footer for legal and credits */
 
+/* Simple global footer for legal and credits */
 .footer {
   width: 100vw;
   text-align: center;
@@ -1045,4 +1050,256 @@ main {
 
 .footer-text {
   color: white;
+}
+
+/* ==================== Name Prompt ==================== */
+
+.prompt-container{
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  /* hidden state */
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+
+  padding: 1rem;
+  background: rgba(0, 0, 0, 0.75);
+  z-index: 9999;
+
+  transition: opacity 180ms ease, visibility 0s linear 180ms;
+}
+
+.prompt-container.is-open{
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+
+  transition: opacity 180ms ease;
+}
+
+.prompt-container.is-open .prompt {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.prompt {
+  opacity: 0;
+  transform: translateY(10px) scale(0.98);
+  transition: opacity 180ms ease, transform 180ms ease;
+  position: relative;
+  width: 100%;
+  max-width: 32.5rem;
+  background-color: #ffffff; 
+  box-shadow: var(--shadow-card-sm);
+  border-radius: var(--radius-card);
+  border: 1px solid var(--border-subtle);
+  padding: 1.6rem 1.6rem 1.4rem;
+}
+
+.pdf-prompt-close-btn {
+  position: absolute;
+  top: 0.85rem;
+  right: 0.85rem;
+  width: 34px;
+  height: 34px;
+  border: none;
+  background: transparent;
+  border-radius: 0.5rem;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+}
+
+.pdf-prompt-close-btn:hover {
+  background: rgba(0,0,0,0.06);
+}
+
+.pdf-prompt-close-btn img {
+  width: 14px;
+  height: 14px;
+  opacity: 0.75;
+}
+
+.prompt-header {
+  text-align: center;
+  display: grid;
+  justify-items: center;
+  gap: 0.85rem;
+  margin-top: 0.1rem;
+  margin-bottom: 0.85rem;
+}
+
+.prompt-header-icon {
+  position: relative;
+  width: 62px;
+  height: 62px;
+  border-radius: 9999px;
+  display: grid;
+  place-items: center;
+  background-color: #ce3e2e;
+  box-shadow: 0 10px 15px -3px rgba(0,0,0,0.12);
+}
+
+.prompt-header-icon img {
+  width: 32px;
+  height: 32px;
+}
+
+.prompt-title {
+  font-size: 1.5rem;
+  line-height: 1.2;
+  font-weight: 650;
+  margin: 0.2rem 0 0;
+}
+
+.pdf-prompt-subtitle {
+  font-size: 0.9rem;
+  color: rgba(44, 44, 44, 0.7);
+}
+
+.pdf-prompt-summary {
+  background-color: #ededed;
+  border-radius: 0.5rem;
+  padding: 0.9rem 1rem;
+  box-shadow: var(--shadow-card-md);
+  border: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin: 1rem 0 1.25rem;
+}
+
+.pdf-prompt-summary-left {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.pdf-prompt-summary-courses {
+  font-size: 1rem;
+  color: rgba(44, 44, 44, 0.75);
+  margin: 0;
+}
+
+.pdf-prompt-summary-label {
+  font-size: 1rem;
+  font-weight: 650;
+  color: rgb(55, 65, 81);
+  margin: 0;
+}
+
+.pdf-prompt-summary-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 1.15rem;
+}
+
+.pdf-prompt-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  padding: 0.125rem 0.5rem;
+  font-size: 0.75rem;
+  color: #cb3d2d;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #cb3d2d;
+  border-radius: 0.375rem;
+}
+
+.pdf-prompt-total {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #cb3d2d;
+}
+
+.prompt-text {
+  font-size: 0.875rem;
+  color: #2c2c2c;
+  font-weight: 600;
+  margin: 0 0 0.4rem;
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+}
+.prompt-text .optional {
+  font-size:  0.875rem;
+  font-weight: 500;
+  color: rgba(44, 44, 44, 0.65);
+}
+
+/* Input field (your hint) */
+.prompt-input {
+  width: 100%;
+  background: #ffffff;
+  border: 2px solid #e5e7eb;
+  border-radius: 0.5rem;
+  padding: 0.75rem 0.85rem;
+  color: #2c2c2c;
+  outline: none;
+  margin-bottom: 1.25rem;
+}
+
+.prompt-input::placeholder {
+  color: rgba(44, 44, 44, 0.45);
+}
+
+.prompt-input:focus {
+  border-color: #e5e7eb;
+  box-shadow: 0 0 0 2px #b7b6b6;
+}
+
+.prompt-actions {
+  border-top: 2px solid #e5e7eb;
+  padding-top: 1rem;
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-top: 0.25rem;
+}
+
+.prompt-cancel {
+  flex: 1;
+  border-radius: 0.6rem;
+  border: 2px solid #d1d5db;
+  background: #ffffff;
+  color: #2c2c2c;
+  padding: 0.75rem 1rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.prompt-cancel:hover {
+  background: #f3f4f6;
+}
+
+.prompt-accept {
+  flex: 1;
+  border-radius: 0.5rem;
+  border: none;
+  background: #cb3d2d;
+  color: #ffffff;
+  padding: 0.75rem 1rem;
+  font-weight: 650;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  cursor: pointer;
+}
+
+.prompt-accept:hover {
+  background: linear-gradient(to right, #cc0011, #b30010);
+  box-shadow: 0 10px 15px -3px rgba(0,0,0,0.10);
+}
+.prompt-accept img {
+  width: 16px;
+  height: 16px;
 }

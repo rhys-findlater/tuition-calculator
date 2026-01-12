@@ -1,7 +1,10 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, send_file
+from weasyprint import HTML, CSS
+from datetime import datetime
 import pandas as pd
 import os
 import json
+import io
 
 def create_app(test_config=None):
     # Create and configure the app
@@ -129,7 +132,36 @@ def create_app(test_config=None):
         if request.method == "POST":
             return redirect(url_for("index"))
 
-        # Pass data into template 
-        return render_template("index.html", courses=COURSES, courses_json=COURSES_JSON, unique_faculties=UNIQUE_FACULTIES, degrees=DEGREES)
+        return render_template(
+            "index.html", 
+            courses=COURSES, 
+            courses_json=COURSES_JSON, 
+            unique_faculties=UNIQUE_FACULTIES,
+            degrees=DEGREES
+        )
+    
+    @app.route("/export-pdf", methods=["POST"])
+    def export_pdf():
+        # Gets JSON sent from the browser
+        data = request.get_json()
+        
+        # Renders the HTML that will be converted into a PDF
+        html_string = render_template("pdf_template.html", **data)
+        
+        # The absolute path to the PDF stylesheet
+        css_path = os.path.join(app.root_path, "static", "pdf", "pdf.css")
+        
+        # Converts the HTML + CSS into a PDF
+        pdf_bytes = HTML(string=html_string, base_url=app.root_path).write_pdf(
+            stylesheets=[CSS(filename=css_path)] 
+        ) 
+        
+        # Sends the in-memory PDF back as a file download
+        return send_file(
+            io.BytesIO(pdf_bytes),
+            mimetype="application/pdf",
+        ) 
+    
+    # =================================#   
 
     return app

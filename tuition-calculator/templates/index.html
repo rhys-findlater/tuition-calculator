@@ -11,6 +11,10 @@
       type="image/x-icon"
       href="{{ url_for('static', filename='favicon.ico') }}"
     />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
     <!-- Main application stylesheet -->
     <link
       rel="stylesheet"
@@ -286,8 +290,8 @@
                 <span id="costSummaryTotal">$9999.00</span>
               </div>
 
-              <!-- Export to PDF action (wired in app.js) -->
-              <button class="cost-summary-export">
+              <!-- Export to PDF button -->
+              <button id="exportPDFButton" class="cost-summary-export" type="button">
                 <img
                   src="{{ url_for('static', filename='icons/download.svg') }}"
                   alt=""
@@ -760,6 +764,63 @@
         UC Online Course Costing Application | UC Online
       </p>
     </footer>
+
+    <!-- PDF export name prompt -->
+    <div id="pdfPrompt" class="prompt-container">
+      <div class="prompt">
+        <button id="pdfPromptCloseBtn" class="pdf-prompt-close-btn">
+          <img
+            src="{{ url_for('static', filename='icons/x.svg') }}"
+            alt="Off-campus location"
+            class="sub-icon"
+          />
+        </button>
+        <div class="prompt-header">
+          <div class="prompt-header-icon">
+            <img
+              src="{{ url_for('static', filename='icons/file-check.svg') }}"
+              alt="Off-campus location"
+              class="sub-icon"
+            />
+          </div>
+          <h1 id="pdfNameTitle" class="prompt-title">Export plan to PDF</h1>
+          <p class="pdf-prompt-subtitle">Save this tuition estimation as a PDF document</p>
+        </div>
+        <div class="pdf-prompt-summary">
+          <div class="pdf-prompt-summary-left">
+            <p class="pdf-prompt-summary-courses">Your estimate includes</p>
+            <p class="pdf-prompt-summary-label">Total Cost</p>
+          </div>
+
+          <div class="pdf-prompt-summary-right">
+            <span id="pdfPromptCoursesPill" class="pdf-prompt-pill"></span>
+            <p id="pdfPromptTotalCost" class="pdf-prompt-total"></p>
+          </div>
+        </div>
+        
+        <label class="prompt-text">Add recipient name <span class="optional">(optional)</span></label>
+
+        <input 
+          id="pdfPromptInput"
+          class="prompt-input"
+          type="text"
+          placeholder="Name"
+        />
+
+        <div class="prompt-actions">
+          <button id="pdfPromptCancelBtn" class="prompt-cancel" type="button">Cancel</button>
+          <button id="pdfPromptExportBtn" class="prompt-accept" type="button"> 
+            <img
+              src="{{ url_for('static', filename='icons/download-white.svg') }}"
+              alt="Off-campus location"
+              class="sub-icon"
+            />
+            Download PDF
+          </button>
+        </div>
+      </div>
+    </div>
+
     <!-- Main application script (handles selection, filtering, and cost logic) -->
     <script src="{{ url_for('static', filename='app.js') }}"></script>
   </body>
