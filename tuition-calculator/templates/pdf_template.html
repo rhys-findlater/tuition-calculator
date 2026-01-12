@@ -21,7 +21,10 @@
         <div class="pdf-header-right">
          <div class="info-row">
             <div class="info-label">Generated:</div>
-            <div class="info-value">{{ generated_date }}</div>
+            <div class="info-value">{{generateddate}}</div>
+            {% if nameInput is defined and nameInput|trim %}
+              <div class="for-name">For {{ nameInput }}</div>
+            {% endif %}          
           </div>
 
           {% if name is defined and name|trim %}

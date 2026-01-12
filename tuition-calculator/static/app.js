@@ -186,12 +186,66 @@ function setAvailableCardVisibility(selector, dataKey, id, isSelected) {
   card.style.display = isSelected ? "none" : "flex";
 }
 
+function collectPdfData() {
+  const nameInput = (document.getElementById("pdfPromptInput")?.value || "").trim();
+  const learner_type      = getCurrentLearnerType();
+  const learner_location  = getCurrentLearnerLocation(); 
+  const gst_applicable    = learner_location === "onshore"; 
+
+  // Build the courses array from selectedCourses map
+  const courses = Array.from(selectedCourses.values()).map((course) => ({
+    code: course.code,
+    name: course.title,
+    points: course.points,
+    fee: (learner_type === "domestic" ? course.domPrice : course.intPrice)
+      .toLocaleString("en-NZ", {
+        style: "currency",
+        currency: "NZD",
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      }),
+  }));
+
+  // Read the displayed summary numbers from the UI so PDF matches inputs 
+  const courseFeesText    = costSummaryTotalCostEl?.textContent?.trim() || "";
+  const levyText          = costSummaryLevyEl?.textContent?.trim() || "";
+  const subTotalText      = costSummarySubtotalEl?.textContent?.trim() || "";
+  const gstText           = costSummaryGstEl?.textContent?.trim() || "";
+  const totalText         = costSummaryTotalEl?.textContent?.trim() || "";
+  const totalPointsText   = costSummaryTotalPointsEl?.textContent?.trim() || "";
+
+  const generateddate = new Date().toLocaleString("en-NZ", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+  
+  return {
+    nameInput,
+    generateddate,
+    learner_type,
+    learner_location,
+    gst_applicable,
+    courses,
+    course_fees: courseFeesText,
+    points: Number(totalPointsText) || 0,
+    levy: levyText,
+    subTotal: subTotalText,
+    gst: gstText,
+    totalCost: totalText,
+  };
+}
+
 async function exportToPDF() {
+  const payload = collectPdfData();
+
   // Sends an HTTP request and waits for a response
   const response = await fetch("/export-pdf", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({}),
+    body: JSON.stringify(payload),
   });
 
   // If status is not in the 200-299 range, failed. Surface the server message
@@ -206,7 +260,7 @@ async function exportToPDF() {
   const pdfUrl = URL.createObjectURL(pdfBlob);
 
   // Todays date ("DD-MM-YYYY"), to attach to the file name
-  const today = new Date().toISOString().slice(0, 10);
+  const today = new Date().toLocaleDateString("en-NZ").replaceAll("/", "-");
 
   // Trigger a download in the browser
   const link = Object.assign(document.createElement("a"), {
