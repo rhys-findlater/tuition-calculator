@@ -3,22 +3,37 @@
 /**
  * @file Tuition calculator UI logic.
  * @description Handles course selection and cost breakdown for the tuition calculator page.
- * @author Regan Williams & Rhys Findlater
+ * @author
  */
 
-// Map of selected courses:
-// Key = course code
-// Value = { code, title, points, price, faculty}
-const selected = new Map();
-let currentFaculty = "All Faculties";
+// State maps
+const selectedCourses = new Map();
+const selectedDegrees = new Map();
 
-// Cached DOM elements
-const selectedListEl = document.getElementById("selectedCoursesList");
-const selectedCountEl = document.getElementById("selectedCoursesCount");
-const clearBtnEl = document.getElementById("clearSelectedCourses");
-const showAllBtnEl = document.getElementById("showAllCourses");
-const showLessBtnEl = document.getElementById("showLessCourses");
+let currentCourseFaculty = "All Faculties";
+let currentDegreeFaculty = "All Faculties";
 
+// Courses
+const selectedCoursesHeaderEl = document.querySelector(
+  ".selected-courses-header"
+);
+const selectedCoursesListEl = document.getElementById("selectedCoursesList");
+const selectedCoursesCountEl = document.getElementById("selectedCoursesCount");
+const clearCoursesBtnEl = document.getElementById("clearSelectedCourses");
+const showAllCoursesBtnEl = document.getElementById("showAllCourses");
+const showLessCoursesBtnEl = document.getElementById("showLessCourses");
+
+// Degrees
+const selectedDegreesHeaderEl = document.querySelector(
+  ".selected-degrees-header"
+);
+const selectedDegreesListEl = document.getElementById("selectedDegreesList");
+const selectedDegreesCountEl = document.getElementById("selectedDegreesCount");
+const clearDegreesBtnEl = document.getElementById("clearSelectedDegrees");
+const showAllDegreesBtnEl = document.getElementById("showAllDegrees");
+const showLessDegreesBtnEl = document.getElementById("showLessDegrees");
+
+// Cost summary
 const costSummaryPillTypeEl = document.getElementById("costSummaryPillType");
 const costSummaryPillLocationEl = document.getElementById(
   "costSummaryPillLocation"
@@ -37,43 +52,97 @@ const costSummarySubtotalEl = document.getElementById("costSummarySubtotal");
 const costSummaryGstEl = document.getElementById("costSummaryGst");
 const costSummaryTotalEl = document.getElementById("costSummaryTotal");
 
-// Course and degree dropdown buttons
+// Dropdowns
 const degreeDropdownBtnEl = document.getElementById("degreeDropdown");
 const courseDropdownBtnEl = document.getElementById("courseDropdown");
-
-// Course and degree body containers used for toggling idle/active states
 const degreeBodyEl = document.getElementById("degreeBodyContainer");
 const courseBodyEl = document.getElementById("courseBodyContainer");
-
-// Course and degree chevron icon used for displaying current dropdown states
 const courseChevronEl = document.getElementById("coursesChevron");
 const degreeChevronEl = document.getElementById("degreesChevron");
 
-// Helper function for dropdown toggling
+// Central config per type
+const selectionConfigs = {
+  course: {
+    items: selectedCourses,
+    cardSelector: ".selection-course",
+    toggleAttr: "data-course-toggle",
+    dataKey: "course-code",
+    attributeKey: "courseCode",
+    headerEl: selectedCoursesHeaderEl,
+    listEl: selectedCoursesListEl,
+    countEl: selectedCoursesCountEl,
+    clearBtnEl: clearCoursesBtnEl,
+    showAllBtnEl: showAllCoursesBtnEl,
+    showLessBtnEl: showLessCoursesBtnEl,
+    datasetKeys: {
+      code: "courseCode",
+      title: "courseTitle",
+      points: "coursePoints",
+      domPrice: "courseDomPrice",
+      intPrice: "courseIntPrice",
+      faculty: "courseFaculty",
+    },
+    searchInputId: "course-search",
+    searchClearId: "searchClearCourse",
+    facultyBtnSelector: ".faculty-btn-course",
+    allFacultyAttr: "[data-course-faculty='All Faculties']",
+  },
+  degree: {
+    items: selectedDegrees,
+    cardSelector: ".selection-degree",
+    toggleAttr: "data-degree-toggle",
+    dataKey: "degree-title",
+    attributeKey: "degreeCode",
+    headerEl: selectedDegreesHeaderEl,
+    listEl: selectedDegreesListEl,
+    countEl: selectedDegreesCountEl,
+    clearBtnEl: clearDegreesBtnEl,
+    showAllBtnEl: showAllDegreesBtnEl,
+    showLessBtnEl: showLessDegreesBtnEl,
+    datasetKeys: {
+      code: "degreeTitle",
+      title: "degreeTitle",
+      points: "degreePoints",
+      domPrice: "degreeDomPrice",
+      intPrice: "degreeIntPrice",
+      faculty: "degreeFaculty",
+    },
+    searchInputId: "degree-search",
+    searchClearId: "searchClearDegree",
+    facultyBtnSelector: ".faculty-btn-degree",
+    allFacultyAttr: "[data-degree-faculty='All Faculties']",
+  },
+};
+
+/* -------------------- Shared helpers -------------------- */
+
 function toggleDropdown(chevEl, btnEl, bodyEl) {
-  if (!btnEl) return;
+  if (!chevEl || !btnEl || !bodyEl) return;
 
   btnEl.addEventListener("click", () => {
     const isIdle = bodyEl.classList.toggle("selection-body-container-idle");
-
     chevEl.src = isIdle ? chevEl.dataset.chevronUp : chevEl.dataset.chevronDown;
   });
 }
 
-function getPotentialVisibleCount() {
-  return Array.from(document.querySelectorAll(".selection-course")).filter(
-    (card) => {
-      const cardFaculty = card.dataset.courseFaculty;
-      const facultyMatch =
-        currentFaculty === "All Faculties" || cardFaculty === currentFaculty;
-      const isSelected = selected.has(card.dataset.courseCode);
-      return facultyMatch && !isSelected;
-    }
-  ).length;
+function getPotentialVisibleCount(
+  selector,
+  selected,
+  { facultyKey, codeKey },
+  currentFaculty
+) {
+  return Array.from(document.querySelectorAll(selector)).filter((card) => {
+    const cardFaculty = card.dataset[facultyKey];
+    const facultyMatch =
+      currentFaculty === "All Faculties" || cardFaculty === currentFaculty;
+    const isSelected = selected.has(card.dataset[codeKey]);
+    return facultyMatch && !isSelected;
+  }).length;
 }
 
-function limitCourses(initialLimit = 5) {
-  const cards = document.querySelectorAll(".selection-course");
+function limitItems(selector, initialLimit = 5) {
+  const cards = document.querySelectorAll(selector);
+  console.log(cards);
   let shown = 0;
   cards.forEach((card) => {
     if (card.style.display === "none") return;
@@ -85,53 +154,6 @@ function limitCourses(initialLimit = 5) {
     }
   });
 }
-
-function getVisibleCourseCount() {
-  return Array.from(document.querySelectorAll(".selection-course")).filter(
-    (card) => card.style.display !== "none"
-  ).length;
-}
-
-// Shared filtering function
-const applySearch = () => {
-  const searchInput = document.getElementById("course-search");
-  const query = searchInput ? searchInput.value.trim().toLowerCase() : "";
-
-  document.querySelectorAll(".selection-course").forEach((card) => {
-    const code = (card.dataset.courseCode || "").toLowerCase();
-    const title = (card.dataset.courseTitle || "").toLowerCase();
-
-    const matches =
-      query === "" || code.includes(query) || title.includes(query);
-
-    const cardFaculty = card.dataset.courseFaculty;
-    const facultyMatch =
-      currentFaculty === "All Faculties" || cardFaculty === currentFaculty;
-    const isSelected = selected.has(card.dataset.courseCode);
-
-    card.style.display =
-      matches && facultyMatch && !isSelected ? "flex" : "none";
-  });
-
-  if (query === "") {
-    const potentialVisible = getPotentialVisibleCount();
-    const needsShowAll = potentialVisible > 5;
-
-    limitCourses();
-
-    if (showAllBtnEl) {
-      showAllBtnEl.style.display = needsShowAll ? "block" : "none";
-      showAllBtnEl.disabled = !needsShowAll;
-    }
-    if (showLessBtnEl) {
-      showLessBtnEl.style.display = "none";
-      showLessBtnEl.disabled = true;
-    }
-  } else {
-    if (showAllBtnEl) showAllBtnEl.style.display = "none";
-    if (showLessBtnEl) showLessBtnEl.style.display = "none";
-  }
-};
 
 function getCurrentLearnerType() {
   const checked = document.querySelector('input[name="learner_type"]:checked');
@@ -145,154 +167,83 @@ function getCurrentLearnerLocation() {
   return checked ? checked.value : "onshore";
 }
 
-const selectedHeaderEl = document.querySelector(".selected-courses-header");
+function setAvailableCardVisibility(selector, dataKey, id, isSelected) {
+  const card = document.querySelector(`${selector}[data-${dataKey}="${id}"]`);
 
-/**
- * Show or hide a course card in the "Available courses" list.
- *
- * @param code - Course code.
- * @param isSelected - Whether this course is currently selected.
- */
-function setAvailableCardVisibility(code, isSelected) {
-  const card = document.querySelector(
-    `.selection-course[data-course-code="${code}"]`
-  );
-
+  console.log(card);
   if (!card) return;
-
-  // Hide card if selected, show card if not selected
   card.style.display = isSelected ? "none" : "flex";
 }
 
-/**
- * Re-render the "Selected courses" panel.
- * - Updates the count
- * - Enables/disables the Clear button
- * - Rebuilds the list of selected courses
- */
-function renderSelected(learnerType = getCurrentLearnerType()) {
-  if (!selectedListEl || !selectedCountEl || !clearBtnEl) return;
+/* -------------------- Search -------------------- */
 
-  const isDomestic = learnerType === "domestic";
-  selectedCountEl.textContent = String(selected.size);
-  clearBtnEl.disabled = selected.size === 0;
+function applySearch(searchInputId, type) {
+  const cfg = selectionConfigs[type];
+  const searchInput = document.getElementById(searchInputId);
+  if (!cfg || !searchInput) return;
 
-  // If no courses selected, hide clear all button and selected courses count
-  if (selectedHeaderEl) {
-    selectedHeaderEl.style.display = selected.size === 0 ? "none" : "flex";
-  }
+  const query = searchInput.value.trim().toLowerCase();
+  const { items, cardSelector, datasetKeys } = cfg;
 
-  selectedListEl.innerHTML = "";
+  const currentFaculty =
+    type === "course" ? currentCourseFaculty : currentDegreeFaculty;
 
-  for (const course of selected.values()) {
-    const displayPrice = isDomestic ? course.domPrice : course.intPrice;
+  document.querySelectorAll(cardSelector).forEach((card) => {
+    const code = (card.dataset[datasetKeys.code] || "").toLowerCase();
+    const title = (card.dataset[datasetKeys.title] || "").toLowerCase();
+    const matches =
+      query === "" || code.includes(query) || title.includes(query);
 
-    const row = document.createElement("div");
-    row.className = "selected-course-row";
-    row.dataset.courseCode = course.code;
+    const cardFaculty = card.dataset[datasetKeys.faculty];
+    const facultyMatch =
+      currentFaculty === "All Faculties" || cardFaculty === currentFaculty;
 
-    row.innerHTML = `
-      <div class="selected-course-main">
-        <div class="selected-course-title">
-          <span class="selected-course-code">${course.code}</span>
-          <span class="selected-course-name">${course.title}</span>
-        </div>
-        <div class="selected-course-meta">
-          <span class="selected-course-points">${course.points} points</span>
-          <span class="selected-course-faculty">${course.faculty}</span>
-        </div>
-      </div>
-      <div class="selected-course-price">
-        <span class="selected-course-price-label"></span>
-        <span class="selected-course-price-value">$${displayPrice.toLocaleString(
-          "en-NZ",
-          {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2,
-          }
-        )}</span>
-      </div>
-      <button type="button" class="selected-course-remove" aria-label="Remove ${
-        course.code
-      }">✕</button>
-    `;
+    const id =
+      card.dataset[datasetKeys.code] ?? card.dataset[datasetKeys.title];
+    const isSelected = items.has(id);
 
-    const removeBtnEl = row.querySelector(".selected-course-remove");
-    if (removeBtnEl) {
-      removeBtnEl.addEventListener("click", () => {
-        selected.delete(course.code);
-        setAvailableCardVisibility(course.code, false);
-        renderSelected();
-      });
-    }
-    selectedListEl.appendChild(row);
-  }
-
-  renderSummary(selected);
-}
-
-/**
- * Add a course to the selected Map and update the UI.
- *
- * @param course - Course data.
- */
-function addCourse(course) {
-  selected.set(course.code, course);
-  setAvailableCardVisibility(course.code, true);
-  renderSelected(getCurrentLearnerType());
-}
-
-/**
- * Clear all selected courses.
- */
-function clearSelected() {
-  // Show all course cards again
-  for (const course of selected.values()) {
-    setAvailableCardVisibility(course.code, false);
-  }
-
-  // Empty the Map and re-render
-  selected.clear();
-  renderSelected(getCurrentLearnerType());
-}
-
-/**
- * Initialise click handlers for each course card
- * in the "Available courses" section.
- */
-function initAvailableCourseCards() {
-  const cards = document.querySelectorAll(".selection-course");
-  cards.forEach((card) => {
-    const code = card.dataset.courseCode;
-    const title = card.dataset.courseTitle;
-    const points = Number(card.dataset.coursePoints || "0");
-    const domPrice = Number(card.dataset.domPrice || "0");
-    const intPrice = Number(card.dataset.intPrice || "0");
-    const faculty = card.dataset.courseFaculty || "";
-
-    // Direct button handler only—no outer card click to avoid duplicates
-    const addBtnEl = card.querySelector("[data-course-toggle]");
-    if (addBtnEl) {
-      addBtnEl.addEventListener("click", (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        addCourse({
-          code,
-          title,
-          points,
-          domPrice,
-          intPrice,
-          faculty,
-        });
-      });
-    }
+    card.style.display =
+      matches && facultyMatch && !isSelected ? "flex" : "none";
   });
+
+  const showAllBtnEl = cfg.showAllBtnEl;
+  const showLessBtnEl = cfg.showLessBtnEl;
+
+  if (query === "") {
+    const potentialVisible = getPotentialVisibleCount(
+      cardSelector,
+      items,
+      {
+        facultyKey: datasetKeys.faculty,
+        codeKey: datasetKeys.code,
+      },
+      currentFaculty
+    );
+    const needsShowAll = potentialVisible > 5;
+
+    limitItems(cardSelector);
+
+    if (showAllBtnEl) {
+      showAllBtnEl.style.display = needsShowAll ? "block" : "none";
+      showAllBtnEl.disabled = !needsShowAll;
+    }
+    if (showLessBtnEl) {
+      showLessBtnEl.style.display = "none";
+      showLessBtnEl.disabled = true;
+    }
+  } else {
+    if (showAllBtnEl) showAllBtnEl.style.display = "none";
+    if (showLessBtnEl) showLessBtnEl.style.display = "none";
+  }
 }
 
-function initCourseSearch() {
-  const searchInput = document.getElementById("course-search");
-  const clearBtn = document.querySelector(".search-clear-btn");
-  const searchForm = document.querySelector(".selection-search");
+function initSearch(type) {
+  const cfg = selectionConfigs[type];
+  if (!cfg) return;
+
+  const searchInput = document.getElementById(cfg.searchInputId);
+  const clearBtn = document.getElementById(cfg.searchClearId);
+  const searchForm = searchInput ? searchInput.closest("form") : null;
   if (!searchInput) return;
 
   if (searchForm) {
@@ -303,72 +254,200 @@ function initCourseSearch() {
     if (e.key === "Enter") e.preventDefault();
   });
 
-  searchInput.addEventListener("input", applySearch);
+  searchInput.addEventListener("input", () =>
+    applySearch(cfg.searchInputId, type)
+  );
 
   if (clearBtn) {
     clearBtn.addEventListener("click", () => {
       searchInput.value = "";
       searchInput.focus();
-      applySearch();
+      applySearch(cfg.searchInputId, type);
     });
   }
 }
 
-/**
- * Attach event listeners to buttons and perform initial render.
- */
-function initTuitionSelection() {
-  initAvailableCourseCards();
+/* -------------------- Rendering selected lists -------------------- */
 
-  if (clearBtnEl) {
-    clearBtnEl.addEventListener("click", clearSelected);
+function renderSelected(
+  selector,
+  dataKey,
+  attributeKey,
+  headerEl,
+  listEl,
+  countEl,
+  clearBtnEl,
+  showAllBtnEl,
+  showLessBtnEl,
+  selected,
+  learnerType = getCurrentLearnerType()
+) {
+  if (!listEl || !countEl || !clearBtnEl) return;
+
+  const isDomestic = learnerType === "domestic";
+  countEl.textContent = String(selected.size);
+  clearBtnEl.disabled = selected.size === 0;
+
+  if (headerEl) {
+    headerEl.style.display = selected.size === 0 ? "none" : "flex";
   }
 
-  renderSelected("domestic");
-  limitCourses();
+  listEl.innerHTML = "";
 
-  if (showAllBtnEl) {
-    showAllBtnEl.style.display = "block";
-    showAllBtnEl.disabled = false;
+  for (const item of selected.values()) {
+    const displayPrice = isDomestic ? item.domPrice : item.intPrice;
+
+    const row = document.createElement("div");
+    row.className = "selected-item-row";
+    row.dataset[attributeKey] = item.code;
+
+    const codeSpan =
+      dataKey === "degree-title"
+        ? ""
+        : `<span class="selected-item-code">${item.code}</span>`;
+
+    row.innerHTML = `
+      <div class="selected-item-main">
+        <div class="selected-item-title">
+          ${codeSpan}
+          <span class="selected-item-name">${item.title}</span>
+        </div>
+        <div class="selected-item-meta">
+          <span class="selected-item-points">${item.points} points</span>
+          <span class="selected-item-faculty">${item.faculty}</span>
+        </div>
+      </div>
+      <div class="selected-item-price">
+        <span class="selected-item-price-label"></span>
+        <span class="selected-item-price-value">${displayPrice.toLocaleString(
+          "en-NZ",
+          {
+            style: "currency",
+            currency: "NZD",
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          }
+        )}</span>
+      </div>
+      <button type="button" class="selected-item-remove" aria-label="Remove ${
+        item.code
+      }">✕</button>
+    `;
+
+    const removeBtnEl = row.querySelector(".selected-item-remove");
+    if (removeBtnEl) {
+      removeBtnEl.addEventListener("click", () => {
+        selected.delete(item.id);
+        setAvailableCardVisibility(selector, dataKey, item.id, false);
+        renderSelected(
+          selector,
+          dataKey,
+          attributeKey,
+          headerEl,
+          listEl,
+          countEl,
+          clearBtnEl,
+          showAllBtnEl,
+          showLessBtnEl,
+          selected
+        );
+        renderSummary(selectedCourses);
+      });
+    }
+
+    listEl.appendChild(row);
   }
-  if (showLessBtnEl) {
-    showLessBtnEl.style.display = "none";
-    showLessBtnEl.disabled = true;
-  }
 
-  // Initial active pill only
-  document
-    .querySelectorAll(".faculty-btn-course")
-    .forEach((pill) =>
-      pill.classList.remove("selection-faculty-filter-active")
-    );
-  const allPillEl = document.querySelector("[data-faculty='All Faculties']");
-  if (allPillEl) allPillEl.classList.add("selection-faculty-filter-active");
-
-  initCourseSearch();
-
-  // Toggle course and degree dropdowns
-  toggleDropdown(degreeChevronEl, degreeDropdownBtnEl, degreeBodyEl);
-  toggleDropdown(courseChevronEl, courseDropdownBtnEl, courseBodyEl);
+  renderSummary(selectedCourses);
 }
 
-/**
- * Update course prices based on form value.
- * @param value - learner_type value
- */
+function renderSelection(type, learnerType = getCurrentLearnerType()) {
+  const cfg = selectionConfigs[type];
+  if (!cfg) return;
+
+  renderSelected(
+    cfg.cardSelector,
+    cfg.dataKey,
+    cfg.attributeKey,
+    cfg.headerEl,
+    cfg.listEl,
+    cfg.countEl,
+    cfg.clearBtnEl,
+    cfg.showAllBtnEl,
+    cfg.showLessBtnEl,
+    cfg.items,
+    learnerType
+  );
+}
+
+/* -------------------- Add / clear -------------------- */
+
+function addItem(type, item) {
+  const cfg = selectionConfigs[type];
+  if (!cfg) return;
+
+  cfg.items.set(item.id, item);
+  setAvailableCardVisibility(cfg.cardSelector, cfg.dataKey, item.id, true);
+
+  renderSelection(type);
+}
+
+function clearSelection(type) {
+  const cfg = selectionConfigs[type];
+  if (!cfg) return;
+
+  for (const course of cfg.items.values()) {
+    setAvailableCardVisibility(cfg.cardSelector, cfg.dataKey, course.id, false);
+  }
+
+  cfg.items.clear();
+  renderSelection(type);
+}
+
+/* -------------------- Init available cards -------------------- */
+
+function initAvailableCards(type) {
+  const cfg = selectionConfigs[type];
+  if (!cfg) return;
+
+  const { cardSelector, toggleAttr, datasetKeys } = cfg;
+  const cards = document.querySelectorAll(cardSelector);
+
+  cards.forEach((card) => {
+    const code = card.dataset[datasetKeys.code];
+    const title = card.dataset[datasetKeys.title];
+    const points = Number(card.dataset[datasetKeys.points] || "0");
+    const domPrice = Number(card.dataset[datasetKeys.domPrice] || "0");
+    const intPrice = Number(card.dataset[datasetKeys.intPrice] || "0");
+    const faculty = card.dataset[datasetKeys.faculty] || "";
+
+    const addBtnEl = card.querySelector(`[${toggleAttr}]`);
+    if (!addBtnEl) return;
+
+    addBtnEl.addEventListener("click", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+
+      const id = code ?? title;
+
+      addItem(type, { id, code, title, points, domPrice, intPrice, faculty });
+    });
+  });
+}
+
+/* -------------------- Prices -------------------- */
+
 function updatePrices(value) {
   const isDomestic = value === "domestic";
 
   document.querySelectorAll(".selection-course").forEach((card) => {
-    const domPrice = parseFloat(card.dataset.domPrice);
-    const intPrice = parseFloat(card.dataset.intPrice);
-
-    const selectedPrice = isDomestic ? domPrice : intPrice;
+    const courseDomPrice = parseFloat(card.dataset.courseDomPrice);
+    const courseIntPrice = parseFloat(card.dataset.courseIntPrice);
+    const selectedPrice = isDomestic ? courseDomPrice : courseIntPrice;
 
     card.dataset.coursePrice = selectedPrice;
 
-    const priceEl = card.querySelector(".selection-course-button-container p");
-
+    const priceEl = card.querySelector(".item-button-container p");
     if (priceEl) {
       priceEl.textContent = selectedPrice.toLocaleString("en-NZ", {
         style: "currency",
@@ -379,75 +458,29 @@ function updatePrices(value) {
     }
   });
 
-  renderSelected(value);
-}
+  document.querySelectorAll(".selection-degree").forEach((card) => {
+    const degreeDomPrice = parseFloat(card.dataset.degreeDomPrice);
+    const degreeIntPrice = parseFloat(card.dataset.degreeIntPrice);
+    const selectedPrice = isDomestic ? degreeDomPrice : degreeIntPrice;
 
-document.querySelectorAll('input[name="learner_type"]').forEach((radio) => {
-  radio.addEventListener("change", function (e) {
-    e.preventDefault();
-    updatePrices(this.value);
-  });
-});
+    card.dataset.degreePrice = selectedPrice;
 
-document.querySelectorAll('input[name="learner_location"]').forEach((radio) => {
-  radio.addEventListener("change", function () {
-    renderSummary(selected);
-  });
-});
-
-/**
- * Pill filtering functionality
- */
-document.querySelectorAll(".faculty-btn-course").forEach((btnEl) => {
-  btnEl.addEventListener("click", () => {
-    // Active state
-    document
-      .querySelectorAll(".faculty-btn-course")
-      .forEach((pill) =>
-        pill.classList.remove("selection-faculty-filter-active")
-      );
-    btnEl.classList.add("selection-faculty-filter-active");
-
-    currentFaculty = btnEl.dataset.faculty;
-
-    applySearch();
-  });
-});
-
-// Global Show All/Show Less handlers (run once)
-if (showAllBtnEl) {
-  showAllBtnEl.addEventListener("click", () => {
-    document.querySelectorAll(".selection-course").forEach((card) => {
-      const code = card.dataset.courseCode;
-      const cardFaculty = card.dataset.courseFaculty;
-      const facultyMatch =
-        currentFaculty === "All Faculties" || cardFaculty === currentFaculty;
-      const isSelected = selected.has(code);
-      card.style.display = facultyMatch && !isSelected ? "flex" : "none";
-    });
-
-    showAllBtnEl.style.display = "none";
-    showLessBtnEl.style.display = "block";
-    showLessBtnEl.disabled = false;
-  });
-}
-
-if (showLessBtnEl) {
-  showLessBtnEl.addEventListener("click", () => {
-    const potentialVisible = getPotentialVisibleCount();
-    const needsShowAll = potentialVisible > 5;
-
-    limitCourses();
-
-    showLessBtnEl.style.display = "none";
-    showLessBtnEl.disabled = true;
-
-    if (showAllBtnEl) {
-      showAllBtnEl.style.display = needsShowAll ? "block" : "none";
-      showAllBtnEl.disabled = !needsShowAll;
+    const priceEl = card.querySelector(".item-button-container p");
+    if (priceEl) {
+      priceEl.textContent = selectedPrice.toLocaleString("en-NZ", {
+        style: "currency",
+        currency: "NZD",
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      });
     }
   });
+
+  renderSelection("course", value);
+  renderSelection("degree", value);
 }
+
+/* -------------------- Summary -------------------- */
 
 function capitalize(word) {
   return word.charAt(0).toUpperCase() + word.slice(1);
@@ -487,11 +520,9 @@ function renderSummary(
 
   const isDomestic = learnerType === "domestic";
 
-  // Header pills
   costSummaryPillTypeEl.textContent = capitalize(learnerType);
   costSummaryPillLocationEl.textContent = capitalize(learnerLocation);
 
-  // GST tooltip
   gstInfoTooltipEl.textContent =
     learnerLocation === "offshore"
       ? "GST does not apply to offshore learners"
@@ -499,7 +530,6 @@ function renderSummary(
 
   costSummaryCoursesSelectedEl.textContent = String(selectedCourses.size);
 
-  // Course totals
   const { points: totalCoursePoints, cost: totalCourseCost } =
     calculateCoursesTotals(selectedCourses, isDomestic);
 
@@ -511,7 +541,6 @@ function renderSummary(
     maximumFractionDigits: 2,
   });
 
-  // Levy
   const levy = calculateLevy(selectedCourses.size, totalCoursePoints);
   costSummaryLevyEl.textContent =
     levy === "TBD"
@@ -524,7 +553,6 @@ function renderSummary(
         });
   costSummaryLevyNoteEl.textContent = `Based on ${totalCoursePoints} points`;
 
-  // Subtotal
   const levyAmount = levy === "TBD" ? 0 : Number(levy);
   const subTotal = levyAmount + totalCourseCost;
   costSummarySubtotalEl.textContent = subTotal.toLocaleString("en-NZ", {
@@ -534,7 +562,6 @@ function renderSummary(
     maximumFractionDigits: 2,
   });
 
-  // GST
   const gst = learnerLocation === "onshore" ? subTotal * 0.15 : 0;
   costSummaryGstEl.textContent = gst.toLocaleString("en-NZ", {
     style: "currency",
@@ -543,7 +570,6 @@ function renderSummary(
     maximumFractionDigits: 2,
   });
 
-  // Total
   const totalCost = subTotal + gst;
   costSummaryTotalEl.textContent = totalCost.toLocaleString("en-NZ", {
     style: "currency",
@@ -551,6 +577,194 @@ function renderSummary(
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   });
+}
+
+/* -------------------- Init -------------------- */
+
+function initTuitionSelection() {
+  initAvailableCards("course");
+  initAvailableCards("degree");
+
+  if (clearCoursesBtnEl) {
+    clearCoursesBtnEl.addEventListener("click", () => clearSelection("course"));
+  }
+
+  if (clearDegreesBtnEl) {
+    clearDegreesBtnEl.addEventListener("click", () => clearSelection("degree"));
+  }
+
+  renderSelection("course", "domestic");
+  limitItems(selectionConfigs.course.cardSelector);
+
+  renderSelection("degree", "domestic");
+  limitItems(selectionConfigs.degree.cardSelector);
+
+  applySearch(selectionConfigs.degree.searchInputId, "degree");
+
+  document
+    .querySelectorAll(selectionConfigs.course.facultyBtnSelector)
+    .forEach((pill) =>
+      pill.classList.remove("selection-faculty-filter-active")
+    );
+  const allCoursePillEl = document.querySelector(
+    selectionConfigs.course.allFacultyAttr
+  );
+  if (allCoursePillEl)
+    allCoursePillEl.classList.add("selection-faculty-filter-active");
+
+  document
+    .querySelectorAll(selectionConfigs.degree.facultyBtnSelector)
+    .forEach((pill) =>
+      pill.classList.remove("selection-faculty-filter-active")
+    );
+  const allDegreePillEl = document.querySelector(
+    selectionConfigs.degree.allFacultyAttr
+  );
+  if (allDegreePillEl)
+    allDegreePillEl.classList.add("selection-faculty-filter-active");
+
+  initSearch("course");
+  initSearch("degree");
+
+  toggleDropdown(courseChevronEl, courseDropdownBtnEl, courseBodyEl);
+  toggleDropdown(degreeChevronEl, degreeDropdownBtnEl, degreeBodyEl);
+
+  document.querySelectorAll('input[name="learner_type"]').forEach((radio) => {
+    radio.addEventListener("change", function (e) {
+      e.preventDefault();
+      updatePrices(this.value);
+    });
+  });
+
+  document
+    .querySelectorAll('input[name="learner_location"]')
+    .forEach((radio) => {
+      radio.addEventListener("change", function () {
+        renderSummary(selectedCourses);
+      });
+    });
+
+  document.querySelectorAll(".faculty-btn-course").forEach((btnEl) => {
+    btnEl.addEventListener("click", () => {
+      document
+        .querySelectorAll(".faculty-btn-course")
+        .forEach((pill) =>
+          pill.classList.remove("selection-faculty-filter-active")
+        );
+      btnEl.classList.add("selection-faculty-filter-active");
+
+      currentCourseFaculty = btnEl.dataset.courseFaculty;
+
+      applySearch(selectionConfigs.course.searchInputId, "course");
+    });
+  });
+
+  document.querySelectorAll(".faculty-btn-degree").forEach((btnEl) => {
+    btnEl.addEventListener("click", () => {
+      document
+        .querySelectorAll(".faculty-btn-degree")
+        .forEach((pill) =>
+          pill.classList.remove("selection-faculty-filter-active")
+        );
+      btnEl.classList.add("selection-faculty-filter-active");
+
+      currentDegreeFaculty = btnEl.dataset.degreeFaculty;
+
+      applySearch(selectionConfigs.degree.searchInputId, "degree");
+    });
+  });
+
+  if (showAllCoursesBtnEl) {
+    showAllCoursesBtnEl.addEventListener("click", () => {
+      document.querySelectorAll(".selection-course").forEach((card) => {
+        const code = card.dataset.courseCode;
+        const cardFaculty = card.dataset.courseFaculty;
+        const facultyMatch =
+          currentCourseFaculty === "All Faculties" ||
+          cardFaculty === currentCourseFaculty;
+        const isSelected = selectedCourses.has(code);
+        card.style.display = facultyMatch && !isSelected ? "flex" : "none";
+      });
+
+      showAllCoursesBtnEl.style.display = "none";
+      showLessCoursesBtnEl.style.display = "block";
+      showLessCoursesBtnEl.disabled = false;
+    });
+  }
+
+  if (showLessCoursesBtnEl) {
+    showLessCoursesBtnEl.addEventListener("click", () => {
+      // Reapply current filters (faculty + selection)
+      applySearch(selectionConfigs.course.searchInputId, "course");
+
+      const potentialVisible = getPotentialVisibleCount(
+        ".selection-course",
+        selectedCourses,
+        {
+          facultyKey: "courseFaculty",
+          codeKey: "courseCode",
+        },
+        currentCourseFaculty
+      );
+      const needsShowAll = potentialVisible > 5;
+
+      limitItems(".selection-course"); // will hide beyond 5 among currently visible
+
+      showLessCoursesBtnEl.style.display = "none";
+      showLessCoursesBtnEl.disabled = true;
+
+      if (showAllCoursesBtnEl) {
+        showAllCoursesBtnEl.style.display = needsShowAll ? "block" : "none";
+        showAllCoursesBtnEl.disabled = !needsShowAll;
+      }
+    });
+  }
+
+  if (showAllDegreesBtnEl) {
+    showAllDegreesBtnEl.addEventListener("click", () => {
+      document.querySelectorAll(".selection-degree").forEach((card) => {
+        const title = card.dataset.degreeTitle;
+        const cardFaculty = card.dataset.degreeFaculty;
+        const facultyMatch =
+          currentDegreeFaculty === "All Faculties" ||
+          cardFaculty === currentDegreeFaculty;
+        const isSelected = selectedDegrees.has(title);
+
+        card.style.display = facultyMatch && !isSelected ? "flex" : "none";
+      });
+
+      showAllDegreesBtnEl.style.display = "none";
+      showLessDegreesBtnEl.style.display = "block";
+      showLessDegreesBtnEl.disabled = false;
+    });
+  }
+
+  if (showLessDegreesBtnEl) {
+    showLessDegreesBtnEl.addEventListener("click", () => {
+      applySearch(selectionConfigs.degree.searchInputId, "degree");
+
+      const potentialVisible = getPotentialVisibleCount(
+        ".selection-degree",
+        selectedDegrees,
+        {
+          facultyKey: "degreeFaculty",
+          codeKey: "degreeTitle",
+        },
+        currentDegreeFaculty
+      );
+      const needsShowAll = potentialVisible > 5;
+
+      limitItems(".selection-degree");
+
+      showLessDegreesBtnEl.style.display = "none";
+      showLessDegreesBtnEl.disabled = true;
+
+      if (showAllDegreesBtnEl) {
+        showAllDegreesBtnEl.style.display = needsShowAll ? "block" : "none";
+        showAllDegreesBtnEl.disabled = !needsShowAll;
+      }
+    });
+  }
 }
 
 if (document.readyState === "loading") {

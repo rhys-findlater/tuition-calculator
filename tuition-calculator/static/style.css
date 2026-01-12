@@ -125,6 +125,20 @@ main {
   height: 4rem;
 }
 
+.selection-course,
+.selection-degree {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.18s ease-out, transform 0.18s ease-out;
+  display: flex;
+}
+
+.selection-course.hidden,
+.selection-degree.hidden {
+  opacity: 0;
+  transform: translateY(4px);
+}
+
 /* ==================== Welcome-section ==================== */
 /* Introductory panel explaining the tool */
 
@@ -754,7 +768,7 @@ main {
   margin-bottom: 1.25rem;
 }
 
-.selected-courses-header {
+.selected-items-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -799,7 +813,7 @@ main {
 /* ==================== Individual-Selected-Courses ==================== */
 /* Styles for each selected course row in the summary */
 
-.selected-course-row {
+.selected-item-row {
   display: flex;
   align-items: center;
   gap: 0.75rem;
@@ -809,7 +823,7 @@ main {
   border: 1px solid #e5e7eb;
 }
 
-.selected-course-main {
+.selected-item-main {
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
@@ -817,14 +831,14 @@ main {
 }
 
 /* Code + title wrapping inside a row */
-.selected-course-title {
+.selected-item-title {
   display: flex;
   align-items: baseline;
   gap: 0.55rem;
   min-width: 0;
 }
 
-.selected-course-code {
+.selected-item-code {
   font-size: 0.9rem;
   font-weight: 600;
   letter-spacing: 0.02em;
@@ -832,7 +846,7 @@ main {
   white-space: nowrap;
 }
 
-.selected-course-name {
+.selected-item-name {
   font-size: 0.9rem;
   font-weight: 500;
   color: #2c2c2c;
@@ -842,7 +856,7 @@ main {
 }
 
 /* Meta line for points and faculty chip */
-.selected-course-meta {
+.selected-item-meta {
   display: flex;
   gap: 0.75rem;
   font-size: 0.78rem;
@@ -850,12 +864,12 @@ main {
   align-items: center;
 }
 
-.selected-course-points {
+.selected-item-points {
   white-space: nowrap;
   font-weight: bold;
 }
 
-.selected-course-faculty {
+.selected-item-faculty {
   white-space: nowrap;
   font-weight: 500;
   color: #2c2c2c;
@@ -866,7 +880,7 @@ main {
 }
 
 /* Price block aligned to the right of the row */
-.selected-course-price {
+.selected-item-price {
   display: flex;
   align-items: baseline;
   gap: 0.35rem;
@@ -874,19 +888,19 @@ main {
   white-space: nowrap;
 }
 
-.selected-course-price-label {
+.selected-item-price-label {
   font-size: 0.75rem;
   color: #2c2c2c;
 }
 
-.selected-course-price-value {
+.selected-item-price-value {
   font-size: 0.95rem;
   font-weight: 600;
   color: #2c2c2c;
 }
 
 /* Remove button for a single selected course */
-.selected-course-remove {
+.selected-item-remove {
   border: none;
   background: transparent;
   color: #2c2c2c;
@@ -897,11 +911,11 @@ main {
   cursor: pointer;
 }
 
-.selected-course-remove:hover {
+.selected-item-remove:hover {
   background: rgba(0, 0, 0, 0.06);
 }
 
-.selected-course-remove:active {
+.selected-item-remove:active {
   background: rgba(0, 0, 0, 0.1);
 }
 

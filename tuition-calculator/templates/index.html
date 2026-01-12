@@ -358,7 +358,7 @@
           <!-- Course selection main content -->
           <div id="courseBodyContainer">
             <div class="selected-courses-container">
-              <div class="selected-courses-header">
+              <div class="selected-items-header selected-courses-header">
                 <p class="selected-courses-title">
                   Selected Courses (<span id="selectedCoursesCount">0</span>)
                 </p>
@@ -399,6 +399,7 @@
                   />
                   <button
                     type="button"
+                    id="searchClearCourse"
                     class="search-clear-btn"
                     aria-label="Clear search"
                   >
@@ -416,14 +417,14 @@
             <div class="selection-faculty-filter">
               <button
                 class="selection-faculty-filter-btn faculty-btn-course"
-                data-faculty="All Faculties"
+                data-course-faculty="All Faculties"
               >
                 All Faculties
               </button>
               {% for faculty in unique_faculties %} {% if faculty != 'Other' %}
               <button
                 class="selection-faculty-filter-btn faculty-btn-course"
-                data-faculty="{{ faculty }}"
+                data-course-faculty="{{ faculty }}"
               >
                 <span class="selection-faculty-filter-label"
                   >{{ faculty }}</span
@@ -432,7 +433,7 @@
               {% endif %} {% endfor %}
               <button
                 class="selection-faculty-filter-btn faculty-btn-course"
-                data-faculty="Other"
+                data-course-faculty="Other"
               >
                 Other
               </button>
@@ -446,8 +447,8 @@
                 data-course-code="{{ course['UC Code'] }}"
                 data-course-title="{{ course['Course Title'] }}"
                 data-course-points="{{ course['Points'] }}"
-                data-dom-price="{{ course['Dom Fees - 2026'] }}"
-                data-int-price="{{ course['Int Fees - 2026'] }}"
+                data-course-dom-price="{{ course['Dom Fees - 2026'] }}"
+                data-course-int-price="{{ course['Int Fees - 2026'] }}"
                 data-course-price="{{ course['Dom Fees - 2026'] }}"
                 data-course-faculty="{{ course['Faculty'] }}"
               >
@@ -458,7 +459,6 @@
                     {% if course['Points'] == 'TBC' %}
                     <p class="item-points">{{ course['Points'] }}</p>
                     {% else %} {% set p = course['Points']|float %}
-                    <!-- Render whole numbers without decimal, otherwise show full value -->
                     <p class="item-points">
                       {{ (p|int) if p == (p|int) else p }} pts
                     </p>
@@ -530,7 +530,7 @@
           <!-- Selected Courses -->
           <div id="degreeBodyContainer" class="selection-body-container-idle">
             <div class="selected-courses-container">
-              <div class="selected-courses-header">
+              <div class="selected-items-header selected-degrees-header">
                 <p class="selected-courses-title">
                   Selected Degrees (<span id="selectedDegreesCount">0</span>)
                 </p>
@@ -571,6 +571,7 @@
                   />
                   <button
                     type="button"
+                    id="searchClearDegree"
                     class="search-clear-btn"
                     aria-label="Clear search"
                   >
@@ -588,14 +589,14 @@
             <div class="selection-faculty-filter">
               <button
                 class="selection-faculty-filter-btn faculty-btn-degree"
-                data-faculty="All Faculties"
+                data-degree-faculty="All Faculties"
               >
                 All Degrees
               </button>
               {% for faculty in unique_faculties %} {% if faculty != 'Other' %}
               <button
                 class="selection-faculty-filter-btn faculty-btn-degree"
-                data-faculty="{{ faculty }}"
+                data-degree-faculty="{{ faculty }}"
               >
                 <span class="selection-faculty-filter-label"
                   >{{ faculty }}</span
@@ -604,7 +605,7 @@
               {% endif %} {% endfor %}
               <button
                 class="selection-faculty-filter-btn faculty-btn-degree"
-                data-faculty="Other"
+                data-degree-faculty="Other"
               >
                 Other
               </button>
@@ -617,29 +618,29 @@
                 class="selection-item selection-degree"
                 data-degree-title="{{ degree['Course Title'] }}"
                 data-degree-points="{{ degree['Points'] }}"
-                data-dom-price="{{ degree['Dom Fees - 2026'] }}"
-                data-int-price="{{ degree['Int Fees - 2026'] }}"
+                data-degree-dom-price="{{ degree['Dom Fees - 2026'] }}"
+                data-degree-int-price="{{ degree['Int Fees - 2026'] }}"
                 data-degree-price="{{ degree['Dom Fees - 2026'] }}"
                 data-degree-faculty="{{ degree['Faculty'] }}"
               >
                 <div class="item-info-container">
                   <div class="item-container">
+                    <p>{{ degree['UC Code'] }}</p>
                     <p class="item-faculty">{{ degree['Faculty'] }}</p>
                     {% if degree['Points'] == 'TBC' %}
                     <p class="item-points">{{ degree['Points'] }}</p>
                     {% else %} {% set p = degree['Points']|float %}
-                    <!-- Render whole numbers without decimal, otherwise show full value -->
                     <p class="item-points">
                       {{ (p|int) if p == (p|int) else p }} pts
                     </p>
                     {% endif %}
                   </div>
-                  <p>{{ degree['Degree Title'] }}</p>
+                  <p>{{ degree['Course Title'] }}</p>
                 </div>
                 <div class="item-button-container">
                   <p>${{ "{:,.2f}".format(degree['Dom Fees - 2026']) }}</p>
                   <!-- Toggle button used by JS to add/remove course from selection -->
-                  <button class="item-button" type="button" data-course-toggle>
+                  <button class="item-button" type="button" data-degree-toggle>
                     <span class="item-button-add">+</span>
                     <span>Add</span>
                   </button>
