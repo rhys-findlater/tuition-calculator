@@ -570,11 +570,37 @@
     <!-- PDF export name prompt -->
     <div id="pdfPrompt" class="prompt-container">
       <div class="prompt">
+        <button id="pdfPromptCloseBtn" class="pdf-prompt-close-btn">
+          <img
+            src="{{ url_for('static', filename='icons/x.svg') }}"
+            alt="Off-campus location"
+            class="sub-icon"
+          />
+        </button>
         <div class="prompt-header">
+          <div class="prompt-header-icon">
+            <img
+              src="{{ url_for('static', filename='icons/file-check.svg') }}"
+              alt="Off-campus location"
+              class="sub-icon"
+            />
+          </div>
           <h1 id="pdfNameTitle" class="prompt-title">Export plan to PDF</h1>
+          <p class="pdf-prompt-subtitle">Save this tuition estimation as a PDF document</p>
         </div>
+        <div class="pdf-prompt-summary">
+          <div class="pdf-prompt-summary-left">
+            <p class="pdf-prompt-summary-courses">Your estimate includes</p>
+            <p class="pdf-prompt-summary-label">Total Cost</p>
+          </div>
 
-        <p class="prompt-text">Who is this plan for? (optional)</p>
+          <div class="pdf-prompt-summary-right">
+            <span id="pdfPromptCourses" class="pdf-prompt-pill"></span>
+            <p id="pdfPromptTotalCost" class="pdf-prompt-total"></p>
+          </div>
+        </div>
+        
+        <label class="prompt-text">Who is this plan for? <span>(optional)</span></label>
 
         <input 
           id="pdfPromptInput"
@@ -585,7 +611,14 @@
 
         <div class="prompt-actions">
           <button id="pdfPromptCancelBtn" class="prompt-cancel" type="button">Cancel</button>
-          <button id="pdfPromptExportBtn" class="prompt-accept" type="button">Export</button>
+          <button id="pdfPromptExportBtn" class="prompt-accept" type="button"> 
+            <img
+              src="{{ url_for('static', filename='icons/download-white.svg') }}"
+              alt="Off-campus location"
+              class="sub-icon"
+            />
+            Export
+          </button>
         </div>
       </div>
     </div>

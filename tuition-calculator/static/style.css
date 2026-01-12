@@ -1003,8 +1003,8 @@ main {
 }
 
 /* ==================== Footer ==================== */
-/* Simple global footer for legal and credits */
 
+/* Simple global footer for legal and credits */
 .footer {
   width: 100vw;
   text-align: center;
@@ -1015,3 +1015,5 @@ main {
 .footer-text {
   color: white;
 }
+
+/* ==================== Name Prompt ==================== */
