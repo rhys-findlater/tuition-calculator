@@ -1017,3 +1017,52 @@ main {
 }
 
 /* ==================== Name Prompt ==================== */
+
+.prompt-container {
+  position: fixed;
+  inset: 0;
+  display: none;              
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background: rgba(17, 24, 39, 0.55); /* dark overlay */
+  z-index: 9999;
+}
+
+.prompt-container.is-open {                              
+  display: flex;                                         
+}
+
+.prompt {
+  width: 100%;
+  max-width: 32rem;
+  background-color: #ffffff; 
+  box-shadow: var(--shadow-card-sm);
+  border-radius: var(--radius-card);
+  border: 1px solid var(--border-subtle);
+  padding: 1.5rem;
+}
+
+.prompt-title {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+}
+
+.prompt-text {
+  font-size: 0.875rem;
+  margin-bottom: 0.75rem;
+}
+
+.prompt-input {
+  width: 100%;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: var(--radius-control);
+}
+
+.prompt-actions {}
+
+.prompt-cancel {}
+
+.prompt-accept {}

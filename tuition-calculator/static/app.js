@@ -286,15 +286,31 @@ function initTuitionSelection() {
   initCourseSearch();
 
   // Get elements 
-  const exportPDFButtonEl     = document.getElementById("exportPDFButton");
+  const exportPDFButtonEl       = document.getElementById("exportPDFButton");
 
-  const pdfPromptEl           = document.getElementById("pdfPrompt");
-  const pdfPromptInputEl      = document.getElementById("pdfPromptInput")  
-  const pdfPromptCancelBtnEl  = document.getElementById("pdfPromptCancelBtn")
-  const pdfPromptExportBtnEl  = document.getElementById("pdfPromptExportBtn")
+  const pdfPromptEl             = document.getElementById("pdfPrompt");
+  const pdfPromptInputEl        = document.getElementById("pdfPromptInput")  
+  const pdfPromptCancelBtnEl    = document.getElementById("pdfPromptCancelBtn")
+  const pdfPromptExportBtnEl    = document.getElementById("pdfPromptExportBtn")
+  const pdfPromptCloseBtnEl     = document.getElementById("pdfPromptCloseBtn");
+  const pdfPromptCoursesPillEl  = document.getElementById("pdfPromptCoursesPill");
+  const pdfPromptTotalCostEl    = document.getElementById("pdfPromptTotalCost");
+
 
   // Show the popup
   function openPdfPrompt() {
+
+    if  (!pdfPromptEl) return // Guard clause
+
+    if (pdfPromptTotalCostEl && costSummaryTotalEl) { 
+      pdfPromptTotalCostEl.textContent = costSummaryTotalEl.textContent // Copy the displayed total cost text from the main summary
+    }
+
+    if (pdfPromptCoursesPillEl) {
+      const count = selected.size;
+      pdfPromptCoursesPillEl.textContent = `${count} course${count === 1 ? "" : "s"}`;
+    }
+
     pdfPromptEl.classList.add("is-open");
     if (pdfPromptInputEl) {
       pdfPromptInputEl.value = "";
@@ -318,6 +334,11 @@ function initTuitionSelection() {
   if (pdfPromptCancelBtnEl) {
     pdfPromptCancelBtnEl.addEventListener("click", closePdfPrompt);
   }  
+
+  // X button, closes
+  if (pdfPromptCloseBtnEl) {
+    pdfPromptCloseBtnEl.addEventListener("click", closePdfPrompt);
+  }
 
   // Export: read name, close prompt, export PDF
   if (pdfPromptExportBtnEl) {
