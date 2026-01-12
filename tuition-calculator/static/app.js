@@ -285,10 +285,72 @@ function initTuitionSelection() {
 
   initCourseSearch();
 
-  const exportPDFButtonEl = document.getElementById("exportPDFButton");
-  if (exportPDFButtonEl) {
-    exportPDFButtonEl.addEventListener("click", exportToPDF)
+  // Get elements 
+  const exportPDFButtonEl     = document.getElementById("exportPDFButton");
+
+  const pdfPromptEl           = document.getElementById("pdfPrompt");
+  const pdfPromptInputEl      = document.getElementById("pdfPromptInput")  
+  const pdfPromptCancelBtnEl  = document.getElementById("pdfPromptCancelBtn")
+  const pdfPromptExportBtnEl  = document.getElementById("pdfPromptExportBtn")
+
+  // Show the popup
+  function openPdfPrompt() {
+    pdfPromptEl.classList.add("is-open");
+    if (pdfPromptInputEl) {
+      pdfPromptInputEl.value = "";
+      pdfPromptInputEl.focus();
+    }
   }
+
+  // Hide the popup
+  function closePdfPrompt() {
+    pdfPromptEl.classList.remove("is-open");
+  }
+
+  // Open prompt on click of main "Export to PDF" btn
+  if (exportPDFButtonEl) {
+    exportPDFButtonEl.addEventListener("click", () => {
+      openPdfPrompt();
+    });
+  } 
+
+  // Cancel, closes
+  if (pdfPromptCancelBtnEl) {
+    pdfPromptCancelBtnEl.addEventListener("click", closePdfPrompt);
+  }  
+
+  // Export: read name, close prompt, export PDF
+  if (pdfPromptExportBtnEl) {
+    pdfPromptExportBtnEl.addEventListener("click", async (e) => {
+      const planFor = (pdfPromptInputEl?.value || "").trim();
+      closePdfPrompt();
+      await exportToPDF(planFor);
+    })
+  }
+
+  // Press Enter in input
+  if (pdfPromptInputEl) {
+    pdfPromptInputEl.addEventListener("keydown", async (e) => {
+      if (e.key !== "Enter") return;
+      e.preventDefault();
+
+      const planFor = (pdfPromptInputEl.value || "").trim();
+      closePdfPrompt();
+      await exportToPDF(planFor)
+    });
+  }
+
+  // Click outside the prompt to close it
+  if (pdfPromptEl) {
+    pdfPromptEl.addEventListener("click", (e) => {
+      if (e.target === pdfPromptEl) closePdfPrompt();
+    });
+  }
+  
+  // Press Escape to close prompt
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") closePdfPrompt();
+  });
 }
 
 /**

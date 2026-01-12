@@ -568,7 +568,7 @@
     </footer>
 
     <!-- PDF export name prompt -->
-    <div id="pdfNamePrompt" class="prompt-container">
+    <div id="pdfPrompt" class="prompt-container">
       <div class="prompt">
         <div class="prompt-header">
           <h1 id="pdfNameTitle" class="prompt-title">Export plan to PDF</h1>
@@ -577,15 +577,15 @@
         <p class="prompt-text">Who is this plan for? (optional)</p>
 
         <input 
-          id="promptInput"
+          id="pdfPromptInput"
           class="prompt-input"
           type="text"
           placeholder="Name"
         />
 
         <div class="prompt-actions">
-          <button id="promptCancel" class="prompt-cancel">Cancel</button>
-          <button id="promptAccept" class="prompt-accept">Export</button>
+          <button id="pdfPromptCancelBtn" class="prompt-cancel" type="button">Cancel</button>
+          <button id="pdfPromptExportBtn" class="prompt-accept" type="button">Export</button>
         </div>
       </div>
     </div>
