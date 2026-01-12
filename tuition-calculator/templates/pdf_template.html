@@ -1,10 +1,147 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <title>Test</title>
-    </head>
-<body>
-    <h1>Test</h1>
-    <p>PDF is working!</p>
-</body>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Course Cost Summary PDF</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  </head>
+  <body>
+    <!-- Header -->
+    <header class="pdf-header">
+        <div class="pdf-header-left">
+            <h1 class="pdf-title">Course Cost Summary</h1>
+            <p class="pdf-org">University of Canterbury</p>
+        </div>
+
+        <div class="pdf-header-right">
+         <div class="info-row">
+            <div class="info-label">Generated:</div>
+            <div class="info-value">{{ generated_date }}</div>
+          </div>
+
+          {% if name is defined and name|trim %}
+          <div class="info-row">
+            <div class="info-label">Name:</div>
+            <div class="info-value">{{ name }}</div>
+          </div>
+          {% endif %}
+        </div>
+    </header>
+    
+    <main class="pdf-document">
+      <!-- Learner Information -->
+      <div class="pdf-section">
+        <h1 class="pdf-section-title">Learner Information</h1>
+        <div class="learner-info-grid">
+          <div class="info-row">
+            <div class="info-label">Learner Type:</div>
+            <div class="info-value">{{ learner_type }}</div>
+          </div>
+
+          <div class="info-row">
+            <div class="info-label">Study Location:</div>
+            <div class="info-value">
+              {{ learner_location }}
+              {% if gst_applicable is not none %}
+              <span class="status-pill">
+                {{ "GST Applicable" if gst_applicable else "GST Not Applicable" }}
+              </span>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Selected Courses -->
+      <div class="pdf-section">
+        <div class="pdf-section-header">
+          <h1 class="pdf-section-title">Selected Courses</h1>
+        </div>
+        <table class="courses-table">
+          <thead>
+            <tr>
+              <th class="course-code">Course Code</th>
+              <th>Course Name</th>
+              <th class="course-points">Points</th>
+              <th class="course-fee">Fee</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {% for course in courses %}
+            <tr>
+              <td class="mono">{{ course.code }}</td>
+              <td>{{ course.name }}</td>
+              <td class="number">{{ course.points }}</td>
+              <td class="number">{{ course.fee }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      
+      <!-- Cost Breakdown -->
+      <div class="pdf-section">
+        <h1 class="pdf-section-title">Cost Breakdown</h1>
+
+        <div class="totals">
+          <div class="totals-rows">
+            <div class="totals-label">Course Fees </div>
+            <div class="totals-values"> {{ course_fees }} </div>
+          </div>
+
+          <div class="totals-rows">
+            <div class="totals-label">Student Services Levy</div>
+            <div class="levy-note">(Based on {{points}} points)</div>
+          </div>
+          <div class="totals-value">{{ levy }}</div>
+        </div>
+        <div class="totals-rows">
+          <div class="totals-label">Subtotal</div>
+          <div class="totals-value">{{ subTotal }}</div>
+        </div>
+
+        <div class="totals-rows">
+          <div class="totals-label">GST (15%)</div>
+          <div class="totals-value">{{ gst }}</div>
+        </div>
+
+        <div class="totals-totalbar">
+          <div class="totals-totalbar-label">TOTAL COST</div>
+          <div class="totals-totalbar-value">{{ totalCost }}</div>
+        </div>
+      </div>
+    </main>
+    <!-- Footer -->
+    <Footer class="pdf-footer">
+      <div class="footer-title">UC Online Tuition Calculator</div>
+      <div class="footer-subtitle">University of Canterbury | Te Whare Wānanga o Waitaha</div>
+
+      <div class="pdf-notes">
+        <div class="pdf-notes-title">Important Notes:</div>
+        <ul class="pdf-notes-list">
+          <li>
+            Fees are indicative and subject to change. Please confirm with UC Online before enrolling.
+          </li>
+          <li>
+            Additional costs such as textbooks, materials, and equipment may apply.
+          </li>
+          <li>
+            This document is for informational purposes only and does not constitute an offer of enrolment.
+          </li>
+          <li>
+            GST is applicable for onshore learners only.
+          </li>
+          <li>
+            Student Services Levy (SSL) is calculated based on total course points.
+          </li>
+        </ul>
+      </div>
+    </Footer>
+  </body>
 </html>

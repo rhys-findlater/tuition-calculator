@@ -4,3 +4,9 @@
  * @
  * @ Authors: Regan Williams & Rhys Findlater
  */
+
+@page {
+  size: A4;
+  margin: 16mm;
+}
+
