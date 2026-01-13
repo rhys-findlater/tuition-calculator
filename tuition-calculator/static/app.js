@@ -187,32 +187,36 @@ function setAvailableCardVisibility(selector, dataKey, id, isSelected) {
 }
 
 function collectPdfData() {
-  const nameInput = (document.getElementById("pdfPromptInput")?.value || "").trim();
-  const learner_type      = getCurrentLearnerType();
-  const learner_location  = getCurrentLearnerLocation(); 
-  const gst_applicable    = learner_location === "onshore"; 
+  const nameInput = (
+    document.getElementById("pdfPromptInput")?.value || ""
+  ).trim();
+  const learner_type = getCurrentLearnerType();
+  const learner_location = getCurrentLearnerLocation();
+  const gst_applicable = learner_location === "onshore";
 
   // Build the courses array from selectedCourses map
   const courses = Array.from(selectedCourses.values()).map((course) => ({
     code: course.code,
     name: course.title,
     points: course.points,
-    fee: (learner_type === "domestic" ? course.domPrice : course.intPrice)
-      .toLocaleString("en-NZ", {
-        style: "currency",
-        currency: "NZD",
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-      }),
+    fee: (learner_type === "domestic"
+      ? course.domPrice
+      : course.intPrice
+    ).toLocaleString("en-NZ", {
+      style: "currency",
+      currency: "NZD",
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }),
   }));
 
-  // Read the displayed summary numbers from the UI so PDF matches inputs 
-  const courseFeesText    = costSummaryTotalCostEl?.textContent?.trim() || "";
-  const levyText          = costSummaryLevyEl?.textContent?.trim() || "";
-  const subTotalText      = costSummarySubtotalEl?.textContent?.trim() || "";
-  const gstText           = costSummaryGstEl?.textContent?.trim() || "";
-  const totalText         = costSummaryTotalEl?.textContent?.trim() || "";
-  const totalPointsText   = costSummaryTotalPointsEl?.textContent?.trim() || "";
+  // Read the displayed summary numbers from the UI so PDF matches inputs
+  const courseFeesText = costSummaryTotalCostEl?.textContent?.trim() || "";
+  const levyText = costSummaryLevyEl?.textContent?.trim() || "";
+  const subTotalText = costSummarySubtotalEl?.textContent?.trim() || "";
+  const gstText = costSummaryGstEl?.textContent?.trim() || "";
+  const totalText = costSummaryTotalEl?.textContent?.trim() || "";
+  const totalPointsText = costSummaryTotalPointsEl?.textContent?.trim() || "";
 
   const generateddate = new Date().toLocaleString("en-NZ", {
     year: "numeric",
@@ -221,7 +225,7 @@ function collectPdfData() {
     hour: "2-digit",
     minute: "2-digit",
   });
-  
+
   return {
     nameInput,
     generateddate,
@@ -584,10 +588,7 @@ function capitalize(word) {
 }
 
 function calculateLevy(selectedCoursesSize, totalCoursePoints) {
-  if (selectedCoursesSize === 1 && totalCoursePoints === 15) return 29.1;
-  if (totalCoursePoints === 60) return 116.4;
-  if (totalCoursePoints === 120) return 232.8;
-  return "TBD";
+  return totalCoursePoints * 2.06;
 }
 
 function calculateCoursesTotals(selectedCourses, isDomestic) {

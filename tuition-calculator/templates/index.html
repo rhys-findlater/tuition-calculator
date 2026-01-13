@@ -11,9 +11,12 @@
       type="image/x-icon"
       href="{{ url_for('static', filename='favicon.ico') }}"
     />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
 
     <!-- Main application stylesheet -->
     <link
@@ -246,7 +249,7 @@
                         class="cost-summary-icon-inline"
                       />
                       <span class="info-tooltip">
-                        Compulsory fee charged in addition to tuition fees
+                        SSL is calculated at $2.06 per point
                       </span>
                     </button>
                   </div>
@@ -291,7 +294,11 @@
               </div>
 
               <!-- Export to PDF button -->
-              <button id="exportPDFButton" class="cost-summary-export" type="button">
+              <button
+                id="exportPDFButton"
+                class="cost-summary-export"
+                type="button"
+              >
                 <img
                   src="{{ url_for('static', filename='icons/download.svg') }}"
                   alt=""
@@ -740,6 +747,10 @@
 
               <div class="ssl-panel-rows">
                 <div class="ssl-panel-row">
+                  <p class="ssl-panel-label">Per 1-point</p>
+                  <p class="ssl-panel-value">$2.06</p>
+                </div>
+                <div class="ssl-panel-row">
                   <p class="ssl-panel-label">One 15-point course</p>
                   <p class="ssl-panel-value">$29.10</p>
                 </div>
@@ -784,7 +795,9 @@
             />
           </div>
           <h1 id="pdfNameTitle" class="prompt-title">Export plan to PDF</h1>
-          <p class="pdf-prompt-subtitle">Save this tuition estimation as a PDF document</p>
+          <p class="pdf-prompt-subtitle">
+            Save this tuition estimation as a PDF document
+          </p>
         </div>
         <div class="pdf-prompt-summary">
           <div class="pdf-prompt-summary-left">
@@ -797,10 +810,12 @@
             <p id="pdfPromptTotalCost" class="pdf-prompt-total"></p>
           </div>
         </div>
-        
-        <label class="prompt-text">Add recipient name <span class="optional">(optional)</span></label>
 
-        <input 
+        <label class="prompt-text"
+          >Add recipient name <span class="optional">(optional)</span></label
+        >
+
+        <input
           id="pdfPromptInput"
           class="prompt-input"
           type="text"
@@ -808,8 +823,10 @@
         />
 
         <div class="prompt-actions">
-          <button id="pdfPromptCancelBtn" class="prompt-cancel" type="button">Cancel</button>
-          <button id="pdfPromptExportBtn" class="prompt-accept" type="button"> 
+          <button id="pdfPromptCancelBtn" class="prompt-cancel" type="button">
+            Cancel
+          </button>
+          <button id="pdfPromptExportBtn" class="prompt-accept" type="button">
             <img
               src="{{ url_for('static', filename='icons/download-white.svg') }}"
               alt="Off-campus location"
