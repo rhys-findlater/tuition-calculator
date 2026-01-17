@@ -7,6 +7,238 @@
 
 @page {
   size: A4;
-  margin: 16mm;
+  margin: 8mm;
 }
 
+:root{
+  --ink: #111827;
+  --muted: #6b7280;
+  --line: #e5e7eb;
+  --panel: #F9FAFB;
+  --header: #1f2937;
+  --accent: #ce3e2e; 
+  
+  /* Border radius scale */
+  --radius-card: 0.75rem;
+  
+  /* Shadow scale */
+  --shadow-card-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-card-md: 0 3px 6px 0 rgb(0 0 0 / 0.1);
+}
+
+* { 
+  box-sizing: border-box; 
+  margin: 0;
+  padding: 0;
+}
+html {
+  font-size: 16px;
+}
+
+body {
+  line-height: 1.35;
+  font-family: Inter, sans-serif;
+  color: #2c2c2c;
+  background: #ffffff;
+  font-size: 0.875rem;
+}
+
+.info-label {
+  margin-right: 6px;
+}
+
+/* ==================== Header ==================== */
+.pdf-header{
+  background: linear-gradient(#212121);
+  color: #ffffff;
+  width: 100%;
+  padding: 0.875rem 1rem;
+
+  border: 1px solid var(--line);    
+  border-radius: 12px;
+  overflow: hidden;
+  position: relative;               
+
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.pdf-header::before{
+  content: "";
+  position: absolute;
+  left: 0; right: 0; top: 0;
+  height: 6px;
+  background: var(--accent);
+}
+
+.pdf-header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.pdf-header-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.pdf-title {
+  font-size: 1.875rem;
+  font-weight: 400;
+  letter-spacing: -0.025em;
+}
+
+.pdf-org {
+  font-size: 0.875rem;
+  font-weight: 400;
+}
+
+.header-info-row {
+  display: flex;
+  flex-direction: row;
+  white-space: nowrap;
+}
+
+
+.for-name{
+  margin-top: 6px;
+}
+
+/* ==================== Body ==================== */
+.pdf-document{
+  padding-top: 0.375rem;
+}
+
+.pdf-section{
+  margin-top: 0.875rem;
+}
+
+.pdf-section-title{
+  font-size: 1.125rem;
+  font-weight: 400;
+  letter-spacing: 0.025em;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+}
+
+/* ==================== Learner info ==================== */
+.learner-info-grid {
+  box-shadow: var(--shadow-card-sm);
+  border-radius: var(--radius-card);
+  border: 1px solid var(--line);
+  background: var(--panel);
+  padding: 2rem;
+}
+
+.pdf-section-subheading {
+  color: #364153;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+  margin-bottom: 0.75rem;
+  font-weight: 400;
+}
+
+.info-rows {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.info-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.info-label {
+  color: #4A5565;
+}
+
+.info-value {
+  color: #101828;
+}
+
+.status-pill{
+  margin-left: 2px;
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 700;
+  color: #111827;
+  background: #eef2f7;
+  border: 1px solid #dbe3ef;
+  vertical-align: middle;
+}
+
+/* ==================== Courses table ==================== */
+
+.courses-card{
+  border-radius: 12px;
+  overflow: hidden;                
+  box-shadow: var(--shadow-card-sm);
+  background: #fff;
+  border: 1px solid var(--line);
+  position: relative;
+}
+
+.courses-card::before{
+  content: "";
+  position: absolute;
+  left: 0; right: 0; top: 0;
+  height: 3px;
+  background: var(--accent);
+}
+
+.courses-table{
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  border: 0;
+  background: transparent;
+}
+
+.courses-table thead th {
+  background: #212121;
+  color: #ffffff;
+  text-transform: uppercase;
+  font-size: 0.875rem;
+  font-weight: 400;
+  padding: 12px 14px;
+  text-align: left;
+}
+
+.courses-table tbody td {
+  padding: 12px 14px;
+  font-size: 0.75rem;
+  vertical-align: middle;
+}
+
+.courses-table tbody tr:nth-child(even) {
+  background: #f9fbfc;
+}
+
+.courses-table th.course-code,
+.courses-table td.mono{
+  width: 18%;
+  white-space: nowrap;
+}
+
+.courses-table th.course-points,
+.courses-table th.course-fee{
+  width: 12%;
+  white-space: nowrap;
+  text-align: right;
+}
+
+.courses-table td.point{
+  padding-left: 1.5rem;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.courses-table td.cost{
+  text-align: right;
+  white-space: nowrap;
+}

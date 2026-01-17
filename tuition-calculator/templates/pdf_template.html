@@ -9,52 +9,51 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
+    <link rel="stylesheet" href="{{ url_for('static', filename='pdf/pdf.css') }}">
+
   </head>
+
   <body>
     <!-- Header -->
     <header class="pdf-header">
-        <div class="pdf-header-left">
-            <h1 class="pdf-title">Course Cost Summary</h1>
-            <p class="pdf-org">University of Canterbury</p>
+      <div class="pdf-header-top">
+        <h1 class="pdf-title">Course Cost Summary</h1>
+        <div class="header-info-row">
+          <div class="header-info-label">Generated: </div>
+          <div class="header-info-value">{{ generateddate }}</div>
         </div>
-
-        <div class="pdf-header-right">
-         <div class="info-row">
-            <div class="info-label">Generated:</div>
-            <div class="info-value">{{generateddate}}</div>
-            {% if nameInput is defined and nameInput|trim %}
-              <div class="for-name">For {{ nameInput }}</div>
-            {% endif %}          
-          </div>
-
-          {% if name is defined and name|trim %}
-          <div class="info-row">
-            <div class="info-label">Name:</div>
-            <div class="info-value">{{ name }}</div>
-          </div>
+      </div>
+      <div class="pdf-header-bottom">
+        <p class="pdf-org">University of Canterbury</p>
+        <div class="header-info-row">
+          {% if nameInput is defined and nameInput|trim %}
+          <div class="for-name">For {{ nameInput }}</div>
           {% endif %}
         </div>
+      </div>
     </header>
     
     <main class="pdf-document">
       <!-- Learner Information -->
       <div class="pdf-section">
-        <h1 class="pdf-section-title">Learner Information</h1>
         <div class="learner-info-grid">
-          <div class="info-row">
-            <div class="info-label">Learner Type:</div>
-            <div class="info-value">{{ learner_type }}</div>
-          </div>
+          <h1 class="pdf-section-subheading">Learner Information</h1>
+          <div class="info-rows">
+            <div class="info-row">
+              <div class="info-label">Learner Type:</div>
+              <div class="info-value">{{ learner_type }}</div>
+            </div>
 
-          <div class="info-row">
-            <div class="info-label">Study Location:</div>
-            <div class="info-value">
-              {{ learner_location }}
-              {% if gst_applicable is not none %}
-              <span class="status-pill">
-                {{ "GST Applicable" if gst_applicable else "GST Not Applicable" }}
-              </span>
-              {% endif %}
+            <div class="info-row">
+              <div class="info-label">Study Location: </div>
+              <div class="info-value">
+                {{ learner_location }}
+                {% if gst_applicable is not none %}
+                <span class="status-pill">
+                  {{ "GST Applicable" if gst_applicable else "GST Not Applicable" }}
+                </span>
+                {% endif %}
+              </div>
             </div>
           </div>
         </div>
@@ -62,30 +61,30 @@
 
       <!-- Selected Courses -->
       <div class="pdf-section">
-        <div class="pdf-section-header">
-          <h1 class="pdf-section-title">Selected Courses</h1>
-        </div>
-        <table class="courses-table">
-          <thead>
-            <tr>
-              <th class="course-code">Course Code</th>
-              <th>Course Name</th>
-              <th class="course-points">Points</th>
-              <th class="course-fee">Fee</th>
-            </tr>
-          </thead>
+        <h1 class="pdf-section-title">Selected Courses</h1>
+        <div class="courses-card">
+          <table class="courses-table">
+            <thead>
+              <tr>
+                <th class="course-code">Course Code</th>
+                <th>Course Name</th>
+                <th class="course-points">Points</th>
+                <th class="course-fee">Fee</th>
+              </tr>
+            </thead>
 
-          <tbody>
-            {% for course in courses %}
-            <tr>
-              <td class="mono">{{ course.code }}</td>
-              <td>{{ course.name }}</td>
-              <td class="number">{{ course.points }}</td>
-              <td class="number">{{ course.fee }}</td>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
+            <tbody>
+              {% for course in courses %}
+              <tr>
+                <td class="mono">{{ course.code }}</td>
+                <td>{{ course.name }}</td>
+                <td class="point">{{ course.points }}</td>
+                <td class="cost">{{ course.fee }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
       </div>
       
       <!-- Cost Breakdown -->
