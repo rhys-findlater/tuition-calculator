@@ -87,6 +87,46 @@ main {
   display: none;
 }
 
+.popup-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.popup-backdrop[hidden] {
+  display: none;
+}
+
+.popup {
+  background: #fff;
+  padding: 1.5rem 2rem;
+  border-radius: 0.5rem;
+  max-width: 360px;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.25);
+}
+
+.popup-title {
+  margin: 0 0 0.5rem;
+  font-weight: 600;
+}
+
+.popup-text {
+  margin: 0 0 1rem;
+}
+
+.popup-btn {
+  padding: 0.5rem 1.2rem;
+  border: none;
+  border-radius: 999px;
+  background: #111827;
+  color: #fff;
+  cursor: pointer;
+}
+
 /* ==================== Header ==================== */
 /* Global header bar with logo and title */
 
@@ -1054,7 +1094,7 @@ main {
 
 /* ==================== Name Prompt ==================== */
 
-.prompt-container{
+.prompt-container {
   position: fixed;
   inset: 0;
   display: flex;
@@ -1073,7 +1113,7 @@ main {
   transition: opacity 180ms ease, visibility 0s linear 180ms;
 }
 
-.prompt-container.is-open{
+.prompt-container.is-open {
   opacity: 1;
   visibility: visible;
   pointer-events: auto;
@@ -1093,7 +1133,7 @@ main {
   position: relative;
   width: 100%;
   max-width: 32.5rem;
-  background-color: #ffffff; 
+  background-color: #ffffff;
   box-shadow: var(--shadow-card-sm);
   border-radius: var(--radius-card);
   border: 1px solid var(--border-subtle);
@@ -1115,7 +1155,7 @@ main {
 }
 
 .pdf-prompt-close-btn:hover {
-  background: rgba(0,0,0,0.06);
+  background: rgba(0, 0, 0, 0.06);
 }
 
 .pdf-prompt-close-btn img {
@@ -1141,7 +1181,7 @@ main {
   display: grid;
   place-items: center;
   background-color: #ce3e2e;
-  box-shadow: 0 10px 15px -3px rgba(0,0,0,0.12);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.12);
 }
 
 .prompt-header-icon img {
@@ -1230,7 +1270,7 @@ main {
   gap: 0.4rem;
 }
 .prompt-text .optional {
-  font-size:  0.875rem;
+  font-size: 0.875rem;
   font-weight: 500;
   color: rgba(44, 44, 44, 0.65);
 }
@@ -1297,7 +1337,7 @@ main {
 
 .prompt-accept:hover {
   background: linear-gradient(to right, #cc0011, #b30010);
-  box-shadow: 0 10px 15px -3px rgba(0,0,0,0.10);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
 }
 .prompt-accept img {
   width: 16px;

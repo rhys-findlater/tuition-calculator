@@ -432,7 +432,8 @@
               >
                 All Faculties
               </button>
-              {% for faculty in unique_faculties %} {% if faculty != 'Other' %}
+              {% for faculty in unique_course_faculties %} {% if faculty !=
+              'Other' %}
               <button
                 class="selection-faculty-filter-btn faculty-btn-course"
                 data-course-faculty="{{ faculty }}"
@@ -441,13 +442,15 @@
                   >{{ faculty }}</span
                 >
               </button>
-              {% endif %} {% endfor %}
+              {% endif %} {% endfor %} {% if 'Other' in unique_course_faculties
+              %}
               <button
                 class="selection-faculty-filter-btn faculty-btn-course"
                 data-course-faculty="Other"
               >
                 Other
               </button>
+              {% endif %}
             </div>
 
             <!-- Course results list rendered from SharePoint/Excel data -->
@@ -602,9 +605,10 @@
                 class="selection-faculty-filter-btn faculty-btn-degree"
                 data-degree-faculty="All Faculties"
               >
-                All Degrees
+                All Faculties
               </button>
-              {% for faculty in unique_faculties %} {% if faculty != 'Other' %}
+              {% for faculty in unique_degree_faculties %} {% if faculty !=
+              'Other' %}
               <button
                 class="selection-faculty-filter-btn faculty-btn-degree"
                 data-degree-faculty="{{ faculty }}"
@@ -613,13 +617,15 @@
                   >{{ faculty }}</span
                 >
               </button>
-              {% endif %} {% endfor %}
+              {% endif %} {% endfor %} {% if 'Other' in unique_degree_faculties
+              %}
               <button
                 class="selection-faculty-filter-btn faculty-btn-degree"
                 data-degree-faculty="Other"
               >
                 Other
               </button>
+              {% endif %}
             </div>
 
             <!-- Degree results list rendered from SharePoint/Excel data -->
@@ -627,17 +633,18 @@
               {% for degree in degrees %}
               <div
                 class="selection-item selection-degree"
-                data-degree-title="{{ degree['Course Title'] }}"
+                data-degree-code="{{ degree['Code'] }}"
+                data-degree-title="{{ degree['Full Title'] }}"
                 data-degree-points="{{ degree['Points'] }}"
-                data-degree-dom-price="{{ degree['Dom Fees - 2026'] }}"
-                data-degree-int-price="{{ degree['Int Fees - 2026'] }}"
-                data-degree-price="{{ degree['Dom Fees - 2026'] }}"
-                data-degree-faculty="{{ degree['Faculty'] }}"
+                data-degree-dom-price="{{ degree['Dom - Full Prog_2026'] }}"
+                data-degree-int-price="{{ degree['Int -  Full Prog_2026'] }}"
+                data-degree-price="{{ degree['Dom - Full Prog_2026'] }}"
+                data-degree-faculty="{{ degree['Owning Faculty'] }}"
               >
                 <div class="item-info-container">
                   <div class="item-container">
-                    <p>{{ degree['UC Code'] }}</p>
-                    <p class="item-faculty">{{ degree['Faculty'] }}</p>
+                    <p>{{ degree['Code'] }}</p>
+                    <p class="item-faculty">{{ degree['Owning Faculty'] }}</p>
                     {% if degree['Points'] == 'TBC' %}
                     <p class="item-points">{{ degree['Points'] }}</p>
                     {% else %} {% set p = degree['Points']|float %}
@@ -646,11 +653,31 @@
                     </p>
                     {% endif %}
                   </div>
-                  <p>{{ degree['Course Title'] }}</p>
+                  <p>{{ degree['Full Title'] }}</p>
                 </div>
                 <div class="item-button-container">
-                  <p>${{ "{:,.2f}".format(degree['Dom Fees - 2026']) }}</p>
+                  <p>${{ "{:,.2f}".format(degree['Dom - Full Prog_2026']) }}</p>
                   <!-- Toggle button used by JS to add/remove course from selection -->
+                  <div
+                    id="degreeLimitPopup-{{ degree['Code'] }}"
+                    class="popup-backdrop"
+                    hidden
+                  >
+                    <div class="popup">
+                      <h2 class="popup-title">Degree limit reached</h2>
+                      <p class="popup-text">
+                        You can only select one degree. Remove the current
+                        degree to choose another.
+                      </p>
+                      <button
+                        id="degreeLimitCloseBtn-{{ degree['Code'] }}"
+                        class="popup-btn"
+                        type="button"
+                      >
+                        OK
+                      </button>
+                    </div>
+                  </div>
                   <button class="item-button" type="button" data-degree-toggle>
                     <span class="item-button-add">+</span>
                     <span>Add</span>
@@ -747,7 +774,7 @@
 
               <div class="ssl-panel-rows">
                 <div class="ssl-panel-row">
-                  <p class="ssl-panel-label">Per 1-point</p>
+                  <p class="ssl-panel-label">Per 1-point (2026)</p>
                   <p class="ssl-panel-value">$2.06</p>
                 </div>
                 <div class="ssl-panel-row">

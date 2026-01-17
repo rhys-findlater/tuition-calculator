@@ -14,118 +14,64 @@ def create_app(test_config=None):
     )
 
     DATA_DIR = os.getenv('RAILWAY_VOLUME_MOUNT_PATH', 'data')
-    csv_path = os.path.join('tuition-calculator', DATA_DIR, 'tuition_fees.csv') 
+    course_csv_path = os.path.join('tuition-calculator', DATA_DIR, 'tuition_fees.csv') 
+    degree_csv_path = os.path.join('tuition-calculator', DATA_DIR, 'degree_fees.csv')
    
     @app.route("/", methods=['GET', 'POST']) 
     def index():
         # Read in CSV
-        df = pd.read_csv(csv_path)
+        course_df = pd.read_csv(course_csv_path)
+        degree_df = pd.read_csv(degree_csv_path)
+
 
         # Clean and filter data
         fee_columns = ['Int Fees - 2026', 'Dom Fees - 2026'] 
         for col in fee_columns:
-            df[col] = (
-                df[col].astype(str)
+            course_df[col] = (
+                course_df[col].astype(str)
                 .str.replace(r'[\$,]', '', regex=True)
                 .str.strip()
                 .replace('nan', pd.NA)
                 .pipe(pd.to_numeric, errors='coerce')
                 .fillna(0).astype(int)
             )
-        df['Faculty'] = df['Faculty'].fillna('Other').replace('None', 'Other')
-        df['UC Code'] = df['UC Code'].fillna('TBC').replace('nan', 'TBC')
-        df['Points'] = df['Points'].fillna('TBC').replace('nan', 'TBC')
+
+        fee_columns = ['Int -  Full Prog_2026', 'Dom - Full Prog_2026'] 
+        for col in fee_columns:
+            degree_df[col] = (
+                degree_df[col].astype(str)
+                .str.replace(r'[\$,]', '', regex=True)
+                .str.strip()
+                .replace('nan', pd.NA)
+                .pipe(pd.to_numeric, errors='coerce')
+                .fillna(0).astype(int)
+            )
+
+        course_df['Faculty'] = course_df['Faculty'].fillna('Other').replace('None', 'Other')
+        course_df['UC Code'] = course_df['UC Code'].fillna('TBC').replace('nan', 'TBC')
+        course_df['Points'] = course_df['Points'].fillna('TBC').replace('nan', 'TBC')
+        
+        degree_df['Owning Faculty'] = degree_df['Owning Faculty'].fillna('Other').replace('None', 'Other')
+        degree_df['Code'] = degree_df['Code'].fillna('TBC').replace('nan', 'TBC')
+        degree_df['Points'] = degree_df['Points'].fillna('TBC').replace('nan', 'TBC')
     
-        df = df[df['UC Code'] != 'TBC']
-        df = df[df['Points'] != 'TBC']
-        df = df[df['Course Title'] != 'TBC']
-        df = df[df['Int Fees - 2026'] != 0]
-        df = df[df['Dom Fees - 2026'] != 0]
+        course_df = course_df[course_df['UC Code'] != 'TBC']
+        course_df = course_df[course_df['Points'] != 'TBC']
+        course_df = course_df[course_df['Course Title'] != 'TBC']
+        course_df = course_df[course_df['Int Fees - 2026'] != 0]
+        course_df = course_df[course_df['Dom Fees - 2026'] != 0]
 
-        degrees_data = {
-            "UC Code": [
-                "Bachelor", "Bachelor", "Masters",
-                "Bachelor", "Bachelor", "Bachelor", "Bachelor", "Bachelor",
-                "Masters", "Masters",
-                "Certificate", "Certificate",
-                "Bachelor", "Bachelor", "Bachelor",
-                "Masters", "Masters",
-                "Certificate", "Certificate", "Bachelor",
-                "Bachelor", "Bachelor", "Masters",
-            ],
-            "Course Title": [
-                "Computer Science",
-                "Psychology",
-                "Data Science",
-                "Information Systems",
-                "Engineering",
-                "Law",
-                "Commerce",
-                "Fine Arts",
-                "Education",
-                "Public Policy",
-                "Digital Humanities",
-                "Environmental Studies",
-                "Mathematics",
-                "Physics",
-                "Chemistry",
-                "Cyber Security",
-                "Health Sciences",
-                "Media Studies",
-                "Sociology",
-                "Linguistics",
-                "Philosophy",
-                "History",
-                "Statistics",
-            ],
-            "Points": [
-                "120", "120", "60",
-                "120", "120", "120", "120", "120",
-                "60", "60",
-                "60", "60",
-                "120", "120", "120",
-                "60", "60",
-                "60", "60", "120",
-                "120", "120", "60",
-            ],
-            "Int Fees - 2026": [
-                13890, 14250, 7200,
-                13500, 18000, 19000, 16000, 15500,
-                8000, 8300,
-                6500, 6400,
-                14500, 14800, 15000,
-                9000, 9500,
-                7000, 7100, 13950,
-                14100, 14350, 8800,
-            ],
-            "Dom Fees - 2026": [
-                8560, 8790, 4300,
-                8400, 9200, 9700, 9100, 8900,
-                4600, 4800,
-                4100, 4050,
-                8650, 8720, 8800,
-                4550, 4700,
-                4200, 4250, 8580,
-                8620, 8690, 4950,
-            ],
-            "Faculty": [
-                "Science", "Arts", "Science",
-                "Business", "Engineering", "Law", "Business", "Arts",
-                "Education", "Arts",
-                "Arts", "Science",
-                "Science", "Science", "Science",
-                "Engineering", "Health",
-                "Arts", "Arts", "Arts",
-                "Arts", "Arts", "Science",
-            ],
-        }
-
-        degrees_df = pd.DataFrame(degrees_data)
+        degree_df = degree_df[degree_df['Code'] != 'TBC']
+        degree_df = degree_df[degree_df['Points'] != 'TBC']
+        degree_df = degree_df[degree_df['Full Title'] != 'TBC']
+        degree_df = degree_df[degree_df['Int -  Full Prog_2026'] != 0]
+        degree_df = degree_df[degree_df['Dom - Full Prog_2026'] != 0]
 
         # Create course data for templates and JavaScript 
-        COURSES = df.to_dict('records')
-        DEGREES = degrees_df.to_dict('records')
-        UNIQUE_FACULTIES = list(df['Faculty'].drop_duplicates())
+        COURSES = course_df.to_dict('records')
+        DEGREES = degree_df.to_dict('records')
+        UNIQUE_COURSE_FACULTIES = list(course_df['Faculty'].drop_duplicates())
+        UNIQUE_DEGREE_FACULTIES = list(degree_df['Owning Faculty'].drop_duplicates())
         COURSES_JSON = json.dumps(COURSES)
       
         # Prevent redirect form alert
@@ -136,7 +82,8 @@ def create_app(test_config=None):
             "index.html", 
             courses=COURSES, 
             courses_json=COURSES_JSON, 
-            unique_faculties=UNIQUE_FACULTIES,
+            unique_course_faculties=UNIQUE_COURSE_FACULTIES,
+            unique_degree_faculties=UNIQUE_DEGREE_FACULTIES,
             degrees=DEGREES
         )
     

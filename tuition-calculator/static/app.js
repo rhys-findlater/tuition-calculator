@@ -74,6 +74,7 @@ const pdfPromptTotalCostEl = document.getElementById("pdfPromptTotalCost");
 // Central config per type
 const selectionConfigs = {
   course: {
+    name: "course",
     items: selectedCourses,
     cardSelector: ".selection-course",
     toggleAttr: "data-course-toggle",
@@ -99,10 +100,11 @@ const selectionConfigs = {
     allFacultyAttr: "[data-course-faculty='All Faculties']",
   },
   degree: {
+    name: "degree",
     items: selectedDegrees,
     cardSelector: ".selection-degree",
     toggleAttr: "data-degree-toggle",
-    dataKey: "degree-title",
+    dataKey: "degree-code",
     attributeKey: "degreeCode",
     headerEl: selectedDegreesHeaderEl,
     listEl: selectedDegreesListEl,
@@ -111,7 +113,7 @@ const selectionConfigs = {
     showAllBtnEl: showAllDegreesBtnEl,
     showLessBtnEl: showLessDegreesBtnEl,
     datasetKeys: {
-      code: "degreeTitle",
+      code: "degreeCode",
       title: "degreeTitle",
       points: "degreePoints",
       domPrice: "degreeDomPrice",
@@ -136,6 +138,19 @@ function toggleDropdown(chevEl, btnEl, bodyEl) {
   });
 }
 
+function openDegreeLimitPopup(degreeLimitPopup) {
+  if (!degreeLimitPopup) return;
+  degreeLimitPopup.removeAttribute("hidden");
+
+  degreeLimitCloseBtn?.addEventListener(
+    "click",
+    () => {
+      degreeLimitPopup.setAttribute("hidden");
+    },
+    { once: true }
+  );
+}
+
 function getPotentialVisibleCount(
   selector,
   selected,
@@ -153,7 +168,6 @@ function getPotentialVisibleCount(
 
 function limitItems(selector, initialLimit = 5) {
   const cards = document.querySelectorAll(selector);
-  console.log(cards);
   let shown = 0;
   cards.forEach((card) => {
     if (card.style.display === "none") return;
@@ -178,10 +192,9 @@ function getCurrentLearnerLocation() {
   return checked ? checked.value : "onshore";
 }
 
-function setAvailableCardVisibility(selector, dataKey, id, isSelected) {
-  const card = document.querySelector(`${selector}[data-${dataKey}="${id}"]`);
+function setAvailableCardVisibility(selector, dataKey, code, isSelected) {
+  const card = document.querySelector(`${selector}[data-${dataKey}="${code}"]`);
 
-  console.log(card);
   if (!card) return;
   card.style.display = isSelected ? "none" : "flex";
 }
@@ -402,15 +415,10 @@ function renderSelected(
     row.className = "selected-item-row";
     row.dataset[attributeKey] = item.code;
 
-    const codeSpan =
-      dataKey === "degree-title"
-        ? ""
-        : `<span class="selected-item-code">${item.code}</span>`;
-
     row.innerHTML = `
       <div class="selected-item-main">
         <div class="selected-item-title">
-          ${codeSpan}
+          <span class="selected-item-code">${item.code}</span>
           <span class="selected-item-name">${item.title}</span>
         </div>
         <div class="selected-item-meta">
@@ -438,8 +446,8 @@ function renderSelected(
     const removeBtnEl = row.querySelector(".selected-item-remove");
     if (removeBtnEl) {
       removeBtnEl.addEventListener("click", () => {
-        selected.delete(item.id);
-        setAvailableCardVisibility(selector, dataKey, item.id, false);
+        selected.delete(item.code);
+        setAvailableCardVisibility(selector, dataKey, item.code, false);
         renderSelected(
           selector,
           dataKey,
@@ -487,9 +495,9 @@ function addItem(type, item) {
   const cfg = selectionConfigs[type];
   if (!cfg) return;
 
-  cfg.items.set(item.id, item);
-  setAvailableCardVisibility(cfg.cardSelector, cfg.dataKey, item.id, true);
+  cfg.items.set(item.code, item);
 
+  setAvailableCardVisibility(cfg.cardSelector, cfg.dataKey, item.code, true);
   renderSelection(type);
 }
 
@@ -498,7 +506,12 @@ function clearSelection(type) {
   if (!cfg) return;
 
   for (const course of cfg.items.values()) {
-    setAvailableCardVisibility(cfg.cardSelector, cfg.dataKey, course.id, false);
+    setAvailableCardVisibility(
+      cfg.cardSelector,
+      cfg.dataKey,
+      course.code,
+      false
+    );
   }
 
   cfg.items.clear();
@@ -523,15 +536,26 @@ function initAvailableCards(type) {
     const faculty = card.dataset[datasetKeys.faculty] || "";
 
     const addBtnEl = card.querySelector(`[${toggleAttr}]`);
+
     if (!addBtnEl) return;
 
     addBtnEl.addEventListener("click", (e) => {
       e.preventDefault();
       e.stopPropagation();
 
-      const id = code ?? title;
+      const degreeLimitPopup = document.getElementById(
+        `degreeLimitPopup-${code}`
+      );
+      const degreeLimitCloseBtn = document.getElementById(
+        `degreeLimitCloseBtn-${code}`
+      );
 
-      addItem(type, { id, code, title, points, domPrice, intPrice, faculty });
+      if (cfg.name === "degree" && cfg.items.size >= 1) {
+        openDegreeLimitPopup(degreeLimitPopup, degreeLimitCloseBtn);
+        return;
+      }
+
+      addItem(type, { code, title, points, domPrice, intPrice, faculty });
     });
   });
 }
