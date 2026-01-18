@@ -53,12 +53,10 @@ const costSummaryGstEl = document.getElementById("costSummaryGst");
 const costSummaryTotalEl = document.getElementById("costSummaryTotal");
 
 // Dropdowns
-const degreeDropdownBtnEl = document.getElementById("degreeDropdown");
-const courseDropdownBtnEl = document.getElementById("courseDropdown");
+const degreeDropdownBtnEl = document.getElementById("tabDegreesBtn");
+const courseDropdownBtnEl = document.getElementById("tabCoursesBtn");
 const degreeBodyEl = document.getElementById("degreeBodyContainer");
 const courseBodyEl = document.getElementById("courseBodyContainer");
-const courseChevronEl = document.getElementById("coursesChevron");
-const degreeChevronEl = document.getElementById("degreesChevron");
 
 // Get elements
 const exportPDFButtonEl = document.getElementById("exportPDFButton");
@@ -129,23 +127,55 @@ const selectionConfigs = {
 
 /* -------------------- Shared helpers -------------------- */
 
-function toggleDropdown(chevEl, btnEl, bodyEl) {
-  if (!chevEl || !btnEl || !bodyEl) return;
+function toggleDropdown(courseBtnEl, degreeBtnEl, courseEl, degreeEl) {
+  if (!courseBtnEl || !degreeBtnEl || !courseEl || !degreeEl) return;
 
-  btnEl.addEventListener("click", () => {
-    const isIdle = bodyEl.classList.toggle("selection-body-container-idle");
-    chevEl.src = isIdle ? chevEl.dataset.chevronUp : chevEl.dataset.chevronDown;
+  let pressed = false;
+
+  courseBtnEl.addEventListener("click", () => {
+    if (pressed) {
+      degreeEl.classList.toggle("selection-body-container-idle");
+      degreeBtnEl.classList.toggle("tab-btn-active");
+
+      selectedDegrees.clear();
+      renderSelection("degree");
+      renderSummary(selectedCourses);
+
+      courseEl.classList.toggle("selection-body-container-idle");
+      courseBtnEl.classList.toggle("tab-btn-active");
+
+      pressed = false;
+    }
+  });
+
+  degreeBtnEl.addEventListener("click", () => {
+    if (!pressed) {
+      courseEl.classList.toggle("selection-body-container-idle");
+      courseBtnEl.classList.toggle("tab-btn-active");
+
+      selectedCourses.clear();
+      renderSelection("course");
+      renderSummary(selectedCourses);
+
+      degreeEl.classList.toggle("selection-body-container-idle");
+      degreeBtnEl.classList.toggle("tab-btn-active");
+
+      pressed = true;
+    }
   });
 }
 
-function openDegreeLimitPopup(degreeLimitPopup) {
-  if (!degreeLimitPopup) return;
+function openDegreeLimitPopup(degreeLimitPopup, degreeLimitCloseBtn) {
+  if (!degreeLimitPopup || !degreeLimitCloseBtn) return;
+
   degreeLimitPopup.removeAttribute("hidden");
+
+  console.log("DEGREE,", degreeLimitPopup, degreeLimitCloseBtn);
 
   degreeLimitCloseBtn?.addEventListener(
     "click",
     () => {
-      degreeLimitPopup.setAttribute("hidden");
+      degreeLimitPopup.setAttribute("hidden", "hidden");
     },
     { once: true }
   );
@@ -748,8 +778,12 @@ function initTuitionSelection() {
   initSearch("course");
   initSearch("degree");
 
-  toggleDropdown(courseChevronEl, courseDropdownBtnEl, courseBodyEl);
-  toggleDropdown(degreeChevronEl, degreeDropdownBtnEl, degreeBodyEl);
+  toggleDropdown(
+    courseDropdownBtnEl,
+    degreeDropdownBtnEl,
+    courseBodyEl,
+    degreeBodyEl
+  );
 
   document.querySelectorAll('input[name="learner_type"]').forEach((radio) => {
     radio.addEventListener("change", function (e) {
