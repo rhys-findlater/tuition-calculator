@@ -35,26 +35,21 @@
     
     <main class="pdf-document">
       <!-- Learner Information -->
-      <div class="pdf-section">
-        <div class="learner-info-grid">
-          <h1 class="pdf-section-subheading">Learner Information</h1>
-          <div class="info-rows">
-            <div class="info-row">
-              <div class="info-label">Learner Type:</div>
-              <div class="info-value">{{ learner_type }}</div>
-            </div>
+      <div class="learner-strip">
+        <div class="learner-cell">
+          <div class="learner-cell-label">LEARNER TYPE</div>
+          <div class="learner-cell-value">{{ learner_type }}</div>
+        </div>
 
-            <div class="info-row">
-              <div class="info-label">Study Location: </div>
-              <div class="info-value">
-                {{ learner_location }}
-                {% if gst_applicable is not none %}
-                <span class="status-pill">
-                  {{ "GST Applicable" if gst_applicable else "GST Not Applicable" }}
-                </span>
-                {% endif %}
-              </div>
-            </div>
+        <div class="learner-cell">
+          <div class="learner-cell-label">STUDY LOCATION</div>
+          <div class="learner-cell-value">{{ learner_location }}</div>
+        </div>
+
+        <div class="learner-cell">
+          <div class="learner-cell-label">GST STATUS</div>
+          <div class="learner-cell-value">
+            {{ "Applicable" if gst_applicable else "Not applicable" }}
           </div>
         </div>
       </div>
@@ -87,40 +82,48 @@
         </div>
       </div>
       
+      <hr class="cost-divider">
+
       <!-- Cost Breakdown -->
       <div class="pdf-section">
-        <h1 class="pdf-section-title">Cost Breakdown</h1>
+        <div class="pdf-section-title">Cost Breakdown</div>
 
-        <div class="totals">
-          <div class="totals-rows">
-            <div class="totals-label">Course Fees </div>
-            <div class="totals-values"> {{ course_fees }} </div>
+        <div class="cost-card-top3">
+          <div class="mini-card">
+            <div class="mini-kicker">Course Fees</div>
+            <div class="mini-value">{{ course_fees }}</div>
+            <div class="mini-note">{{ courses|length }} courses enrolled</div>
           </div>
 
-          <div class="totals-rows">
-            <div class="totals-label">Student Services Levy</div>
-            <div class="levy-note">(Based on {{points}} points)</div>
+          <div class="mini-card">
+            <div class="mini-kicker">Student Services Levy</div>
+            <div class="mini-value">{{ levy }}</div>
+            <div class="mini-note">Based on {{ points }} points</div>
           </div>
-          <div class="totals-value">{{ levy }}</div>
-        </div>
-        <div class="totals-rows">
-          <div class="totals-label">Subtotal</div>
-          <div class="totals-value">{{ subTotal }}</div>
+
+          <div class="mini-card">
+            <div class="mini-kicker">GST (15%)</div>
+            <div class="mini-value">{{ gst }}</div>
+            <div class="mini-note">Onshore students only</div>
+          </div>
         </div>
 
-        <div class="totals-rows">
-          <div class="totals-label">GST (15%)</div>
-          <div class="totals-value">{{ gst }}</div>
-        </div>
+        <div class="total-panel">
+          <div class="total-panel-left">
+            <div class="total-kicker">Total amount due</div>
+            <div class="total-amount">{{ totalCost }}</div>
+            <div class="total-currency">NZD (New Zealand Dollar)</div>
+          </div>
 
-        <div class="totals-totalbar">
-          <div class="totals-totalbar-label">TOTAL COST</div>
-          <div class="totals-totalbar-value">{{ totalCost }}</div>
+          <div class="total-panel-right">
+            <div class="mini-line"><span>Subtotal</span><span>{{ subTotal }}</span></div>
+            <div class="mini-line"><span>GST</span><span>{{ gst }}</span></div>
+          </div>
         </div>
       </div>
     </main>
     <!-- Footer -->
-    <Footer class="pdf-footer">
+    <footer class="pdf-footer">
       <div class="footer-title">UC Online Tuition Calculator</div>
       <div class="footer-subtitle">University of Canterbury | Te Whare Wānanga o Waitaha</div>
 
@@ -144,6 +147,6 @@
           </li>
         </ul>
       </div>
-    </Footer>
+    </footer>
   </body>
 </html>
