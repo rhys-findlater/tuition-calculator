@@ -88,6 +88,13 @@ main {
   display: none;
 }
 
+.selection-subtitle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding-bottom: 1rem;
+}
+
 .popup-backdrop {
   position: fixed;
   inset: 0;
@@ -358,11 +365,79 @@ main {
 }
 
 /* ==================== Tab Section ==================== */
-.tab-container {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  width: 100%;
-  height: 100%;
+.tab-container.tab-container-pill {
+  background: #fff;
+  display: flex;
+  gap: 4px;                 
+  padding: 4px;           
+
+  border: 1px solid #e5e7eb; 
+  border-bottom: 0;          
+
+  border-top-left-radius: 0.75rem; 
+  border-top-right-radius: 0.75rem;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.tab-container.tab-container-pill .tab-btn {
+  flex: 1;                   
+  position: relative;         
+
+  padding: 10px 16px;        
+  border: 0;
+  background: transparent;
+
+  border-radius: 0.5rem;      
+  font-size: 14px;           
+  font-weight: 500;           
+
+  transition: all 150ms ease;
+  cursor: pointer;
+
+  color: #4b5563;             
+
+  display: inline-flex;       
+  align-items: center;
+  justify-content: center;
+  gap: 8px;                   
+}
+
+.tab-container.tab-container-pill .tab-btn:hover {
+  color: #111827;             
+  background: #f9fafb;        
+}
+
+.tab-container.tab-container-pill .tab-btn .main-icon {
+  width: 16px;                
+  height: 16px;
+}
+
+.tab-container.tab-container-pill .tab-btn.tab-btn-active {
+  color: #cb3d2d;
+}
+
+.tab-container.tab-container-pill .tab-btn.tab-btn-active::before {
+  content: "";
+  position: absolute;
+  inset: 0;                 
+
+  border-radius: 0.5rem;      
+  border: 2px solid #cb3d2d;  
+
+  background: linear-gradient(
+    135deg,
+    rgba(203, 61, 45, 0.10),  
+    rgba(204, 0, 17, 0.10)    
+  );
+
+  pointer-events: none;
+  z-index: 0;
+}
+
+.tab-container.tab-container-pill .tab-btn > * {
+  position: relative;        
+  z-index: 1;
 }
 
 /* ==================== Cost Summary - active state ==================== */
@@ -858,17 +933,23 @@ main {
   font-size: 0.875rem;
   color: #fff;
   background-color: #ce3e2e;
-  padding: 2.5px 10px;
+  padding: 5px 10px;
   border: 1px solid #ce3e2e;
   border-radius: var(--radius-card);
   display: flex;
   align-items: center;
-  gap: 0.75rem;
   cursor: pointer;
+  gap: 0.5rem;
 }
 
 .item-button-add {
   font-size: 1.35rem;
+  display: flex;
+  align-items: center;
+}
+
+.plus-icon {
+  width: 1.25rem;
 }
 
 .item-button:hover {

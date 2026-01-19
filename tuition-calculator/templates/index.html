@@ -86,8 +86,8 @@
             <div class="learner-info-select-container">
               <div class="learner-info-select-icon-container">
                 <img
-                  src="{{ url_for('static', filename='icons/graduation-cap.svg') }}"
-                  alt="Graduation cap icon"
+                  src="{{ url_for('static', filename='icons/user-pen.svg') }}"
+                  alt="User pen icon"
                   class="sub-icon"
                 />
                 <p class="learner-info-select-text">Learner Type</p>
@@ -335,37 +335,26 @@
         <!-- Course selection heading and search column -->
         <div class="selection-container">
           <div class="selection-heading-container">
-            <div class="tab-container">
-              <div>
-                <button
-                  type="button"
-                  class="tab-btn tab-btn-first tab-btn-active"
-                  id="tabCoursesBtn"
-                >
-                  <img
-                    src="{{ url_for('static', filename='icons/book-open.svg') }}"
-                    class="main-icon"
-                    alt="Open book icon"
-                  />
-                  <p>Select Courses</p>
-                </button>
-              </div>
-              <div>
-                <button type="button" class="tab-btn" id="tabDegreesBtn">
-                  <img
-                    src="{{ url_for('static', filename='icons/square-pen.svg') }}"
-                    class="main-icon"
-                    alt="Square pen icon"
-                  />
-                  <p>Select Degrees</p>
-                </button>
-              </div>
+            <div class="tab-container tab-container-pill">
+              <button type="button" class="tab-btn tab-btn-active" id="tabCoursesBtn">
+                <img src="{{ url_for('static', filename='icons/list-plus.svg') }}" class="main-icon" alt="List icon" />
+                <span>Course Selection</span>
+              </button>
+
+              <button type="button" class="tab-btn" id="tabDegreesBtn">
+                <img src="{{ url_for('static', filename='icons/graduation-cap.svg') }}" class="main-icon" alt="Graduation cap icon" />
+                <span>Select Degrees</span>
+              </button>
             </div>
           </div>
 
           <div class="selection-body-container">
             <!-- Course selection main content -->
             <div id="courseBodyContainer">
+              <div class="selection-subtitle">
+                <img src="{{ url_for('static', filename='icons/list-plus.svg') }}" class="subtitle-icon" alt="List icon" />
+                Course Selection
+              </div>
               <p>
                 Search and select individual courses to add to your cost
                 calculation
@@ -490,7 +479,7 @@
                       type="button"
                       data-course-toggle
                     >
-                      <span class="item-button-add">+</span>
+                      <span class="item-button-add"><img src="{{ url_for('static', filename='icons/plus.svg') }}" class="plus-icon"/></span>
                       <span>Add</span>
                     </button>
                   </div>
@@ -531,6 +520,10 @@
 
             <!-- Selected Courses -->
             <div id="degreeBodyContainer" class="selection-body-container-idle">
+              <div class="selection-subtitle">
+                <img src="{{ url_for('static', filename='icons/graduation-cap.svg') }}" class="subtitle-icon" alt="graduation icon" />
+                Degree Selection
+              </div>
               <p>
                 Search and select individual degrees to add to your cost
                 calculation
@@ -677,7 +670,7 @@
                       type="button"
                       data-degree-toggle
                     >
-                      <span class="item-button-add">+</span>
+                      <span class="item-button-add"><img src="{{ url_for('static', filename='icons/plus.svg') }}" class="plus-icon"/></span>
                       <span>Add</span>
                     </button>
                   </div>
