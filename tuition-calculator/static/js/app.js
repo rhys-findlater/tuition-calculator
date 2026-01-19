@@ -165,15 +165,51 @@ function toggleDropdown(courseBtnEl, degreeBtnEl, courseEl, degreeEl) {
   });
 }
 
-function openDegreeLimitPopup(degreeLimitPopup, degreeLimitCloseBtn) {
-  if (!degreeLimitPopup || !degreeLimitCloseBtn) return;
+function enablePopupDismiss(popupEl, closeFn) {
+  if (!popupEl || typeof closeFn !== "function") return;
 
-  degreeLimitPopup.removeAttribute("hidden");
+  // Click on the backdrop only
+  popupEl.addEventListener(
+    "click",
+    (e) => {
+      if (e.target === popupEl) closeFn();
+    },
+    { once: true },
+  );
 
-  degreeLimitCloseBtn?.addEventListener(
+  // ESC
+  document.addEventListener(
+    "keydown",
+    (e) => {
+      if (e.key === "Escape") closeFn();
+    },
+    { once: true },
+  );
+}
+
+function openDegreeLimitPopup(degreeLimitPopup, currentTitle, newTitle, onReplace) {
+  if (!degreeLimitPopup) return;
+
+  const currentEl = document.getElementById("currentDegreeName");
+  const newEl = document.getElementById("newDegreeName");
+
+  const cancelBtn = document.getElementById("degreeLimitCancelBtn");
+  const replaceBtn = document.getElementById("degreeLimitReplaceBtn");
+
+  if (currentEl) currentEl.textContent = currentTitle || "";
+  if (newEl) newEl.textContent = newTitle || "";
+
+  openBackdropModal(degreeLimitPopup);
+  const close = () => closeBackdropModal(degreeLimitPopup);
+  enablePopupDismiss(degreeLimitPopup, close);
+  
+  cancelBtn?.addEventListener("click", close, { once: true });
+
+  replaceBtn?.addEventListener(
     "click",
     () => {
-      degreeLimitPopup.setAttribute("hidden", "hidden");
+      close();
+      if (typeof onReplace === "function") onReplace();
     },
     { once: true },
   );
@@ -536,12 +572,16 @@ function addItem(type, item) {
   const closeBtnDegree = document.getElementById("errorCloseDegreeBtn");
 
   if (altCfg.items.size >= 1) {
-    altType === "degree"
-      ? modalCourse.removeAttribute("hidden")
-      : modalDegree.removeAttribute("hidden");
+    const activeModal = altType === "degree" ? modalCourse : modalDegree;
+
+    openBackdropModal(activeModal);
+
+    enablePopupDismiss(activeModal, () => {
+      closeBackdropModal(activeModal);
+    });
 
     replaceBtnCourse.onclick = () => {
-      modalCourse.setAttribute("hidden", "");
+      closeBackdropModal(modalCourse);
 
       for (const altItem of altCfg.items.values()) {
         setAvailableCardVisibility(
@@ -567,7 +607,7 @@ function addItem(type, item) {
     };
 
     closeBtnCourse.onclick = () => {
-      modalCourse.setAttribute("hidden", "");
+      closeBackdropModal(modalCourse);
     };
 
     replaceBtnDegree.onclick = () => {
@@ -652,12 +692,27 @@ function initAvailableCards(type) {
       e.stopPropagation();
 
       const degreeLimitPopup = document.getElementById("degreeLimitPopup");
-      const degreeLimitCloseBtn = document.getElementById(
-        "degreeLimitCloseBtn",
-      );
 
       if (cfg.name === "degree" && cfg.items.size >= 1) {
-        openDegreeLimitPopup(degreeLimitPopup, degreeLimitCloseBtn);
+        const existing = Array.from(cfg.items.values())[0]; 
+        const currentTitle = existing?.title;
+
+        openDegreeLimitPopup(
+          degreeLimitPopup,
+          currentTitle,
+          title, // clicked degree title
+          () => {
+            // remove existing degree
+            for (const old of cfg.items.values()) {
+              setAvailableCardVisibility(cfg.cardSelector, cfg.dataKey, old.code, false);
+            }
+            cfg.items.clear();
+            renderSelection("degree");
+
+            addItem("degree", { code, title, points, domPrice, intPrice, faculty });
+          }
+        );
+
         return;
       }
 
