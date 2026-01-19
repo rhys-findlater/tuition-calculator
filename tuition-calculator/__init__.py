@@ -149,7 +149,7 @@ def create_app(test_config=None):
         html_string = render_template("pdf_template.html", **data)
         
         # The absolute path to the PDF stylesheet
-        css_path = os.path.join(app.root_path, "static", "pdf", "pdf.css")
+        css_path = os.path.join(app.root_path, "static", "css", "pdf.css")
         
         # Converts the HTML + CSS into a PDF
         pdf_bytes = HTML(string=html_string, base_url=app.root_path).write_pdf(

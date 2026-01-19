@@ -19,10 +19,10 @@
     />
 
     <!-- Main application stylesheet -->
-    <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='style.css') }}"
-    />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <!-- Application animations -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/animations.css') }}">
+    
   </head>
   <body>
     <!-- Global site header with logo and title -->
@@ -839,6 +839,8 @@
     </div>
 
     <!-- Main application script (handles selection, filtering, and cost logic) -->
-    <script src="{{ url_for('static', filename='app.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+    <!-- Animation script (adds/removes classes for motion effects) -->
+    <script src="{{ url_for('static', filename='js/animations.js') }}"></script>
   </body>
 </html>
