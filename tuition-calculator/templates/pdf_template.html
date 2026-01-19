@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -11,114 +11,121 @@
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
+
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='pdf/pdf.css') }}"
+    />
   </head>
+
   <body>
     <!-- Header -->
     <header class="pdf-header">
-      <div class="pdf-header-left">
+      <div class="pdf-header-top">
         <h1 class="pdf-title">Course Cost Summary</h1>
-        <p class="pdf-org">University of Canterbury</p>
+        <div class="header-info-row">
+          <div class="header-info-label">Generated:</div>
+          <div class="header-info-value">{{ generateddate }}</div>
+        </div>
       </div>
-
-      <div class="pdf-header-right">
-        <div class="info-row">
-          <div class="info-label">Generated:</div>
-          <div class="info-value">{{generateddate}}</div>
+      <div class="pdf-header-bottom">
+        <p class="pdf-org">University of Canterbury</p>
+        <div class="header-info-row">
           {% if nameInput is defined and nameInput|trim %}
           <div class="for-name">For {{ nameInput }}</div>
           {% endif %}
         </div>
-
-        {% if name is defined and name|trim %}
-        <div class="info-row">
-          <div class="info-label">Name:</div>
-          <div class="info-value">{{ name }}</div>
-        </div>
-        {% endif %}
       </div>
     </header>
 
     <main class="pdf-document">
       <!-- Learner Information -->
-      <div class="pdf-section">
-        <h1 class="pdf-section-title">Learner Information</h1>
-        <div class="learner-info-grid">
-          <div class="info-row">
-            <div class="info-label">Learner Type:</div>
-            <div class="info-value">{{ learner_type }}</div>
-          </div>
+      <div class="learner-strip">
+        <div class="learner-cell">
+          <div class="learner-cell-label">LEARNER TYPE</div>
+          <div class="learner-cell-value">{{ learner_type }}</div>
+        </div>
 
-          <div class="info-row">
-            <div class="info-label">Study Location:</div>
-            <div class="info-value">
-              {{ learner_location }} {% if gst_applicable is not none %}
-              <span class="status-pill">
-                {{ "GST Applicable" if gst_applicable else "GST Not Applicable"
-                }}
-              </span>
-              {% endif %}
-            </div>
+        <div class="learner-cell">
+          <div class="learner-cell-label">STUDY LOCATION</div>
+          <div class="learner-cell-value">{{ learner_location }}</div>
+        </div>
+
+        <div class="learner-cell">
+          <div class="learner-cell-label">GST STATUS</div>
+          <div class="learner-cell-value">
+            {{ "Applicable" if gst_applicable else "Not applicable" }}
           </div>
         </div>
       </div>
 
       <!-- Selected Courses -->
       <div class="pdf-section">
-        <div class="pdf-section-header">
-          <h1 class="pdf-section-title">Selected Courses</h1>
-        </div>
-        <table class="courses-table">
-          <thead>
-            <tr>
-              <th class="course-code">Course Code</th>
-              <th>Course Name</th>
-              <th class="course-points">Points</th>
-              <th class="course-fee">Fee</th>
-            </tr>
-          </thead>
+        <h1 class="pdf-section-title">Selected Courses</h1>
+        <div class="courses-card">
+          <table class="courses-table">
+            <thead>
+              <tr>
+                <th class="course-code">Course Code</th>
+                <th>Course Name</th>
+                <th class="course-points">Points</th>
+                <th class="course-fee">Fee</th>
+              </tr>
+            </thead>
 
-          <tbody>
-            {% for course in courses %}
-            <tr>
-              <td class="mono">{{ course.code }}</td>
-              <td>{{ course.name }}</td>
-              <td class="number">{{ course.points }}</td>
-              <td class="number">{{ course.fee }}</td>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
+            <tbody>
+              {% for course in courses %}
+              <tr>
+                <td class="mono">{{ course.code }}</td>
+                <td>{{ course.name }}</td>
+                <td class="point">{{ course.points }}</td>
+                <td class="cost">{{ course.fee }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
       </div>
+
+      <hr class="cost-divider" />
 
       <!-- Cost Breakdown -->
       <div class="pdf-section">
-        <h1 class="pdf-section-title">Cost Breakdown</h1>
+        <div class="pdf-section-title">Cost Breakdown</div>
 
-        <div class="totals">
-          <div class="totals-rows">
-            <div class="totals-label">Course Fees</div>
-            <div class="totals-values">{{ course_fees }}</div>
+        <div class="cost-card-top3">
+          <div class="mini-card">
+            <div class="mini-kicker">Course Fees</div>
+            <div class="mini-value">{{ course_fees }}</div>
+            <div class="mini-note">{{ courses|length }} courses enrolled</div>
           </div>
 
-          <div class="totals-rows">
-            <div class="totals-label">Student Services Levy</div>
-            <div class="levy-note">(Based on {{points}} points)</div>
+          <div class="mini-card">
+            <div class="mini-kicker">Student Services Levy</div>
+            <div class="mini-value">{{ levy }}</div>
+            <div class="mini-note">Based on {{ points }} points</div>
           </div>
-          <div class="totals-value">{{ levy }}</div>
-        </div>
-        <div class="totals-rows">
-          <div class="totals-label">Subtotal</div>
-          <div class="totals-value">{{ subTotal }}</div>
+
+          <div class="mini-card">
+            <div class="mini-kicker">GST (15%)</div>
+            <div class="mini-value">{{ gst }}</div>
+            <div class="mini-note">Onshore students only</div>
+          </div>
         </div>
 
-        <div class="totals-rows">
-          <div class="totals-label">GST (15%)</div>
-          <div class="totals-value">{{ gst }}</div>
-        </div>
+        <div class="total-panel">
+          <div class="total-panel-left">
+            <div class="total-kicker">Total amount due</div>
+            <div class="total-amount">{{ totalCost }}</div>
+            <div class="total-currency">NZD (New Zealand Dollar)</div>
+          </div>
 
-        <div class="totals-totalbar">
-          <div class="totals-totalbar-label">TOTAL COST</div>
-          <div class="totals-totalbar-value">{{ totalCost }}</div>
+          <div class="total-panel-right">
+            <div class="mini-line">
+              <span>Subtotal</span><span>{{ subTotal }}</span>
+            </div>
+            <div class="mini-line"><span>GST</span><span>{{ gst }}</span></div>
+          </div>
         </div>
       </div>
     </main>
