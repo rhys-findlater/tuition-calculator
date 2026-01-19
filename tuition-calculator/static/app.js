@@ -15,7 +15,7 @@ let currentDegreeFaculty = "All Faculties";
 
 // Courses
 const selectedCoursesHeaderEl = document.querySelector(
-  ".selected-courses-header"
+  ".selected-courses-header",
 );
 const selectedCoursesListEl = document.getElementById("selectedCoursesList");
 const selectedCoursesCountEl = document.getElementById("selectedCoursesCount");
@@ -25,7 +25,7 @@ const showLessCoursesBtnEl = document.getElementById("showLessCourses");
 
 // Degrees
 const selectedDegreesHeaderEl = document.querySelector(
-  ".selected-degrees-header"
+  ".selected-degrees-header",
 );
 const selectedDegreesListEl = document.getElementById("selectedDegreesList");
 const selectedDegreesCountEl = document.getElementById("selectedDegreesCount");
@@ -36,14 +36,14 @@ const showLessDegreesBtnEl = document.getElementById("showLessDegrees");
 // Cost summary
 const costSummaryPillTypeEl = document.getElementById("costSummaryPillType");
 const costSummaryPillLocationEl = document.getElementById(
-  "costSummaryPillLocation"
+  "costSummaryPillLocation",
 );
 const gstInfoTooltipEl = document.getElementById("GstInfoToolTip");
 const costSummaryCoursesSelectedEl = document.getElementById(
-  "costSummaryCoursesSelected"
+  "costSummaryCoursesSelected",
 );
 const costSummaryTotalPointsEl = document.getElementById(
-  "costSummaryTotalPoints"
+  "costSummaryTotalPoints",
 );
 const costSummaryTotalCostEl = document.getElementById("costSummaryCourseFees");
 const costSummaryLevyEl = document.getElementById("costSummaryLevy");
@@ -137,9 +137,9 @@ function toggleDropdown(courseBtnEl, degreeBtnEl, courseEl, degreeEl) {
       degreeEl.classList.toggle("selection-body-container-idle");
       degreeBtnEl.classList.toggle("tab-btn-active");
 
-      selectedDegrees.clear();
-      renderSelection("degree");
-      renderSummary(selectedCourses);
+      // selectedDegrees.clear();
+      // renderSelection("degree");
+      // renderSummary(selectedCourses);
 
       courseEl.classList.toggle("selection-body-container-idle");
       courseBtnEl.classList.toggle("tab-btn-active");
@@ -153,9 +153,9 @@ function toggleDropdown(courseBtnEl, degreeBtnEl, courseEl, degreeEl) {
       courseEl.classList.toggle("selection-body-container-idle");
       courseBtnEl.classList.toggle("tab-btn-active");
 
-      selectedCourses.clear();
-      renderSelection("course");
-      renderSummary(selectedCourses);
+      // selectedCourses.clear();
+      // renderSelection("course");
+      // renderSummary(selectedCourses);
 
       degreeEl.classList.toggle("selection-body-container-idle");
       degreeBtnEl.classList.toggle("tab-btn-active");
@@ -170,14 +170,12 @@ function openDegreeLimitPopup(degreeLimitPopup, degreeLimitCloseBtn) {
 
   degreeLimitPopup.removeAttribute("hidden");
 
-  console.log("DEGREE,", degreeLimitPopup, degreeLimitCloseBtn);
-
   degreeLimitCloseBtn?.addEventListener(
     "click",
     () => {
       degreeLimitPopup.setAttribute("hidden", "hidden");
     },
-    { once: true }
+    { once: true },
   );
 }
 
@@ -185,7 +183,7 @@ function getPotentialVisibleCount(
   selector,
   selected,
   { facultyKey, codeKey },
-  currentFaculty
+  currentFaculty,
 ) {
   return Array.from(document.querySelectorAll(selector)).filter((card) => {
     const cardFaculty = card.dataset[facultyKey];
@@ -217,7 +215,7 @@ function getCurrentLearnerType() {
 
 function getCurrentLearnerLocation() {
   const checked = document.querySelector(
-    'input[name="learner_location"]:checked'
+    'input[name="learner_location"]:checked',
   );
   return checked ? checked.value : "onshore";
 }
@@ -298,7 +296,7 @@ async function exportToPDF() {
   // If status is not in the 200-299 range, failed. Surface the server message
   if (!response.ok) {
     throw new Error(
-      `Export failed: ${response.status} ${await response.text()}`
+      `Export failed: ${response.status} ${await response.text()}`,
     );
   }
 
@@ -361,7 +359,7 @@ function applySearch(searchInputId, type) {
         facultyKey: datasetKeys.faculty,
         codeKey: datasetKeys.code,
       },
-      currentFaculty
+      currentFaculty,
     );
     const needsShowAll = potentialVisible > 5;
 
@@ -399,7 +397,7 @@ function initSearch(type) {
   });
 
   searchInput.addEventListener("input", () =>
-    applySearch(cfg.searchInputId, type)
+    applySearch(cfg.searchInputId, type),
   );
 
   if (clearBtn) {
@@ -424,7 +422,7 @@ function renderSelected(
   showAllBtnEl,
   showLessBtnEl,
   selected,
-  learnerType = getCurrentLearnerType()
+  learnerType = getCurrentLearnerType(),
 ) {
   if (!listEl || !countEl || !clearBtnEl) return;
 
@@ -465,7 +463,7 @@ function renderSelected(
             currency: "NZD",
             minimumFractionDigits: 2,
             maximumFractionDigits: 2,
-          }
+          },
         )}</span>
       </div>
       <button type="button" class="selected-item-remove" aria-label="Remove ${
@@ -488,7 +486,7 @@ function renderSelected(
           clearBtnEl,
           showAllBtnEl,
           showLessBtnEl,
-          selected
+          selected,
         );
         renderSummary(selectedCourses);
       });
@@ -515,7 +513,7 @@ function renderSelection(type, learnerType = getCurrentLearnerType()) {
     cfg.showAllBtnEl,
     cfg.showLessBtnEl,
     cfg.items,
-    learnerType
+    learnerType,
   );
 }
 
@@ -525,7 +523,88 @@ function addItem(type, item) {
   const cfg = selectionConfigs[type];
   if (!cfg) return;
 
-  cfg.items.set(item.code, item);
+  let altType;
+  type === "degree" ? (altType = "course") : (altType = "degree");
+
+  const altCfg = selectionConfigs[altType];
+
+  const modalCourse = document.getElementById("errorModalCourse");
+  const modalDegree = document.getElementById("errorModalDegree");
+  const replaceBtnCourse = document.getElementById("errorReplaceCourseBtn");
+  const closeBtnCourse = document.getElementById("errorCloseCourseBtn");
+  const replaceBtnDegree = document.getElementById("errorReplaceDegreeBtn");
+  const closeBtnDegree = document.getElementById("errorCloseDegreeBtn");
+
+  console.log(altCfg);
+  if (altCfg.items.size >= 1) {
+    altType === "degree"
+      ? modalCourse.removeAttribute("hidden")
+      : modalDegree.removeAttribute("hidden");
+
+    replaceBtnCourse.onclick = () => {
+      modalCourse.setAttribute("hidden", "");
+
+      for (const altItem of altCfg.items.values()) {
+        setAvailableCardVisibility(
+          altCfg.cardSelector,
+          altCfg.dataKey,
+          altItem.code,
+          false,
+        );
+      }
+
+      altCfg.items.clear();
+      renderSelection(altType);
+
+      cfg.items.set(item.code, item);
+      setAvailableCardVisibility(
+        cfg.cardSelector,
+        cfg.dataKey,
+        item.code,
+        true,
+      );
+      renderSelection(type);
+      renderSummary(selectedCourses);
+    };
+
+    closeBtnCourse.onclick = () => {
+      modalCourse.setAttribute("hidden", "");
+    };
+
+    replaceBtnDegree.onclick = () => {
+      modalDegree.setAttribute("hidden", "");
+
+      for (const altItem of altCfg.items.values()) {
+        setAvailableCardVisibility(
+          altCfg.cardSelector,
+          altCfg.dataKey,
+          altItem.code,
+          false,
+        );
+      }
+
+      altCfg.items.clear();
+      renderSelection(altType);
+
+      cfg.items.set(item.code, item);
+      setAvailableCardVisibility(
+        cfg.cardSelector,
+        cfg.dataKey,
+        item.code,
+        true,
+      );
+      renderSelection(type);
+      renderSummary(selectedCourses);
+    };
+
+    closeBtnDegree.onclick = () => {
+      modalDegree.setAttribute("hidden", "");
+    };
+
+    return;
+  }
+
+  if (cfg) cfg.items.set(item.code, item);
 
   setAvailableCardVisibility(cfg.cardSelector, cfg.dataKey, item.code, true);
   renderSelection(type);
@@ -540,7 +619,7 @@ function clearSelection(type) {
       cfg.cardSelector,
       cfg.dataKey,
       course.code,
-      false
+      false,
     );
   }
 
@@ -574,10 +653,10 @@ function initAvailableCards(type) {
       e.stopPropagation();
 
       const degreeLimitPopup = document.getElementById(
-        `degreeLimitPopup-${code}`
+        `degreeLimitPopup-${code}`,
       );
       const degreeLimitCloseBtn = document.getElementById(
-        `degreeLimitCloseBtn-${code}`
+        `degreeLimitCloseBtn-${code}`,
       );
 
       if (cfg.name === "degree" && cfg.items.size >= 1) {
@@ -661,7 +740,7 @@ function calculateCoursesTotals(selectedCourses, isDomestic) {
 function renderSummary(
   selectedCourses,
   learnerType = getCurrentLearnerType(),
-  learnerLocation = getCurrentLearnerLocation()
+  learnerLocation = getCurrentLearnerLocation(),
 ) {
   if (!costSummaryTotalEl) return;
 
@@ -756,10 +835,10 @@ function initTuitionSelection() {
   document
     .querySelectorAll(selectionConfigs.course.facultyBtnSelector)
     .forEach((pill) =>
-      pill.classList.remove("selection-faculty-filter-active")
+      pill.classList.remove("selection-faculty-filter-active"),
     );
   const allCoursePillEl = document.querySelector(
-    selectionConfigs.course.allFacultyAttr
+    selectionConfigs.course.allFacultyAttr,
   );
   if (allCoursePillEl)
     allCoursePillEl.classList.add("selection-faculty-filter-active");
@@ -767,10 +846,10 @@ function initTuitionSelection() {
   document
     .querySelectorAll(selectionConfigs.degree.facultyBtnSelector)
     .forEach((pill) =>
-      pill.classList.remove("selection-faculty-filter-active")
+      pill.classList.remove("selection-faculty-filter-active"),
     );
   const allDegreePillEl = document.querySelector(
-    selectionConfigs.degree.allFacultyAttr
+    selectionConfigs.degree.allFacultyAttr,
   );
   if (allDegreePillEl)
     allDegreePillEl.classList.add("selection-faculty-filter-active");
@@ -782,7 +861,7 @@ function initTuitionSelection() {
     courseDropdownBtnEl,
     degreeDropdownBtnEl,
     courseBodyEl,
-    degreeBodyEl
+    degreeBodyEl,
   );
 
   document.querySelectorAll('input[name="learner_type"]').forEach((radio) => {
@@ -805,7 +884,7 @@ function initTuitionSelection() {
       document
         .querySelectorAll(".faculty-btn-course")
         .forEach((pill) =>
-          pill.classList.remove("selection-faculty-filter-active")
+          pill.classList.remove("selection-faculty-filter-active"),
         );
       btnEl.classList.add("selection-faculty-filter-active");
 
@@ -820,7 +899,7 @@ function initTuitionSelection() {
       document
         .querySelectorAll(".faculty-btn-degree")
         .forEach((pill) =>
-          pill.classList.remove("selection-faculty-filter-active")
+          pill.classList.remove("selection-faculty-filter-active"),
         );
       btnEl.classList.add("selection-faculty-filter-active");
 
@@ -860,7 +939,7 @@ function initTuitionSelection() {
           facultyKey: "courseFaculty",
           codeKey: "courseCode",
         },
-        currentCourseFaculty
+        currentCourseFaculty,
       );
       const needsShowAll = potentialVisible > 5;
 
@@ -906,7 +985,7 @@ function initTuitionSelection() {
           facultyKey: "degreeFaculty",
           codeKey: "degreeTitle",
         },
-        currentDegreeFaculty
+        currentDegreeFaculty,
       );
       const needsShowAll = potentialVisible > 5;
 

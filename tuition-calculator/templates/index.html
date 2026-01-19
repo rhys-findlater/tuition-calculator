@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -496,6 +496,23 @@
                   </div>
                 </div>
                 {% endfor %}
+                <div id="errorModalCourse" class="error-modal" hidden>
+                  <div class="error-backdrop"></div>
+                  <div class="error-content">
+                    <p id="errorMessage">
+                      Only courses or degrees can be selected at one time.
+                    </p>
+                    <button
+                      id="errorReplaceCourseBtn"
+                      class="error-close-btn error-close-btn-first"
+                    >
+                      Replace
+                    </button>
+                    <button id="errorCloseCourseBtn" class="error-close-btn">
+                      Cancel
+                    </button>
+                  </div>
+                </div>
               </div>
 
               <!-- Pagination/visibility controls for long course lists -->
@@ -666,7 +683,25 @@
                   </div>
                 </div>
                 {% endfor %}
+                <div id="errorModalDegree" class="error-modal" hidden>
+                  <div class="error-backdrop"></div>
+                  <div class="error-content">
+                    <p id="errorMessage">
+                      Only courses or degrees can be selected at one time.
+                    </p>
+                    <button
+                      id="errorReplaceDegreeBtn"
+                      class="error-close-btn error-close-btn-first"
+                    >
+                      Replace
+                    </button>
+                    <button id="errorCloseDegreeBtn" class="error-close-btn">
+                      Cancel
+                    </button>
+                  </div>
+                </div>
               </div>
+
               <!-- Pagination/visibility controls for long course lists -->
               <button id="showAllDegrees" class="selection-showall">
                 Show all degrees
