@@ -1,0 +1,428 @@
+/**
+ * @ PDF Export CSS
+ * @ Styles used by WeasyPrint when rendering the Course Cost Summary PDF.
+ * @
+ * @ Authors: Regan Williams & Rhys Findlater
+ */
+
+@page {
+  size: A4;
+  margin: 0;
+}
+
+:root{
+  /* Text */
+  --text: #2c2c2c;            
+  --text-strong: #121212;     
+  --text-heading: #212121;    
+  --text-inverse: #ffffff;   
+
+  /* UI neutrals */
+  --bg: #ffffff;              
+  --surface: #f9fbfc;         
+  --panel: #F9FAFB;           
+
+  /* Lines/borders */
+  --line: #e5e7eb;            
+  --line-soft: #eef2f7;      
+
+  /* Brand / accent */
+  --accent: #CE3E2E;         
+
+  /* Muted text */
+  --muted: #6b7280;           
+
+  /* Border radius scale */
+  --radius-card: 12px;        
+  --radius-panel: 14px;      
+
+  /* Shadow scale */
+  --shadow-card-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+}
+
+body {
+  line-height: 1.35;
+  font-family: Inter, sans-serif;
+  color: var(--text);
+  background: var(--bg);
+  font-size: 0.75rem;
+}
+
+.info-label {
+  margin-right: 6px;
+}
+
+/* ==================== Header ==================== */
+.pdf-header{
+  background: var(--text-heading);
+  color: var(--text-inverse);
+  width: 100%;
+  padding: 1.5rem 1rem;
+
+  border: 0;
+  border-radius: 0;
+  margin: 0;
+  overflow: hidden;
+  position: relative;
+
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.pdf-header::before{
+  content: "";
+  position: absolute;
+  left: 0; right: 0; top: 0;
+  height: 3px;
+  background: var(--accent);
+}
+
+.pdf-header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.pdf-header-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.pdf-title {
+  font-size: 1.625rem;
+  font-weight: 400;
+  letter-spacing: -0.025em;
+  white-space: nowrap;
+}
+
+.pdf-org {
+  font-size: 0.875rem;
+  font-weight: 400;
+}
+
+.header-info-row {
+  display: flex;
+  flex-direction: row;
+  white-space: nowrap;
+  opacity: 0.9;
+}
+
+.for-name{
+  margin-top: 6px;
+}
+
+/* ==================== Body ==================== */
+.pdf-document{
+  padding: 8mm;
+  padding-top: 0;
+}
+
+.pdf-section{
+  margin-top: 1.5rem;
+}
+
+.pdf-section-title{
+  font-size: 0.9rem;
+  font-weight: 400;
+  letter-spacing: 0.025em;
+  text-transform: uppercase;
+  margin-bottom: 0.75rem;
+}
+
+/* ==================== Learner info ==================== */
+.learner-strip{
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  background: var(--bg);
+  border-bottom: 1px solid var(--line);
+  padding: 12px 16px;
+  width: 100%;
+  margin: 0;
+  gap: 999px;
+  white-space: nowrap;
+}
+
+.learner-cell{
+  flex: 1;
+}
+
+.learner-cell-label{
+  letter-spacing: 0.12em;
+  font-size: 0.625rem;
+  color: var(--accent);
+  opacity: 0.9;
+  margin-bottom: 4px;
+}
+
+.learner-cell-value{
+  font-size: 1rem;
+  font-weight: 400;
+  color: var(--text-strong);
+  white-space: nowrap;
+  text-transform: capitalize;
+}
+
+/* ==================== Courses table ==================== */
+.courses-card{
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  box-shadow: var(--shadow-card-sm);
+  background: var(--bg);
+  border: 1px solid var(--line);
+  position: relative;
+  margin-bottom: 0.9rem;
+}
+
+.courses-table{
+  width: 100%;
+  border-collapse: collapse;
+  border-spacing: 0;
+  border: 0;
+  background: transparent;
+}
+
+.courses-table thead th{
+  background: var(--text-heading);
+  color: var(--text-inverse);
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 12px;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.courses-table tbody tr:first-child td{
+  border-top: 1px solid var(--text-heading);
+}
+
+.courses-table thead th:first-child{ border-top-left-radius: var(--radius-card); }
+.courses-table thead th:last-child{ border-top-right-radius: var(--radius-card); }
+
+.courses-table tbody td{
+  padding: 9px 12px;
+  font-size: 0.75rem;
+  line-height: 1.25;
+  vertical-align: middle;
+  border-bottom: 1px solid var(--line-soft);
+}
+
+.courses-table tbody tr:last-child td{ border-bottom: 0; }
+
+.courses-table tbody tr:nth-child(even){
+  background: var(--surface);
+}
+
+.courses-table th.course-code,
+.courses-table td.mono{
+  width: 15%;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.courses-table th.course-points,
+.courses-table th.course-fee{
+  width: 10%;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.courses-table td.point{
+  text-align: left;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.courses-table td.cost{
+  text-align: right;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ==================== Cost Breakdown ==================== */
+.cost-divider{
+  border: 0;
+  border-top: 1px solid var(--line);
+  margin: 6px 0;
+}
+
+.cost-card-top3{
+  display: flex;
+  gap: 10px;
+}
+
+.mini-card{
+  flex: 1;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  background: var(--bg);
+  padding: 12px;
+}
+
+.mini-kicker{
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 0.65rem;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+
+.mini-value{
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text-heading);
+  margin-bottom: 6px;
+  white-space: nowrap;
+}
+
+.mini-note{
+  font-size: 0.7rem;
+  color: var(--muted);
+}
+
+.subtotal-row{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid var(--line);
+  margin-top: 12px;
+  padding-top: 10px;
+  font-size: 0.8rem;
+}
+
+.subtotal-value{ white-space: nowrap; }
+
+.total-panel{
+  margin-top: 12px;
+  border-radius: var(--radius-panel);
+  background: var(--text-heading);
+  color: var(--text-inverse);
+  padding: 22px;
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  position: relative;
+  overflow: hidden;
+  align-items: stretch;
+}
+
+.total-panel::after{
+  content: "";
+  position: absolute;
+  right: -50px;
+  top: -50px;
+  width: 160px;
+  height: 160px;
+  background: var(--accent);
+  opacity: 0.2;
+  border-radius: 999px;
+}
+
+.total-kicker{
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.65rem;
+  opacity: 0.75;
+  margin-bottom: 10px;
+}
+
+.total-amount{
+  font-size: 1.8rem;
+  font-weight: 400;
+  line-height: 1;
+  margin-bottom: 8px;
+  white-space: nowrap;
+}
+
+.total-currency{
+  font-size: 0.7rem;
+  opacity: 0.7;
+}
+
+.total-panel-right{
+  min-width: 160px;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.mini-line{
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 0.8rem;
+  padding: 4px 0;
+  opacity: 0.9;
+}
+
+.mini-line span:last-child{ white-space: nowrap; }
+
+/* ==================== Footer ==================== */
+.pdf-footer{
+  margin-top: 0.75rem;
+  border-top: 2px solid var(--accent);
+  padding: 1rem 8mm;
+}
+
+.footer-title{
+  text-align: center;
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text);
+}
+
+.footer-subtitle{
+  margin-top: 0.35rem;
+  text-align: center;
+  font-size: 0.75rem;
+  font-style: italic;
+  color: var(--muted);
+}
+
+.pdf-notes{
+  margin-top: 0.75rem;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  padding: 14px 16px;
+  box-shadow: var(--shadow-card-sm);
+}
+
+.pdf-notes-title{
+  font-size: 0.8rem;
+  color: var(--text-heading);
+  margin-bottom: 0.5rem;
+}
+
+.pdf-notes-list{
+  margin: 0;
+  padding-left: 1.15rem;
+  color: var(--text);
+  font-size: 0.72rem;
+  line-height: 1.35;
+}
+
+.pdf-notes-list li{
+  margin: 0.3rem 0;
+}
+
+.pdf-footer,
+.pdf-notes{
+  break-inside: avoid;
+  page-break-inside: avoid;
+}

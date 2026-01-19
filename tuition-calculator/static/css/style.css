@@ -1,0 +1,1602 @@
+/* ==================== Global ==================== */
+/* Global design tokens and resets */
+
+:root {
+  /* Border radius scale */
+  --radius-card: 0.5rem;
+  --radius-card-lg: 0.75rem;
+  --radius-control: 0.25rem;
+  --radius-chip: 0.5rem;
+
+  /* Shadow scale */
+  --shadow-card-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-card-md: 0 3px 6px 0 rgb(0 0 0 / 0.1);
+
+  /* Neutral border color */
+  --border-subtle: #e5e7eb;
+}
+
+/* Basic reset and box model */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+/* Root document defaults */
+html {
+  font-size: 16px;
+  background-color: #ffffff;
+}
+
+/* App shell layout and typography */
+body {
+  font-size: 1rem;
+  color: #2c2c2c;
+  line-height: 1.5;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-family: Inter, sans-serif;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* Main content column centered on large screens */
+main {
+  max-width: 80rem;
+  margin-inline: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 3-column main layout for form + summary */
+.main-content-container {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.25rem;
+}
+
+/* Icon sizing utilities */
+.main-icon {
+  width: 1.15rem;
+}
+
+.sub-icon {
+  width: 0.95rem;
+}
+
+.chev-icon {
+  width: 1.5rem;
+}
+
+/* Chrome, Edge, Safari */
+.search-input::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+}
+
+/* Firefox removes special search styling when you use -moz-appearance: none on the input */
+.search-input[type="search"] {
+  appearance: textfield; /* standard */
+  -moz-appearance: textfield; /* Firefox */
+}
+
+.selection-body-container-idle {
+  display: none;
+}
+
+.selection-subtitle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding-bottom: 0.45rem;
+}
+
+/* ==================== Popup ==================== */
+
+
+.popup-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.popup-backdrop[hidden] {
+  display: none;
+}
+
+.conflict-popup {
+  width: 100%;
+  max-width: 520px;
+  background: #ffffff;
+  border-radius: 0.75rem;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.25);
+  overflow: hidden;
+}
+
+.conflict-popup-header {
+  background: linear-gradient(to bottom right, #fef2f2, #fff1f2);
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.conflict-popup-header-left {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.conflict-popup-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 999px;
+  background: #cb3d2d;
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+}
+
+.conflict-popup-icon-img {
+  width: 30px;
+  height: 30px;
+}
+
+.conflict-popup-titles {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.conflict-popup-title {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #111827;
+}
+
+.conflict-popup-subtitle {
+  margin: 0;
+  font-size: 0.875rem;
+  color: rgba(44, 44, 44, 0.75);
+}
+
+.conflict-popup-body {
+  padding: 2rem;
+}
+
+.conflict-popup-body p {
+  margin: 0;
+  font-size: 1rem;
+  color: #364153;
+}
+
+.conflict-popup-note {
+  margin-top: 1rem;
+  background: #eef2ff;
+  border: 1px solid #dbeafe;
+  color: #374151;
+  padding: 0.85rem 1rem;
+  border-radius: 0.6rem;
+  font-size: 0.9rem;
+}
+
+.conflict-popup-actions {
+  padding: 1rem 1.5rem 1.25rem;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  background: #F9FAFB;
+  border-top: 1px solid #e5e7eb;
+}
+
+.conflict-btn {
+  border: 0;
+  border-radius: 0.6rem;
+  padding: 0.7rem 1rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.conflict-btn:focus-visible {
+  outline: 2px solid rgba(206, 62, 46, 0.45);
+  outline-offset: 2px;
+}
+
+.conflict-btn-cancel {
+  background: #f3f4f6;
+  color: #2c2c2c;
+  border: 1px solid #e5e7eb;
+}
+
+.conflict-btn-cancel:hover {
+  background: #e5e7eb;
+}
+
+.conflict-btn-danger {
+  background: #ce3e2e;
+  color: #ffffff;
+}
+
+.conflict-btn-danger:hover {
+  background: #d35143;
+}
+/* ==================== Header ==================== */
+/* Global header bar with logo and title */
+
+.header {
+  width: 100vw;
+  text-align: center;
+  background: #212121;
+}
+
+.header-container {
+  margin: 0 auto;
+  padding: 1.5rem 10rem;
+  display: flex;
+  gap: 1.3rem;
+}
+
+.header-subcontainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  order: 2;
+}
+
+.header-text {
+  font-size: 1.42rem;
+  font-weight: bold;
+  color: white;
+}
+
+.header-subheading {
+  font-size: 0.875rem;
+  color: white;
+}
+
+.header-logo {
+  height: 4rem;
+}
+
+.selection-course,
+.selection-degree {
+  opacity: 1;
+  transform: translateY(0);
+  transition:
+    opacity 0.18s ease-out,
+    transform 0.18s ease-out;
+  display: flex;
+}
+
+.selection-course.hidden,
+.selection-degree.hidden {
+  opacity: 0;
+  transform: translateY(4px);
+}
+
+/* ==================== Welcome-section ==================== */
+/* Introductory panel explaining the tool */
+
+.welcome-section-container {
+  box-shadow: var(--shadow-card-sm);
+  border-radius: var(--radius-card);
+  border: 1px solid var(--border-subtle);
+  padding: 1.5rem;
+  margin-bottom: 1.25rem;
+  margin-top: 1.75rem;
+}
+
+.welcome-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.welcome-content-icon-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.welcome-text-block {
+  max-width: 60rem;
+}
+
+.welcome-title {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.welcome-text {
+  font-size: 0.875rem;
+  margin-left: 1.65rem;
+}
+
+/* ==================== Learner-info ==================== */
+/* Card for learner type, location, and related options */
+
+.learner-info-container {
+  box-shadow: var(--shadow-card-sm);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-card);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  grid-column: span 2 / span 2;
+}
+
+.learner-info-header-container {
+  padding-inline: 1.5rem;
+  padding-top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.09rem;
+}
+
+.learner-info-header-logo-container {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.learner-info-header-text {
+  font-size: 1rem;
+}
+
+.learner-info-selection-container {
+  padding-inline: 1.5rem;
+  padding-bottom: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.learner-info-select-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.learner-info-select-icon-container {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.learner-info-select-text {
+  font-size: 0.875rem;
+}
+
+.learner-info-option {
+  font-size: 0.875rem;
+  padding: 16px 20px;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-card-lg);
+  margin-bottom: 0.75rem;
+  cursor: pointer;
+  display: flex;
+  gap: 12px;
+}
+
+.learner-info-option:hover {
+  background-color: #f0f0f0;
+}
+
+.learner-info-text {
+  display: flex;
+  flex-direction: column;
+}
+
+/* ==================== Cost Summary - shared styles ==================== */
+/* Right-hand cost summary card used by both idle and active states */
+.cost-summary-idle .cost-summary-active-content {
+  display: none;
+}
+
+.cost-summary-idle .cost-summary-idle-content {
+  display: block;
+}
+
+.cost-summary-container:not(.cost-summary-idle) .cost-summary-idle-content {
+  display: none;
+}
+
+.cost-summary-container:not(.cost-summary-idle) .cost-summary-active-content {
+  display: block; /* or flex */
+}
+
+/* Sticky positioning so summary stays visible while scrolling */
+.cost-summary-sticky-wrapper {
+  position: sticky;
+  top: 1.5rem;
+  align-self: flex-start;
+}
+
+.cost-summary-container {
+  padding: 1.5rem;
+  height: 40%;
+  box-shadow: var(--shadow-card-sm);
+  border-radius: var(--radius-card-lg);
+  border: 1px solid var(--border-subtle);
+  display: flex;
+  flex-direction: column;
+}
+
+.cost-summary-header-container {
+  margin-bottom: 1rem;
+  display: flex;
+  gap: 0.25rem;
+}
+
+.cost-summary-header {
+  font-size: 1rem;
+}
+
+/* ==================== Cost Summary - idle state ==================== */
+/* Placeholder content shown before any course is selected */
+
+.cost-summary-idle-container {
+  text-align: center;
+}
+
+.cost-summary-icon {
+  width: 3rem;
+  margin-bottom: 0.5rem;
+}
+
+.cost-summary-text-idle {
+  font-size: 0.875rem;
+  color: rgba(44, 44, 44, 0.8);
+  max-width: 16rem;
+  margin: 0 auto;
+}
+
+/* ==================== Tab Section ==================== */
+.tab-container.tab-container-pill {
+  background: #fff;
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+
+  border: 1px solid #e5e7eb;
+  border-bottom: 0;
+
+  border-top-left-radius: 0.75rem;
+  border-top-right-radius: 0.75rem;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.tab-container.tab-container-pill .tab-btn {
+  flex: 1;
+  position: relative;
+
+  padding: 10px 16px;
+  border: 0;
+  background: transparent;
+
+  border-radius: 0.5rem;
+  font-size: 14px;
+  font-weight: 500;
+
+  transition: all 150ms ease;
+  cursor: pointer;
+
+  color: #4b5563;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.tab-container.tab-container-pill .tab-btn:hover {
+  color: #111827;
+  background: #f9fafb;
+}
+
+.tab-container.tab-container-pill .tab-btn .main-icon {
+  width: 16px;
+  height: 16px;
+}
+
+.tab-container.tab-container-pill .tab-btn.tab-btn-active {
+  color: #cb3d2d;
+}
+
+.tab-container.tab-container-pill .tab-btn.tab-btn-active::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+
+  border-radius: 0.5rem;
+  border: 2px solid #cb3d2d;
+
+  background: linear-gradient(
+    135deg,
+    rgba(203, 61, 45, 0.1),
+    rgba(204, 0, 17, 0.1)
+  );
+
+  pointer-events: none;
+  z-index: 0;
+}
+
+.tab-container.tab-container-pill .tab-btn > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* ==================== Cost Summary - active state ==================== */
+/* Detailed cost breakdown once courses have been added */
+
+/* Selection context “pills” and high-level totals */
+.cost-summary-pills {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.cost-summary-pill {
+  font-size: 0.75rem;
+  padding: 0.25rem 0.9rem;
+  border-radius: 0.375rem;
+  border: 1px solid #ce3e2e;
+  color: #ce3e2e;
+  background-color: #ffffff;
+}
+
+/* Highlighted stats block for totals (e.g. points, GST, SSL) */
+.cost-summary-stats {
+  border-radius: 0.5rem;
+  border-width: 1px;
+  border-style: solid;
+  border-color: rgba(71, 122, 126, 0.2);
+  background-color: #ededed;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.cost-summary-stats-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 1rem;
+}
+
+/* Line items and helper text below the stats block */
+.cost-summary-lines {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  margin-bottom: 1.5rem;
+}
+
+.cost-summary-line {
+  display: flex;
+  justify-content: space-between;
+  font-size: 1rem;
+}
+
+.cost-summary-line-main {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+/* Small inline icon used for notes/tooltips */
+.cost-summary-icon-inline {
+  width: 0.7rem;
+  height: 0.7rem;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.info-icon-wrapper {
+  position: relative;
+  border: none;
+  background: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.info-tooltip {
+  position: absolute;
+  left: 50%;
+  top: 125%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  padding: 0.4rem 0.6rem;
+  background: #111827;
+  color: #f9fafb;
+  font-size: 0.75rem;
+  border-radius: 0.4rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 120ms ease-out;
+  z-index: 10;
+}
+
+/* Show on hover or keyboard focus */
+.info-icon-wrapper:hover .info-tooltip,
+.info-icon-wrapper:focus-visible .info-tooltip {
+  opacity: 1;
+}
+
+.cost-summary-subtext {
+  font-size: 0.75rem;
+  color: rgba(44, 44, 44, 0.8);
+  margin-top: -0.25rem;
+  margin-bottom: 0.75rem;
+}
+
+/* Total strip and export button */
+/* Prominent total row at bottom of summary */
+.cost-summary-total {
+  margin-top: 0.25rem;
+  margin-bottom: 0.9rem;
+  width: 100%;
+  border-radius: 0.7rem;
+  background-color: #ce3e2e;
+  color: #ffffff;
+  padding: 0.85rem 1.1rem;
+  display: flex;
+  justify-content: space-between;
+  font-size: 1rem;
+}
+
+/* Secondary action to export the breakdown (e.g. PDF) */
+.cost-summary-export {
+  width: 100%;
+  border-radius: 0.7rem;
+  border: 1px solid #d1d5db;
+  background-color: #ededed;
+  color: #374151;
+  padding: 0.75rem 1.1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.cost-summary-export:hover {
+  background-color: #e5e7eb;
+  cursor: pointer;
+}
+
+.cost-summary-footnotes {
+  margin-top: 0.9rem;
+  font-size: 0.72rem;
+  color: rgba(44, 44, 44, 0.8);
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+/* ==================== Course Selection ==================== */
+/* Main course search, filtering, and add-to-summary flows */
+
+.selection-container {
+  grid-column: 1 / 3;
+
+  box-shadow: var(--shadow-card-sm);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-card-lg);
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.selection-desc-icon-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.selection-heading-container {
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.tab-btn {
+  font-size: 1rem;
+  font-family: Inter, sans-serif;
+  width: 100%;
+  padding: 1.5rem;
+  background: transparent;
+  cursor: pointer;
+  border: none;
+  display: flex;
+  gap: 0.4rem;
+}
+
+.tab-btn-first {
+  border-right: 1px solid var(--border-subtle);
+}
+
+.tab-btn-active {
+  background-color: #f0f0f0;
+}
+
+.error-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.error-modal[hidden] {
+  display: none;
+}
+
+.error-content {
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  max-width: 400px;
+  text-align: center;
+  position: relative; /* above backdrop */
+  z-index: 1;
+}
+
+.error-close-btn {
+  margin-top: 1rem;
+  padding: 0.75rem 2rem;
+  background: #fff;
+  border: 1px solid #b30010;
+  color: #b30010;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.error-close-btn-first {
+  color: #fff;
+  background-color: #b30010;
+}
+
+.course-desc-btn {
+  background-color: transparent;
+  width: 0px;
+  margin-right: 1.5rem;
+  border: none;
+  cursor: pointer;
+}
+
+.selection-body-container {
+  padding: 1.5rem;
+  padding-top: 0.85rem;
+}
+
+/* Search input and label above course list */
+.selection-search {
+  margin-bottom: 0.75rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.search-label {
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.search-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+/* Text input with embedded search icon */
+.search-input {
+  width: 100%;
+  padding: 0.5rem 0.75rem 0.5rem 2.5rem;
+  border-radius: var(--radius-control);
+  border: 1.2px solid #d1d5db;
+  background: url("icons/search-grey.svg") no-repeat 10px center;
+  background-size: 1rem 1rem;
+}
+
+.search-input::placeholder {
+  color: #616161;
+}
+
+.search-input:focus {
+  border-color: #757575;
+  background-color: #fff;
+  outline: none;
+}
+
+.search-clear-btn {
+  position: absolute;
+  right: 1rem;
+  background: transparent;
+  border: none;
+  color: #000; /* UC blue-ish */
+  width: 0.75rem;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+  display: none;
+}
+
+.search-clear-btn:hover {
+  color: #1e40af;
+}
+
+.search-clear-btn-icon {
+  width: 0.9rem;
+}
+
+.search-input-wrapper:focus-within .search-clear-btn {
+  display: flex;
+}
+
+/* Horizontal filter chips for degree type */
+.selection-faculty-filter {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 12px 8px;
+  scrollbar-width: thin;
+  scrollbar-color: #ccc transparent;
+  scroll-snap-type: x proximity;
+}
+
+/* Custom scrollbar styling for degree filters */
+.course-degree-filters::-webkit-scrollbar {
+  height: 4px;
+}
+
+.course-degree-filters::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.course-degree-filters::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 2px;
+  opacity: 0.5;
+}
+
+.course-degree-filters::-webkit-scrollbar-thumb:hover {
+  background: #999;
+  opacity: 1;
+}
+
+/* Scroll shadow indicators */
+/* Fades at left/right edges to hint that the filter list is scrollable */
+.course-degree-filters {
+  position: relative;
+}
+
+.course-degree-filters::before,
+.course-degree-filters::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 24px;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.course-degree-filters::before {
+  left: 0;
+  background: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 1),
+    rgba(255, 255, 255, 0)
+  );
+}
+
+.course-degree-filters::after {
+  right: 0;
+  background: linear-gradient(
+    to left,
+    rgba(255, 255, 255, 1),
+    rgba(255, 255, 255, 0)
+  );
+}
+
+/* Only show shadows when container is scrollable (toggled via JS/attr) */
+.course-degree-filters:not([scrollbar-hidden])::before,
+.course-degree-filters:not([scrollbar-hidden])::after {
+  opacity: 1;
+}
+
+/* Individual degree filter “pill” */
+.selection-faculty-filter-btn {
+  flex: 0 0 130px; /* Fixed width pills for consistent layout */
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  border: 2px solid #e0e0e0;
+  background: white;
+  color: #666;
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.selection-faculty-filter-btn:hover {
+  color: #fff;
+  background-color: #ce3e2e;
+}
+
+/* Text wrapper inside degree filter pill */
+.selection-faculty-filter-label {
+  flex: 1 1 auto;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: center;
+}
+
+.selection-faculty-filter-active {
+  color: #fff;
+  background-color: #ce3e2e;
+}
+
+/* Vertical list of course cards */
+.item-list-container {
+  margin-bottom: 0.65rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+/* Single course result row */
+.selection-item {
+  padding: 0.55rem 0.65rem;
+  border: 1.2px solid var(--border-subtle);
+  border-radius: var(--radius-card);
+  display: flex;
+  color: #2c2c2c;
+  justify-content: space-between;
+}
+
+.item-info-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.item-container {
+  display: flex;
+  gap: 0.6rem;
+  align-items: center;
+}
+
+.item-faculty {
+  color: #2c2c2c;
+  font-size: 0.75rem;
+  padding: 0.1rem 0.7rem;
+  border: 1.2px solid #2c2c2c;
+  border-radius: var(--radius-card);
+}
+
+.item-points {
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-left: 0.5rem;
+}
+
+/* Container for add/remove buttons on each course */
+.item-button-container {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+/* Primary “Add course” CTA */
+.item-button {
+  font-size: 0.875rem;
+  color: #fff;
+  background-color: #ce3e2e;
+  padding: 5px 10px;
+  border: 1px solid #ce3e2e;
+  border-radius: var(--radius-card);
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  gap: 0.5rem;
+}
+
+.item-button-add {
+  font-size: 1.35rem;
+  display: flex;
+  align-items: center;
+}
+
+.plus-icon {
+  width: 1.25rem;
+}
+
+.item-button:hover {
+  border: 1.2px solid #d35143;
+  background-color: #d35143;
+}
+
+/* Show more/less degree filters */
+.selection-showall,
+.selection-showless {
+  font-size: 0.875rem;
+  color: #ce3e2e;
+  background-color: #fff;
+  padding: 7px 10px;
+  border: 1.2px solid #ce3e2e;
+  border-radius: var(--radius-card);
+  cursor: pointer;
+}
+
+/* ==================== Selected-Courses-Container ==================== */
+/* Summary list of courses the user has chosen */
+
+.selected-courses-container {
+  margin-bottom: 1.25rem;
+}
+
+.selected-items-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.selected-courses-title {
+  font-size: 1rem;
+  margin-top: 1rem;
+  font-weight: bold;
+}
+
+/* Clear-all action for selected courses */
+.selected-courses-clear-btn {
+  font-size: 0.875rem;
+  color: #374151;
+  background-color: #f3f4f6;
+  padding: 5px 10px;
+  border: 1px solid #d1d5db;
+  border-radius: var(--radius-card);
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.selected-courses-clear-btn:hover {
+  background-color: #e5e7eb;
+  border-color: #cbd5e1;
+}
+
+/* Hidden when there are no selected courses */
+.selected-courses-clear-btn:disabled {
+  display: none;
+  cursor: default;
+}
+
+.selected-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+/* ==================== Individual-Selected-Courses ==================== */
+/* Styles for each selected course row in the summary */
+
+.selected-item-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.85rem 1.1rem;
+  border-radius: var(--radius-card-lg);
+  background: #f3f4f6;
+  border: 1px solid #e5e7eb;
+}
+
+.selected-item-main {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 0;
+}
+
+/* Code + title wrapping inside a row */
+.selected-item-title {
+  display: flex;
+  align-items: baseline;
+  gap: 0.55rem;
+  min-width: 0;
+}
+
+.selected-item-code {
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: #2c2c2c;
+  white-space: nowrap;
+}
+
+.selected-item-name {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #2c2c2c;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Meta line for points and faculty chip */
+.selected-item-meta {
+  display: flex;
+  gap: 0.75rem;
+  font-size: 0.78rem;
+  color: #2c2c2c;
+  align-items: center;
+}
+
+.selected-item-points {
+  white-space: nowrap;
+  font-weight: bold;
+}
+
+.selected-item-faculty {
+  white-space: nowrap;
+  font-weight: 500;
+  color: #2c2c2c;
+  font-size: 0.75rem;
+  padding: 0.1rem 0.7rem;
+  border: 1.2px solid #2c2c2c;
+  border-radius: var(--radius-card);
+}
+
+/* Price block aligned to the right of the row */
+.selected-item-price {
+  display: flex;
+  align-items: baseline;
+  gap: 0.35rem;
+  margin-left: auto;
+  white-space: nowrap;
+}
+
+.selected-item-price-label {
+  font-size: 0.75rem;
+  color: #2c2c2c;
+}
+
+.selected-item-price-value {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #2c2c2c;
+}
+
+/* Remove button for a single selected course */
+.selected-item-remove {
+  border: none;
+  background: transparent;
+  color: #2c2c2c;
+  font-size: 1.05rem;
+  line-height: 1;
+  padding: 0.25rem 0.35rem;
+  border-radius: 0.4rem;
+  cursor: pointer;
+}
+
+.selected-item-remove:hover {
+  background: rgba(0, 0, 0, 0.06);
+}
+
+.selected-item-remove:active {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+/* ==================== Student-Levy-Pannel ==================== */
+/* Student Services Levy (SSL) explanation and onshore/offshore breakdown */
+
+.ssl-container {
+  padding-inline: 1.5rem;
+  padding-top: 1.5rem;
+  padding-bottom: 1.5rem;
+  margin-bottom: 7rem;
+  box-shadow: var(--shadow-card-sm);
+  border-radius: var(--radius-card-lg);
+  background-color: #ededed;
+  border: 1px solid var(--border-subtle);
+  grid-column: 1 / 3;
+}
+
+.ssl-container-header {
+  padding-bottom: 1rem;
+  margin-bottom: 1rem;
+}
+
+.ssl-container-header-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.ssl-container-icon-wrapper {
+  background-color: rgba(206, 62, 46, 0.1);
+  border-radius: var(--radius-card);
+  padding: 0.5rem;
+  line-height: 0;
+}
+
+.ssl-container-title {
+  font-size: 1rem;
+}
+
+.ssl-container-subtitle {
+  font-size: 0.875rem;
+}
+
+/* Grid wrapper for onshore vs offshore panels */
+.ssl-container-content {
+  display: grid;
+  gap: 1rem;
+}
+
+/* Form radio styling for SSL selection */
+.radio-button {
+  accent-color: #374151;
+}
+
+/* Onshore and offshore breakdown cards */
+.ssl-panel-onshore,
+.ssl-panel-offshore {
+  box-shadow: var(--shadow-card-md);
+  background-color: #ffffff;
+  border-radius: var(--radius-card-lg);
+  padding: 1rem;
+  border: 1px solid var(--border-subtle);
+}
+
+.ssl-panel-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.ssl-panel-icon-wrapper {
+  background-color: rgba(206, 62, 46, 0.1);
+  border-radius: var(--radius-card);
+  padding: 0.5rem;
+  line-height: 0;
+}
+
+.ssl-panel-header-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.ssl-panel-title {
+  font-size: 0.95rem;
+}
+
+.ssl-panel-subtitle {
+  font-size: 0.75rem;
+  color: rgba(44, 44, 44, 0.8);
+}
+
+/* Line items inside each SSL panel (per-points, caps, etc.) */
+.ssl-panel-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-left: 2.75rem;
+}
+
+.ssl-panel-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.875rem;
+  padding-block: 0.375rem;
+}
+
+.ssl-panel-row:not(:last-child) {
+  border-bottom: 1px solid #f2f5f9;
+}
+
+.ssl-panel-value {
+  color: #ce3e2e;
+  font-size: 1rem;
+}
+
+/* ==================== Footer ==================== */
+
+/* Simple global footer for legal and credits */
+.footer {
+  width: 100vw;
+  text-align: center;
+  background: #212121;
+  padding: 2.5rem 10rem;
+}
+
+.footer-text {
+  color: white;
+}
+
+/* ==================== Name Prompt ==================== */
+
+.prompt-container {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  /* hidden state */
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+
+  padding: 1rem;
+  background: rgba(0, 0, 0, 0.75);
+  z-index: 9999;
+
+  transition:
+    opacity 180ms ease,
+    visibility 0s linear 180ms;
+}
+
+.prompt-container.is-open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+
+  transition: opacity 180ms ease;
+}
+
+.prompt-container.is-open .prompt {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.prompt {
+  opacity: 0;
+  transform: translateY(10px) scale(0.98);
+  transition:
+    opacity 180ms ease,
+    transform 180ms ease;
+  position: relative;
+  width: 100%;
+  max-width: 32.5rem;
+  background-color: #ffffff;
+  box-shadow: var(--shadow-card-sm);
+  border-radius: var(--radius-card);
+  border: 1px solid var(--border-subtle);
+  padding: 1.6rem 1.6rem 1.4rem;
+}
+
+.pdf-prompt-close-btn {
+  position: absolute;
+  top: 0.85rem;
+  right: 0.85rem;
+  width: 34px;
+  height: 34px;
+  border: none;
+  background: transparent;
+  border-radius: 0.5rem;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+}
+
+.pdf-prompt-close-btn:hover {
+  background: rgba(0, 0, 0, 0.06);
+}
+
+.pdf-prompt-close-btn img {
+  width: 14px;
+  height: 14px;
+  opacity: 0.75;
+}
+
+.prompt-header {
+  text-align: center;
+  display: grid;
+  justify-items: center;
+  gap: 0.85rem;
+  margin-top: 0.1rem;
+  margin-bottom: 0.85rem;
+}
+
+.prompt-header-icon {
+  position: relative;
+  width: 62px;
+  height: 62px;
+  border-radius: 9999px;
+  display: grid;
+  place-items: center;
+  background-color: #ce3e2e;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.12);
+}
+
+.prompt-header-icon img {
+  width: 32px;
+  height: 32px;
+}
+
+.prompt-title {
+  font-size: 1.5rem;
+  line-height: 1.2;
+  font-weight: 650;
+  margin: 0.2rem 0 0;
+}
+
+.pdf-prompt-subtitle {
+  font-size: 0.9rem;
+  color: rgba(44, 44, 44, 0.7);
+}
+
+.pdf-prompt-summary {
+  background-color: #ededed;
+  border-radius: 0.5rem;
+  padding: 0.9rem 1rem;
+  box-shadow: var(--shadow-card-md);
+  border: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin: 1rem 0 1.25rem;
+}
+
+.pdf-prompt-summary-left {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.pdf-prompt-summary-courses {
+  font-size: 1rem;
+  color: rgba(44, 44, 44, 0.75);
+  margin: 0;
+}
+
+.pdf-prompt-summary-label {
+  font-size: 1rem;
+  font-weight: 650;
+  color: rgb(55, 65, 81);
+  margin: 0;
+}
+
+.pdf-prompt-summary-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 1.15rem;
+}
+
+.pdf-prompt-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  padding: 0.125rem 0.5rem;
+  font-size: 0.75rem;
+  color: #cb3d2d;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #cb3d2d;
+  border-radius: 0.375rem;
+}
+
+.pdf-prompt-total {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #cb3d2d;
+}
+
+.prompt-text {
+  font-size: 0.875rem;
+  color: #2c2c2c;
+  font-weight: 600;
+  margin: 0 0 0.4rem;
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+}
+.prompt-text .optional {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: rgba(44, 44, 44, 0.65);
+}
+
+.prompt-input {
+  width: 100%;
+  background: #ffffff;
+  border: 2px solid #e5e7eb;
+  border-radius: 0.5rem;
+  padding: 0.75rem 0.85rem;
+  color: #2c2c2c;
+  outline: none;
+  margin-bottom: 1.25rem;
+}
+
+.prompt-input::placeholder {
+  color: rgba(44, 44, 44, 0.45);
+}
+
+.prompt-input:focus {
+  border-color: #e5e7eb;
+  box-shadow: 0 0 0 2px #b7b6b6;
+}
+
+.prompt-actions {
+  border-top: 2px solid #e5e7eb;
+  padding-top: 1rem;
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-top: 0.25rem;
+}
+
+.prompt-cancel {
+  flex: 1;
+  border-radius: 0.6rem;
+  border: 2px solid #d1d5db;
+  background: #ffffff;
+  color: #2c2c2c;
+  padding: 0.75rem 1rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.prompt-cancel:hover {
+  background: #f3f4f6;
+}
+
+.prompt-accept {
+  flex: 1;
+  border-radius: 0.5rem;
+  border: none;
+  background: #cb3d2d;
+  color: #ffffff;
+  padding: 0.75rem 1rem;
+  font-weight: 650;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  cursor: pointer;
+}
+
+.prompt-accept:hover {
+  background: linear-gradient(to right, #cc0011, #b30010);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+.prompt-accept img {
+  width: 16px;
+  height: 16px;
+}

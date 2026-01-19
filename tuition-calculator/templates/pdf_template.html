@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    {% if itemType == 'degree' %}
+    <title>Degree Cost Summary PDF</title>
+    {% else %}
+    <title>Course Cost Summary PDF</title>
+    {% endif %}
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- PDF stylesheet -->
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/pdf.css') }}"
+    />
+
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='pdf/pdf.css') }}"
+    />
+  </head>
+
+  <body>
+    <!-- Header -->
+    <header class="pdf-header">
+      <div class="pdf-header-top">
+        {% if itemType =='degree' %}
+        <h1 class="pdf-title">Degree Cost Summary</h1>
+        {% else %}
+        <h1 class="pdf-title">Course Cost Summary</h1>
+        {% endif %}
+        <div class="header-info-row">
+          <div class="header-info-label">Generated:</div>
+          <div class="header-info-value">{{ generateddate }}</div>
+        </div>
+      </div>
+      <div class="pdf-header-bottom">
+        <p class="pdf-org">University of Canterbury</p>
+        <div class="header-info-row">
+          {% if nameInput is defined and nameInput|trim %}
+          <div class="for-name">For {{ nameInput }}</div>
+          {% endif %}
+        </div>
+      </div>
+    </header>
+
+    <main class="pdf-document">
+      <!-- Learner Information -->
+      <div class="learner-strip">
+        <div class="learner-cell">
+          <div class="learner-cell-label">LEARNER TYPE</div>
+          <div class="learner-cell-value">{{ learner_type }}</div>
+        </div>
+
+        <div class="learner-cell">
+          <div class="learner-cell-label">STUDY LOCATION</div>
+          <div class="learner-cell-value">{{ learner_location }}</div>
+        </div>
+
+        <div class="learner-cell">
+          <div class="learner-cell-label">GST STATUS</div>
+          <div class="learner-cell-value">
+            {{ "Applicable" if gst_applicable else "Not applicable" }}
+          </div>
+        </div>
+      </div>
+
+      <!-- Selected Courses -->
+      <div class="pdf-section">
+        {% if itemType == 'degree' %}
+        <h1 class="pdf-section-title">Selected Degrees</h1>
+        {% else %}
+        <h1 class="pdf-section-title">Selected Courses</h1>
+        {% endif %}
+        <div class="courses-card">
+          <table class="courses-table">
+            <thead>
+              <tr>
+                {% if itemType == 'degree' %}
+                <th class="course-code">Degree Code</th>
+                <th>Degree Name</th>
+                {% else %}
+                <th class="course-code">Course Code</th>
+                <th>Course Name</th>
+                {% endif %}
+                <th class="course-points">Points</th>
+                <th class="course-fee">Fee</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {% for course in courses %}
+              <tr>
+                <td class="mono">{{ course.code }}</td>
+                <td>{{ course.name }}</td>
+                <td class="point">{{ course.points }}</td>
+                <td class="cost">{{ course.fee }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <hr class="cost-divider" />
+
+      <!-- Cost Breakdown -->
+      <div class="pdf-section">
+        <div class="pdf-section-title">Cost Breakdown</div>
+
+        <div class="cost-card-top3">
+          <div class="mini-card">
+            {% if itemType == 'degree' %}
+            <div class="mini-kicker">Degree Fees</div>
+            {% else %}
+            <div class="mini-kicker">Course Fees</div>
+            {% endif %}
+            <div class="mini-value">{{ course_fees }}</div>
+            <div class="mini-note">{{ courses|length }} courses enrolled</div>
+          </div>
+
+          <div class="mini-card">
+            <div class="mini-kicker">Student Services Levy</div>
+            <div class="mini-value">{{ levy }}</div>
+            <div class="mini-note">Based on {{ points }} points</div>
+          </div>
+
+          <div class="mini-card">
+            <div class="mini-kicker">GST (15%)</div>
+            <div class="mini-value">{{ gst }}</div>
+            <div class="mini-note">Onshore students only</div>
+          </div>
+        </div>
+
+        <div class="total-panel">
+          <div class="total-panel-left">
+            <div class="total-kicker">Total amount due</div>
+            <div class="total-amount">{{ totalCost }}</div>
+            <div class="total-currency">NZD (New Zealand Dollar)</div>
+          </div>
+
+          <div class="total-panel-right">
+            <div class="mini-line">
+              <span>Subtotal</span><span>{{ subTotal }}</span>
+            </div>
+            <div class="mini-line"><span>GST</span><span>{{ gst }}</span></div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <!-- Footer -->
+    <footer class="pdf-footer">
+      <div class="footer-title">UC Online Tuition Calculator</div>
+      <div class="footer-subtitle">
+        University of Canterbury | Te Whare Wānanga o Waitaha
+      </div>
+
+      <div class="pdf-notes">
+        <div class="pdf-notes-title">Important Notes:</div>
+        <ul class="pdf-notes-list">
+          <li>
+            Fees are indicative and subject to change. Please confirm with UC
+            Online before enrolling.
+          </li>
+          <li>
+            Additional costs such as textbooks, materials, and equipment may
+            apply.
+          </li>
+          <li>
+            This document is for informational purposes only and does not
+            constitute an offer of enrolment.
+          </li>
+          <li>GST is applicable for onshore learners only.</li>
+          <li>
+            Student Services Levy (SSL) is calculated based on total course
+            points.
+          </li>
+        </ul>
+      </div>
+    </footer>
+  </body>
+</html>

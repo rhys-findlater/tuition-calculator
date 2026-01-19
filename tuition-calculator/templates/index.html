@@ -1,21 +1,36 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Tuition Calculator</title>
     <meta name="description" content="Calculate UC Online tuition costs" />
+    <!-- Favicon -->
     <link
       rel="icon"
       type="image/x-icon"
       href="{{ url_for('static', filename='favicon.ico') }}"
     />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Main application stylesheet -->
     <link
       rel="stylesheet"
-      href="{{ url_for('static', filename='style.css') }}"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+    <!-- Application animations -->
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/animations.css') }}"
     />
   </head>
   <body>
+    <!-- Global site header with logo and title -->
     <header class="header">
       <div class="header-container">
         <div class="header-subcontainer">
@@ -29,7 +44,9 @@
       </div>
     </header>
 
+    <!-- Main application content -->
     <main>
+      <!-- Introductory welcome panel explaining the tool -->
       <div class="welcome-section-container">
         <div class="welcome-content">
           <div class="welcome-content-icon-container">
@@ -43,14 +60,16 @@
             </p>
           </div>
           <p class="welcome-text">
-            Select courses and learner type below to receive an accurate,
-            comprehensive cost breakdown including Student Services Levy (SSL)
-            and GST where applicable then export your results to PDF.
+            Select courses or degrees and a learner type below to receive an
+            accurate, comprehensive cost breakdown including Student Services
+            Levy (SSL) and GST where applicable then export your results to PDF.
           </p>
         </div>
       </div>
 
+      <!-- 3-column layout: learner info, cost summary, course selection + SSL -->
       <div class="main-content-container">
+        <!-- Learner information card (type + location) -->
         <div class="learner-info-container">
           <div class="learner-info-header-container">
             <div class="learner-info-header-logo-container">
@@ -68,11 +87,12 @@
           </div>
 
           <div class="learner-info-selection-container">
+            <!-- Learner type radio options -->
             <div class="learner-info-select-container">
               <div class="learner-info-select-icon-container">
                 <img
-                  src="{{ url_for('static', filename='icons/graduation-cap.svg') }}"
-                  alt="Graduation cap icon"
+                  src="{{ url_for('static', filename='icons/user-pen.svg') }}"
+                  alt="User pen icon"
                   class="sub-icon"
                 />
                 <p class="learner-info-select-text">Learner Type</p>
@@ -121,6 +141,7 @@
               </form>
             </div>
 
+            <!-- Physical location radio options (affects GST + SSL logic) -->
             <div class="learner-info-select-container">
               <div class="learner-info-select-icon-container">
                 <img
@@ -142,7 +163,7 @@
                     class="radio-button"
                     type="radio"
                     id="onshore"
-                    name="location"
+                    name="learner_location"
                     value="onshore"
                     checked
                   />
@@ -159,7 +180,7 @@
                     class="radio-button"
                     type="radio"
                     id="offshore"
-                    name="location"
+                    name="learner_location"
                     value="offshore"
                   />
                   <span class="learner-info-text">
@@ -173,129 +194,606 @@
             </div>
           </div>
         </div>
-        <div class="cost-summary-container">
-          <div class="cost-summary-header-container">
-            <img
-              src="{{ url_for('static', filename='icons/receipt.svg') }}"
-              alt="Receipt icon"
-              class="main-icon"
-            />
-            <p class="cost-summary-header">Cost Summary</p>
-          </div>
-          <div class="cost-summary-idle-container">
-            <img
-              src="{{ url_for('static', filename='icons/circle-alert.svg') }}"
-              alt="Alert pin icon"
-              class="cost-summary-icon"
-            />
-            <p class="cost-summary-text-idle">
-              Select courses to see a full cost breakdown
-            </p>
-          </div>
-        </div>
-        <div class="course-selection-container">
-          <div class="course-selection-heading-container">
-            <div class="course-selection-heading-icon-container">
+
+        <!-- Sticky cost summary column -->
+        <div class="cost-summary-sticky-wrapper">
+          <!-- Cost summary card (idle + active states controlled via JS) -->
+          <div
+            id="costSummary"
+            class="cost-summary-container cost-summary-idle"
+          >
+            <div class="cost-summary-header-container">
               <img
-                src="{{ url_for('static', filename='icons/book-open.svg') }}"
-                alt="Open book icon"
+                src="{{ url_for('static', filename='icons/receipt.svg') }}"
+                alt="Receipt icon"
                 class="main-icon"
               />
-              <p class="course-selection-heading">Course Selection</p>
+              <p class="cost-summary-header">Cost Summary</p>
             </div>
-            <p class="course-selection-container-text">
-              Search and select courses to add to your cost calculation
-            </p>
-          </div>
+            <!-- Learner pills -->
+            <div class="cost-summary-active-content" id="costSummaryActive">
+              <div class="cost-summary-pills">
+                <span class="cost-summary-pill" id="costSummaryPillType"
+                  >Domestic</span
+                >
+                <span class="cost-summary-pill" id="costSummaryPillLocation"
+                  >Onshore</span
+                >
+              </div>
 
-          <!-- Selected Courses -->
-          <div class="selected-courses-container">
-            <div class="selected-courses-header">
-              <p class="selected-courses-title">
-                Selected Courses (<span id="selectedCoursesCount">0</span>)
+              <!-- Top stats -->
+              <div class="cost-summary-stats">
+                <div class="cost-summary-stats-row">
+                  <span>Courses selected</span>
+                  <span id="costSummaryCoursesSelected">8</span>
+                </div>
+                <div class="cost-summary-stats-row">
+                  <span>Total points</span>
+                  <span id="costSummaryTotalPoints">120</span>
+                </div>
+              </div>
+
+              <!-- Line items -->
+              <div class="cost-summary-lines">
+                <div class="cost-summary-line">
+                  <span>Total course fees</span>
+                  <span id="costSummaryCourseFees">$9999.00</span>
+                </div>
+
+                <div class="cost-summary-line">
+                  <div class="cost-summary-line-main">
+                    <span>Student services levy (SSL)</span>
+                    <button
+                      type="button"
+                      class="info-icon-wrapper"
+                      aria-label="More information about GST"
+                    >
+                      <img
+                        src="{{ url_for('static', filename='icons/info-grey.svg') }}"
+                        alt=""
+                        class="cost-summary-icon-inline"
+                      />
+                      <span class="info-tooltip">
+                        SSL is calculated at $2.06 per point
+                      </span>
+                    </button>
+                  </div>
+                  <span id="costSummaryLevy">$999</span>
+                </div>
+                <p class="cost-summary-subtext" id="costSummaryLevyNote">
+                  Based on 0 points
+                </p>
+
+                <div class="cost-summary-line">
+                  <span>Subtotal</span>
+                  <span id="costSummarySubtotal">$9999.00</span>
+                </div>
+
+                <div class="cost-summary-line">
+                  <div class="cost-summary-line-main">
+                    <span>GST (15%)</span>
+                    <button
+                      type="button"
+                      class="info-icon-wrapper"
+                      aria-label="More information about GST"
+                    >
+                      <img
+                        src="{{ url_for('static', filename='icons/info-grey.svg') }}"
+                        alt=""
+                        class="cost-summary-icon-inline"
+                      />
+                      <span class="info-tooltip" id="GstInfoToolTip">
+                        GST is calculated at 15% of the subtotal excluding the
+                        levy.
+                      </span>
+                    </button>
+                  </div>
+                  <span id="costSummaryGst">$999</span>
+                </div>
+              </div>
+
+              <!-- Total + export -->
+              <div class="cost-summary-total">
+                <span>Total cost</span>
+                <span id="costSummaryTotal">$9999.00</span>
+              </div>
+
+              <!-- Export to PDF button -->
+              <button
+                id="exportPDFButton"
+                class="cost-summary-export"
+                type="button"
+              >
+                <img
+                  src="{{ url_for('static', filename='icons/download.svg') }}"
+                  alt=""
+                  class="cost-summary-icon-inline"
+                />
+                <span>Export to PDF</span>
+              </button>
+
+              <!-- Footnote -->
+              <div class="cost-summary-footnotes">
+                <p>* Fees are indicative and subject to change.</p>
+                <p>
+                  * Additional costs such as textbooks and materials may apply.
+                </p>
+              </div>
+            </div>
+            <!-- Idle state -->
+            <div
+              class="cost-summary-idle-container cost-summary-idle-content"
+              id="costSummaryIdle"
+            >
+              <img
+                src="{{ url_for('static', filename='icons/circle-alert.svg') }}"
+                alt="Alert pin icon"
+                class="cost-summary-icon"
+              />
+              <p class="cost-summary-text-idle">
+                Select courses or a degree to see a full cost breakdown
               </p>
+            </div>
+          </div>
+        </div>
 
+        <!-- Course selection heading and search column -->
+        <div class="selection-container">
+          <div class="selection-heading-container">
+            <div class="tab-container tab-container-pill">
               <button
                 type="button"
-                class="selected-courses-clear"
-                id="clearSelectedCourses"
+                class="tab-btn tab-btn-active"
+                id="tabCoursesBtn"
+              >
+                <img
+                  src="{{ url_for('static', filename='icons/list-plus.svg') }}"
+                  class="main-icon"
+                  alt="List icon"
+                />
+                <span>Course Selection</span>
+              </button>
+
+              <button type="button" class="tab-btn" id="tabDegreesBtn">
+                <img
+                  src="{{ url_for('static', filename='icons/graduation-cap.svg') }}"
+                  class="main-icon"
+                  alt="Graduation cap icon"
+                />
+                <span>Degree Selection</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="selection-body-container">
+            <!-- Course selection main content -->
+            <div id="courseBodyContainer">
+              <div class="selection-subtitle">
+                <img
+                  src="{{ url_for('static', filename='icons/list-plus.svg') }}"
+                  class="subtitle-icon"
+                  alt="List icon"
+                />
+                Course Selection
+              </div>
+              <p>
+                Search and select individual courses to add to your cost
+                calculation
+              </p>
+              <div class="selected-courses-container">
+                <div class="selected-items-header selected-courses-header">
+                  <p class="selected-courses-title">
+                    Selected Courses (<span id="selectedCoursesCount">0</span>)
+                  </p>
+
+                  <!-- Clear all selected courses (disabled when none selected) -->
+                  <button
+                    type="button"
+                    class="selected-courses-clear-btn"
+                    id="clearSelectedCourses"
+                    disabled
+                  >
+                    Clear All
+                  </button>
+                </div>
+
+                <!-- Populated dynamically via JavaScript -->
+                <div class="selected-list" id="selectedCoursesList"></div>
+              </div>
+              <!-- End selected courses -->
+
+              <!-- Course search input -->
+              <div>
+                <form
+                  class="course-search"
+                  role="search"
+                  aria-label="Course search"
+                >
+                  <label for="course-search" class="search-label"
+                    >Available Courses</label
+                  >
+                  <div class="search-input-wrapper">
+                    <input
+                      id="course-search"
+                      class="search-input"
+                      name="q"
+                      type="search"
+                      placeholder="Search by course code or title..."
+                    />
+                    <button
+                      type="button"
+                      id="searchClearCourse"
+                      class="search-clear-btn"
+                      aria-label="Clear search"
+                    >
+                      <img
+                        src="{{ url_for('static', filename='icons/x.svg') }}"
+                        alt="clear icon"
+                        class="search-clear-btn-icon"
+                      />
+                    </button>
+                  </div>
+                </form>
+              </div>
+
+              <!-- Faculty filter pills (All Faculties + dynamic list) -->
+              <div class="selection-faculty-filter">
+                <button
+                  class="selection-faculty-filter-btn faculty-btn-course"
+                  data-course-faculty="All Faculties"
+                >
+                  All Faculties
+                </button>
+                {% for faculty in unique_course_faculties %} {% if faculty !=
+                'Other' %}
+                <button
+                  class="selection-faculty-filter-btn faculty-btn-course"
+                  data-course-faculty="{{ faculty }}"
+                >
+                  <span class="selection-faculty-filter-label"
+                    >{{ faculty }}</span
+                  >
+                </button>
+                {% endif %} {% endfor %} {% if 'Other' in
+                unique_course_faculties %}
+                <button
+                  class="selection-faculty-filter-btn faculty-btn-course"
+                  data-course-faculty="Other"
+                >
+                  Other
+                </button>
+                {% endif %}
+              </div>
+
+              <!-- Course results list rendered from SharePoint/Excel data -->
+              <div class="item-list-container">
+                {% for course in courses %}
+                <div
+                  class="selection-item selection-course"
+                  data-course-code="{{ course['UC Code'] }}"
+                  data-course-title="{{ course['Course Title'] }}"
+                  data-course-points="{{ course['Points'] }}"
+                  data-course-dom-price="{{ course['Dom Fees - 2026'] }}"
+                  data-course-int-price="{{ course['Int Fees - 2026'] }}"
+                  data-course-price="{{ course['Dom Fees - 2026'] }}"
+                  data-course-faculty="{{ course['Faculty'] }}"
+                >
+                  <div class="item-info-container">
+                    <div class="item-container">
+                      <p>{{ course['UC Code'] }}</p>
+                      <p class="item-faculty">{{ course['Faculty'] }}</p>
+                      {% if course['Points'] == 'TBC' %}
+                      <p class="item-points">{{ course['Points'] }}</p>
+                      {% else %} {% set p = course['Points']|float %}
+                      <p class="item-points">
+                        {{ (p|int) if p == (p|int) else p }} pts
+                      </p>
+                      {% endif %}
+                    </div>
+                    <p>{{ course['Course Title'] }}</p>
+                  </div>
+                  <div class="item-button-container">
+                    <p>${{ "{:,.2f}".format(course['Dom Fees - 2026']) }}</p>
+                    <!-- Toggle button used by JS to add/remove course from selection -->
+                    <button
+                      class="item-button"
+                      type="button"
+                      data-course-toggle
+                    >
+                      <span class="item-button-add"
+                        ><img
+                          src="{{ url_for('static', filename='icons/plus.svg') }}"
+                          class="plus-icon"
+                      /></span>
+                      <span>Add</span>
+                    </button>
+                  </div>
+                </div>
+                {% endfor %}
+                <div id="errorModalCourse" class="popup-backdrop" hidden>
+                  <div class="conflict-popup">
+                    <div class="conflict-popup-header">
+                      <div class="conflict-popup-header-left">
+                        <div class="conflict-popup-icon">
+                            <img 
+                            src="{{ url_for('static', filename='icons/triangle-alert.svg') }}" 
+                            class="conflict-popup-icon-img"
+                            alt=""
+                            />
+                        </div>
+                        <div class="conflict-popup-titles">
+                          <h2 class="conflict-popup-title">Selection Conflict</h2>
+                          <p class="conflict-popup-subtitle">You cannot mix individual courses with degree selections</p>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="conflict-popup-body">
+                      <p>
+                        Only courses or degrees can be selected at one time.<br />
+                        Replace your selected degree to choose courses instead.
+                      </p>
+                    </div>
+                    <div class="conflict-popup-actions">
+                      <button 
+                        id="errorCloseCourseBtn" 
+                        class="conflict-btn conflict-btn-cancel" 
+                        type="button">Cancel</button>
+                      <button 
+                        id="errorReplaceCourseBtn" 
+                        class="conflict-btn conflict-btn-danger" 
+                        type="button">Replace Selection</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Pagination/visibility controls for long course lists -->
+              <button id="showAllCourses" class="selection-showall">
+                Show all courses
+              </button>
+              <button
+                id="showLessCourses"
+                style="display: none"
+                class="selection-showless"
                 disabled
               >
-                <span class="selected-courses-clear-x">×</span>
-                Clear ALL
+                Show less courses
               </button>
             </div>
 
-            <div class="selected-courses-list" id="selectedCoursesList"></div>
-          </div>
-          <!-- end Selected Courses -->
+            <!-- Selected Courses -->
+            <div id="degreeBodyContainer" class="selection-body-container-idle">
+              <div class="selection-subtitle">
+                <img
+                  src="{{ url_for('static', filename='icons/graduation-cap.svg') }}"
+                  class="subtitle-icon"
+                  alt="graduation icon"
+                />
+                Degree Selection
+              </div>
+              <p>
+                Search and select individual degrees to add to your cost
+                calculation
+              </p>
+              <div class="selected-courses-container">
+                <div class="selected-items-header selected-degrees-header">
+                  <p class="selected-courses-title">
+                    Selected Degrees (<span id="selectedDegreesCount">0</span>)
+                  </p>
 
-          <div class="course-selection-search-container">
-            <form
-              class="course-search"
-              role="search"
-              aria-label="Course search"
-            >
-              <label for="course-search" class="course-search-label"
-                >Available Courses</label
-              >
-              <input
-                id="course-search"
-                class="search-input"
-                name="q"
-                type="search"
-                placeholder="Search by course code or name..."
-              />
-            </form>
-          </div>
-          <div class="course-selection-degree-filter">
-            <button class="course-degree-filter course-degree-filter-active">
-              All Faculties
-            </button>
-            <button class="course-degree-filter">Arts</button>
-            <button class="course-degree-filter">Business</button>
-            <button class="course-degree-filter">Science</button>
-            <button class="course-degree-filter">Education</button>
-            <button class="course-degree-filter">Health Sciences</button>
-            <button class="course-degree-filter">Law</button>
-          </div>
-          <div class="course-selection-course-list">
-            {% for course in courses %}
-            <div
-              class="course-selection-course"
-              data-course-code="{{ course.code }}"
-              data-course-title="{{ course.title }}"
-              data-course-points="{{ course.points }}"
-              data-course-price="{{ course.price }}"
-              data-course-faculty="{{ course.faculty }}"
-            >
-              <div class="course-selection-course-info-container">
-                <div class="course-selection-course-code-container">
-                  <p>{{ course.code }}</p>
-                  <p class="course-selection-course-degree">
-                    {{ course.faculty }}
-                  </p>
-                  <p class="course-selection-course-points">
-                    {{ course.points }} pts
-                  </p>
+                  <!-- Clear all selected degrees (disabled when none selected) -->
+                  <button
+                    type="button"
+                    class="selected-courses-clear-btn"
+                    id="clearSelectedDegrees"
+                    disabled
+                  >
+                    Clear All
+                  </button>
                 </div>
-                <p>{{ course.title }}</p>
+
+                <!-- Populated dynamically via JavaScript -->
+                <div class="selected-list" id="selectedDegreesList"></div>
               </div>
-              <div class="course-selection-course-button-container">
-                <p>${{ "%.2f"|format(course.price) }}</p>
-                <button
-                  class="course-selection-course-button"
-                  type="button"
-                  data-course-toggle
+              <!-- End selected courses -->
+
+              <!-- Degree search input -->
+              <div>
+                <form
+                  class="degree-search"
+                  role="search"
+                  aria-label="Degree search"
                 >
-                  <span class="course-selection-course-button-add">+</span>
-                  <span class="course-selection-course-button-label">Add</span>
-                </button>
+                  <label for="degreeSearch" class="search-label"
+                    >Available Degrees</label
+                  >
+                  <div class="search-input-wrapper">
+                    <input
+                      id="degree-search"
+                      class="search-input"
+                      name="q"
+                      type="search"
+                      placeholder="Search by degree title..."
+                    />
+                    <button
+                      type="button"
+                      id="searchClearDegree"
+                      class="search-clear-btn"
+                      aria-label="Clear search"
+                    >
+                      <img
+                        src="{{ url_for('static', filename='icons/x.svg') }}"
+                        alt="Search icon"
+                        class="search-clear-btn-icon"
+                      />
+                    </button>
+                  </div>
+                </form>
               </div>
+
+              <!-- Faculty filter pills (All Faculties + dynamic list) -->
+              <div class="selection-faculty-filter">
+                <button
+                  class="selection-faculty-filter-btn faculty-btn-degree"
+                  data-degree-faculty="All Faculties"
+                >
+                  All Faculties
+                </button>
+                {% for faculty in unique_degree_faculties %} {% if faculty !=
+                'Other' %}
+                <button
+                  class="selection-faculty-filter-btn faculty-btn-degree"
+                  data-degree-faculty="{{ faculty }}"
+                >
+                  <span class="selection-faculty-filter-label"
+                    >{{ faculty }}</span
+                  >
+                </button>
+                {% endif %} {% endfor %} {% if 'Other' in
+                unique_degree_faculties %}
+                <button
+                  class="selection-faculty-filter-btn faculty-btn-degree"
+                  data-degree-faculty="Other"
+                >
+                  Other
+                </button>
+                {% endif %}
+              </div>
+
+              <!-- Degree results list rendered from SharePoint/Excel data -->
+              <div class="item-list-container">
+                {% for degree in degrees %}
+                <div
+                  class="selection-item selection-degree"
+                  data-degree-code="{{ degree['Code'] }}"
+                  data-degree-title="{{ degree['Full Title'] }}"
+                  data-degree-points="{{ degree['Points'] }}"
+                  data-degree-dom-price="{{ degree['Dom - Full Prog_2026'] }}"
+                  data-degree-int-price="{{ degree['Int -  Full Prog_2026'] }}"
+                  data-degree-price="{{ degree['Dom - Full Prog_2026'] }}"
+                  data-degree-faculty="{{ degree['Owning Faculty'] }}"
+                >
+                  <div class="item-info-container">
+                    <div class="item-container">
+                      <p>{{ degree['Code'] }}</p>
+                      <p class="item-faculty">{{ degree['Owning Faculty'] }}</p>
+                      {% if degree['Points'] == 'TBC' %}
+                      <p class="item-points">{{ degree['Points'] }}</p>
+                      {% else %} {% set p = degree['Points']|float %}
+                      <p class="item-points">
+                        {{ (p|int) if p == (p|int) else p }} pts
+                      </p>
+                      {% endif %}
+                    </div>
+                    <p>{{ degree['Full Title'] }}</p>
+                  </div>
+                  <div class="item-button-container">
+                    <p>
+                      ${{ "{:,.2f}".format(degree['Dom - Full Prog_2026']) }}
+                    </p>
+                    <!-- Toggle button used by JS to add/remove course from selection -->
+                    <button
+                      class="item-button"
+                      type="button"
+                      data-degree-toggle
+                    >
+                      <span class="item-button-add"
+                        ><img
+                          src="{{ url_for('static', filename='icons/plus.svg') }}"
+                          class="plus-icon"
+                      /></span>
+                      <span>Add</span>
+                    </button>
+                  </div>
+                </div>
+                {% endfor %}
+                <div id="degreeLimitPopup" class="popup-backdrop" hidden>
+                  <div class="conflict-popup conflict-popup--degree-limit">
+                    <div class="conflict-popup-header">
+                      <div class="conflict-popup-header-left">
+                        <div class="conflict-popup-icon">
+                          <img
+                            src="{{ url_for('static', filename='icons/triangle-alert.svg') }}"
+                            class="conflict-popup-icon-img"
+                            alt=""
+                          />
+                        </div>
+                        <div class="conflict-popup-titles">
+                          <h2 class="conflict-popup-title">Multiple Degree Selection</h2>
+                          <p class="conflict-popup-subtitle">Only one degree can be selected at a time</p>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="conflict-popup-body">
+                      <p class="multi-degree-message">
+                        You currently have <strong id="currentDegreeName"></strong> selected.
+                        Replace it with <strong id="newDegreeName"></strong>?
+                      </p>
+                      <!-- <div class="conflict-popup-note">
+                        <strong>Note:</strong> Replacing will remove your current degree from the estimate.
+                      </div> -->
+                    </div>
+                    <div class="conflict-popup-actions">
+                      <button id="degreeLimitCancelBtn" class="conflict-btn conflict-btn-cancel" type="button">Cancel</button>
+                      <button id="degreeLimitReplaceBtn" class="conflict-btn conflict-btn-danger" type="button">Replace Degree</button>
+                    </div>
+                  </div>
+                </div>
+
+                <div id="errorModalDegree" class="popup-backdrop" hidden>
+                  <div class="conflict-popup">
+                    <div class="conflict-popup-header">
+                      <div class="conflict-popup-header-left">
+                        <div class="conflict-popup-icon">
+                          <img
+                            src="{{ url_for('static', filename='icons/triangle-alert.svg') }}"
+                            class="conflict-popup-icon-img"
+                            alt=""
+                          />
+                        </div>
+                        <div class="conflict-popup-titles">
+                          <h2 class="conflict-popup-title">Selection Conflict</h2>
+                          <p class="conflict-popup-subtitle">You cannot mix degree selections with individual courses</p>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="conflict-popup-body">
+                      <p>
+                        Only courses or degrees can be selected at one time.<br />
+                        Replace your selected courses to choose a degree instead.
+                      </p>
+                    </div>
+                    <div class="conflict-popup-actions">
+                      <button 
+                        id="errorCloseDegreeBtn" 
+                        class="conflict-btn conflict-btn-cancel" 
+                        type="button">Cancel</button>
+                      <button 
+                        id="errorReplaceDegreeBtn" 
+                        class="conflict-btn conflict-btn-danger" 
+                        type="button">Replace Selection</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Pagination/visibility controls for long course lists -->
+              <button id="showAllDegrees" class="selection-showall">
+                Show all degrees
+              </button>
+              <button
+                id="showLessDegrees"
+                style="display: none"
+                class="selection-showless"
+                disabled
+              >
+                Show less degrees
+              </button>
             </div>
-            {% endfor %}
           </div>
         </div>
+
+        <!-- Student Services Levy explanation panel -->
         <div class="ssl-container">
           <div class="ssl-container-header">
             <div class="ssl-container-header-row">
@@ -308,17 +806,18 @@
               </div>
               <div>
                 <p class="ssl-container-title">
-                  Student Services Levy (SSL) 2025
+                  Student Services Levy (SSL) 2026
                 </p>
                 <p class="ssl-container-subtitle">
-                  Charged per academic point, based on your physical location
+                  Charged per academic point, based on learners physical
+                  location
                 </p>
               </div>
             </div>
           </div>
           <div class="ssl-container-content">
-            <!-- On-campus (Onshore) -->
-            <!-- <div class="ssl-panel-onshore">
+            <!-- On-campus (Onshore) reference panel (kept as commented example)
+            <div class="ssl-panel-onshore">
               <div class="ssl-panel-header">
                 <div class="ssl-panel-icon-wrapper">
                   <img
@@ -347,7 +846,8 @@
                   <p class="ssl-panel-value">$1166.40</p>
                 </div>
               </div>
-            </div> -->
+            </div>
+            -->
             <!-- Off-campus (Offshore) -->
             <div class="ssl-panel-offshore">
               <div class="ssl-panel-header">
@@ -365,6 +865,10 @@
               </div>
 
               <div class="ssl-panel-rows">
+                <div class="ssl-panel-row">
+                  <p class="ssl-panel-label">Per 1-point (2026)</p>
+                  <p class="ssl-panel-value">$2.06</p>
+                </div>
                 <div class="ssl-panel-row">
                   <p class="ssl-panel-label">One 15-point course</p>
                   <p class="ssl-panel-value">$29.10</p>
@@ -384,11 +888,76 @@
       </div>
     </main>
 
+    <!-- Global footer -->
     <footer class="footer">
-      <p class="footer-text">
-        UC Online Course Costing Application | UC Online
-      </p>
+      <p class="footer-text">UC Online Course Tuition Calculator | UC Online</p>
     </footer>
-    <script src="{{ url_for('static', filename='app.js') }}"></script>
+
+    <!-- PDF export name prompt -->
+    <div id="pdfPrompt" class="prompt-container">
+      <div class="prompt">
+        <button id="pdfPromptCloseBtn" class="pdf-prompt-close-btn">
+          <img
+            src="{{ url_for('static', filename='icons/x.svg') }}"
+            alt="Off-campus location"
+            class="sub-icon"
+          />
+        </button>
+        <div class="prompt-header">
+          <div class="prompt-header-icon">
+            <img
+              src="{{ url_for('static', filename='icons/file-check.svg') }}"
+              alt="Off-campus location"
+              class="sub-icon"
+            />
+          </div>
+          <h1 id="pdfNameTitle" class="prompt-title">Export plan to PDF</h1>
+          <p class="pdf-prompt-subtitle">
+            Save this tuition estimation as a PDF document
+          </p>
+        </div>
+        <div class="pdf-prompt-summary">
+          <div class="pdf-prompt-summary-left">
+            <p class="pdf-prompt-summary-courses">Your estimate includes</p>
+            <p class="pdf-prompt-summary-label">Total Cost</p>
+          </div>
+
+          <div class="pdf-prompt-summary-right">
+            <span id="pdfPromptCoursesPill" class="pdf-prompt-pill"></span>
+            <p id="pdfPromptTotalCost" class="pdf-prompt-total"></p>
+          </div>
+        </div>
+
+        <label class="prompt-text"
+          >Add recipient name <span class="optional">(optional)</span></label
+        >
+
+        <input
+          id="pdfPromptInput"
+          class="prompt-input"
+          type="text"
+          placeholder="Name"
+        />
+
+        <div class="prompt-actions">
+          <button id="pdfPromptCancelBtn" class="prompt-cancel" type="button">
+            Cancel
+          </button>
+          <button id="pdfPromptExportBtn" class="prompt-accept" type="button">
+            <img
+              src="{{ url_for('static', filename='icons/download-white.svg') }}"
+              alt="Off-campus location"
+              class="sub-icon"
+            />
+            Download PDF
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main application script (handles selection, filtering, and cost logic) -->
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+    <!-- Animation script (adds/removes classes for motion effects) -->
+    <script src="{{ url_for('static', filename='js/animations.js') }}"></script>
   </body>
 </html>
