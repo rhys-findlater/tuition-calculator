@@ -235,8 +235,12 @@ function collectPdfData() {
   const learner_location = getCurrentLearnerLocation();
   const gst_applicable = learner_location === "onshore";
 
+  const activeItems =
+    selectedCourses.size > 0 ? selectedCourses : selectedDegrees;
+  const itemType = activeItems === selectedCourses ? "course" : "degree";
+
   // Build the courses array from selectedCourses map
-  const courses = Array.from(selectedCourses.values()).map((course) => ({
+  const courses = Array.from(activeItems.values()).map((course) => ({
     code: course.code,
     name: course.title,
     points: course.points,
@@ -280,6 +284,7 @@ function collectPdfData() {
     subTotal: subTotalText,
     gst: gstText,
     totalCost: totalText,
+    itemType,
   };
 }
 

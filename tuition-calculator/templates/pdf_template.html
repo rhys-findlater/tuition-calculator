@@ -3,14 +3,24 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    {% if itemType == 'degree' %}
+    <title>Degree Cost Summary PDF</title>
+    {% else %}
     <title>Course Cost Summary PDF</title>
+    {% endif %}
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
 
     <!-- PDF stylesheet -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/pdf.css') }}">
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/pdf.css') }}"
+    />
 
     <link
       rel="stylesheet"
@@ -22,7 +32,11 @@
     <!-- Header -->
     <header class="pdf-header">
       <div class="pdf-header-top">
+        {% if itemType =='degree' %}
+        <h1 class="pdf-title">Degree Cost Summary</h1>
+        {% else %}
         <h1 class="pdf-title">Course Cost Summary</h1>
+        {% endif %}
         <div class="header-info-row">
           <div class="header-info-label">Generated:</div>
           <div class="header-info-value">{{ generateddate }}</div>
@@ -61,13 +75,22 @@
 
       <!-- Selected Courses -->
       <div class="pdf-section">
+        {% if itemType == 'degree' %}
+        <h1 class="pdf-section-title">Selected Degrees</h1>
+        {% else %}
         <h1 class="pdf-section-title">Selected Courses</h1>
+        {% endif %}
         <div class="courses-card">
           <table class="courses-table">
             <thead>
               <tr>
+                {% if itemType == 'degree' %}
+                <th class="course-code">Degree Code</th>
+                <th>Degree Name</th>
+                {% else %}
                 <th class="course-code">Course Code</th>
                 <th>Course Name</th>
+                {% endif %}
                 <th class="course-points">Points</th>
                 <th class="course-fee">Fee</th>
               </tr>
@@ -95,7 +118,11 @@
 
         <div class="cost-card-top3">
           <div class="mini-card">
+            {% if itemType == 'degree' %}
+            <div class="mini-kicker">Degree Fees</div>
+            {% else %}
             <div class="mini-kicker">Course Fees</div>
+            {% endif %}
             <div class="mini-value">{{ course_fees }}</div>
             <div class="mini-note">{{ courses|length }} courses enrolled</div>
           </div>

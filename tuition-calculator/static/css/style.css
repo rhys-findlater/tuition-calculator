@@ -80,7 +80,7 @@ main {
 
 /* Firefox removes special search styling when you use -moz-appearance: none on the input */
 .search-input[type="search"] {
-  appearance: textfield;     /* standard */
+  appearance: textfield; /* standard */
   -moz-appearance: textfield; /* Firefox */
 }
 
@@ -92,7 +92,7 @@ main {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding-bottom: 1rem;
+  padding-bottom: 0.45rem;
 }
 
 .popup-backdrop {
@@ -368,48 +368,48 @@ main {
 .tab-container.tab-container-pill {
   background: #fff;
   display: flex;
-  gap: 4px;                 
-  padding: 4px;           
+  gap: 4px;
+  padding: 4px;
 
-  border: 1px solid #e5e7eb; 
-  border-bottom: 0;          
+  border: 1px solid #e5e7eb;
+  border-bottom: 0;
 
-  border-top-left-radius: 0.75rem; 
+  border-top-left-radius: 0.75rem;
   border-top-right-radius: 0.75rem;
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
 }
 
 .tab-container.tab-container-pill .tab-btn {
-  flex: 1;                   
-  position: relative;         
+  flex: 1;
+  position: relative;
 
-  padding: 10px 16px;        
+  padding: 10px 16px;
   border: 0;
   background: transparent;
 
-  border-radius: 0.5rem;      
-  font-size: 14px;           
-  font-weight: 500;           
+  border-radius: 0.5rem;
+  font-size: 14px;
+  font-weight: 500;
 
   transition: all 150ms ease;
   cursor: pointer;
 
-  color: #4b5563;             
+  color: #4b5563;
 
-  display: inline-flex;       
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;                   
+  gap: 8px;
 }
 
 .tab-container.tab-container-pill .tab-btn:hover {
-  color: #111827;             
-  background: #f9fafb;        
+  color: #111827;
+  background: #f9fafb;
 }
 
 .tab-container.tab-container-pill .tab-btn .main-icon {
-  width: 16px;                
+  width: 16px;
   height: 16px;
 }
 
@@ -420,15 +420,15 @@ main {
 .tab-container.tab-container-pill .tab-btn.tab-btn-active::before {
   content: "";
   position: absolute;
-  inset: 0;                 
+  inset: 0;
 
-  border-radius: 0.5rem;      
-  border: 2px solid #cb3d2d;  
+  border-radius: 0.5rem;
+  border: 2px solid #cb3d2d;
 
   background: linear-gradient(
     135deg,
-    rgba(203, 61, 45, 0.10),  
-    rgba(204, 0, 17, 0.10)    
+    rgba(203, 61, 45, 0.1),
+    rgba(204, 0, 17, 0.1)
   );
 
   pointer-events: none;
@@ -436,7 +436,7 @@ main {
 }
 
 .tab-container.tab-container-pill .tab-btn > * {
-  position: relative;        
+  position: relative;
   z-index: 1;
 }
 
@@ -706,7 +706,7 @@ main {
 
 .search-label {
   display: block;
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
 }
 
 .search-input-wrapper {
@@ -985,6 +985,7 @@ main {
 
 .selected-courses-title {
   font-size: 1rem;
+  margin-top: 1rem;
   font-weight: bold;
 }
 
