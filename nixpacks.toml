@@ -6,5 +6,6 @@ nixPkgs = [
   'gdk-pixbuf',
   'librsvg', 
   'libffi',
-  'glib'
+  'glib',
+  'gobject-introspection'
 ]
