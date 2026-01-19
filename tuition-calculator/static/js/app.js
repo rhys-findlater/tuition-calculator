@@ -488,14 +488,14 @@ function renderSelected(
           showLessBtnEl,
           selected,
         );
-        renderSummary(selectedCourses);
+        renderSummary();
       });
     }
 
     listEl.appendChild(row);
   }
 
-  renderSummary(selectedCourses);
+  renderSummary();
 }
 
 function renderSelection(type, learnerType = getCurrentLearnerType()) {
@@ -535,7 +535,6 @@ function addItem(type, item) {
   const replaceBtnDegree = document.getElementById("errorReplaceDegreeBtn");
   const closeBtnDegree = document.getElementById("errorCloseDegreeBtn");
 
-  console.log(altCfg);
   if (altCfg.items.size >= 1) {
     altType === "degree"
       ? modalCourse.removeAttribute("hidden")
@@ -564,7 +563,7 @@ function addItem(type, item) {
         true,
       );
       renderSelection(type);
-      renderSummary(selectedCourses);
+      renderSummary();
     };
 
     closeBtnCourse.onclick = () => {
@@ -594,7 +593,7 @@ function addItem(type, item) {
         true,
       );
       renderSelection(type);
-      renderSummary(selectedCourses);
+      renderSummary();
     };
 
     closeBtnDegree.onclick = () => {
@@ -652,11 +651,9 @@ function initAvailableCards(type) {
       e.preventDefault();
       e.stopPropagation();
 
-      const degreeLimitPopup = document.getElementById(
-        `degreeLimitPopup-${code}`,
-      );
+      const degreeLimitPopup = document.getElementById("degreeLimitPopup");
       const degreeLimitCloseBtn = document.getElementById(
-        `degreeLimitCloseBtn-${code}`,
+        "degreeLimitCloseBtn",
       );
 
       if (cfg.name === "degree" && cfg.items.size >= 1) {
@@ -738,13 +735,15 @@ function calculateCoursesTotals(selectedCourses, isDomestic) {
 }
 
 function renderSummary(
-  selectedCourses,
   learnerType = getCurrentLearnerType(),
   learnerLocation = getCurrentLearnerLocation(),
 ) {
   if (!costSummaryTotalEl) return;
 
-  const isIdle = selectedCourses.size === 0;
+  const activeItems =
+    selectedCourses.size > 0 ? selectedCourses : selectedDegrees;
+  const isIdle = activeItems.size === 0;
+
   const costSummaryContainerEl = document.getElementById("costSummary");
   costSummaryContainerEl.classList.toggle("cost-summary-idle", isIdle);
   if (isIdle) return;
@@ -759,10 +758,10 @@ function renderSummary(
       ? "GST does not apply to offshore learners"
       : "GST is calculated at 15% of the subtotal excluding the levy.";
 
-  costSummaryCoursesSelectedEl.textContent = String(selectedCourses.size);
+  costSummaryCoursesSelectedEl.textContent = String(activeItems.size);
 
   const { points: totalCoursePoints, cost: totalCourseCost } =
-    calculateCoursesTotals(selectedCourses, isDomestic);
+    calculateCoursesTotals(activeItems, isDomestic);
 
   costSummaryTotalPointsEl.textContent = String(totalCoursePoints);
   costSummaryTotalCostEl.textContent = totalCourseCost.toLocaleString("en-NZ", {
@@ -772,7 +771,7 @@ function renderSummary(
     maximumFractionDigits: 2,
   });
 
-  const levy = calculateLevy(selectedCourses.size, totalCoursePoints);
+  const levy = calculateLevy(activeItems.size, totalCoursePoints);
   costSummaryLevyEl.textContent =
     levy === "TBD"
       ? "TBD"
@@ -875,7 +874,7 @@ function initTuitionSelection() {
     .querySelectorAll('input[name="learner_location"]')
     .forEach((radio) => {
       radio.addEventListener("change", function () {
-        renderSummary(selectedCourses);
+        renderSummary();
       });
     });
 
@@ -1004,13 +1003,17 @@ function initTuitionSelection() {
   function openPdfPrompt() {
     if (!pdfPromptEl) return; // Guard clause
 
+    const activeItems =
+      selectedCourses.size > 0 ? selectedCourses : selectedDegrees;
+
     if (pdfPromptTotalCostEl && costSummaryTotalEl) {
       pdfPromptTotalCostEl.textContent = costSummaryTotalEl.textContent; // Copy the displayed total cost text from the main summary
     }
 
     if (pdfPromptCoursesPillEl) {
-      const count = selectedCourses.size;
-      pdfPromptCoursesPillEl.textContent = `${count} course${
+      const count = activeItems.size;
+      const item = activeItems === selectedCourses ? "course" : "degree";
+      pdfPromptCoursesPillEl.textContent = `${count} ${item}${
         count === 1 ? "" : "s"
       }`;
     }

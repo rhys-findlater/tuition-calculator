@@ -19,10 +19,15 @@
     />
 
     <!-- Main application stylesheet -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
     <!-- Application animations -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/animations.css') }}">
-    
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/animations.css') }}"
+    />
   </head>
   <body>
     <!-- Global site header with logo and title -->
@@ -347,7 +352,7 @@
                     class="main-icon"
                     alt="Open book icon"
                   />
-                  <p>Select Courses</p>
+                  <p>Course Selection</p>
                 </button>
               </div>
               <div>
@@ -357,7 +362,7 @@
                     class="main-icon"
                     alt="Square pen icon"
                   />
-                  <p>Select Degrees</p>
+                  <p>Degree Selection</p>
                 </button>
               </div>
             </div>
@@ -496,19 +501,25 @@
                   </div>
                 </div>
                 {% endfor %}
-                <div id="errorModalCourse" class="error-modal" hidden>
-                  <div class="error-backdrop"></div>
-                  <div class="error-content">
-                    <p id="errorMessage">
+                <div id="errorModalCourse" class="popup-backdrop" hidden>
+                  <div class="popup">
+                    <h2 class="popup-title">Selection conflict</h2>
+                    <p class="popup-text">
                       Only courses or degrees can be selected at one time.
+                      Replace your selected courses to choose a degree instead.
                     </p>
                     <button
                       id="errorReplaceCourseBtn"
-                      class="error-close-btn error-close-btn-first"
+                      class="popup-btn"
+                      type="button"
                     >
                       Replace
                     </button>
-                    <button id="errorCloseCourseBtn" class="error-close-btn">
+                    <button
+                      id="errorCloseCourseBtn"
+                      class="popup-btn"
+                      type="button"
+                    >
                       Cancel
                     </button>
                   </div>
@@ -652,26 +663,6 @@
                       ${{ "{:,.2f}".format(degree['Dom - Full Prog_2026']) }}
                     </p>
                     <!-- Toggle button used by JS to add/remove course from selection -->
-                    <div
-                      id="degreeLimitPopup-{{ degree['Code'] }}"
-                      class="popup-backdrop"
-                      hidden
-                    >
-                      <div class="popup">
-                        <h2 class="popup-title">Degree limit reached</h2>
-                        <p class="popup-text">
-                          You can only select one degree. Remove the current
-                          degree to choose another.
-                        </p>
-                        <button
-                          id="degreeLimitCloseBtn-{{ degree['Code'] }}"
-                          class="popup-btn"
-                          type="button"
-                        >
-                          OK
-                        </button>
-                      </div>
-                    </div>
                     <button
                       class="item-button"
                       type="button"
@@ -683,19 +674,41 @@
                   </div>
                 </div>
                 {% endfor %}
-                <div id="errorModalDegree" class="error-modal" hidden>
-                  <div class="error-backdrop"></div>
-                  <div class="error-content">
-                    <p id="errorMessage">
+                <div id="degreeLimitPopup" class="popup-backdrop" hidden>
+                  <div class="popup">
+                    <h2 class="popup-title">Degree limit reached</h2>
+                    <p class="popup-text">
+                      You can only select one degree. Remove the current degree
+                      to choose another.
+                    </p>
+                    <button
+                      id="degreeLimitCloseBtn"
+                      class="popup-btn"
+                      type="button"
+                    >
+                      OK
+                    </button>
+                  </div>
+                </div>
+                <div id="errorModalDegree" class="popup-backdrop" hidden>
+                  <div class="popup">
+                    <h2 class="popup-title">Selection conflict</h2>
+                    <p class="popup-text">
                       Only courses or degrees can be selected at one time.
+                      Replace your selected courses to choose a degree instead.
                     </p>
                     <button
                       id="errorReplaceDegreeBtn"
-                      class="error-close-btn error-close-btn-first"
+                      class="popup-btn"
+                      type="button"
                     >
                       Replace
                     </button>
-                    <button id="errorCloseDegreeBtn" class="error-close-btn">
+                    <button
+                      id="errorCloseDegreeBtn"
+                      class="popup-btn"
+                      type="button"
+                    >
                       Cancel
                     </button>
                   </div>
@@ -731,10 +744,11 @@
               </div>
               <div>
                 <p class="ssl-container-title">
-                  Student Services Levy (SSL) 2025
+                  Student Services Levy (SSL) 2026
                 </p>
                 <p class="ssl-container-subtitle">
-                  Charged per academic point, based on your physical location
+                  Charged per academic point, based on learners physical
+                  location
                 </p>
               </div>
             </div>
@@ -814,9 +828,7 @@
 
     <!-- Global footer -->
     <footer class="footer">
-      <p class="footer-text">
-        UC Online Course Costing Application | UC Online
-      </p>
+      <p class="footer-text">UC Online Course Tuition Calculator | UC Online</p>
     </footer>
 
     <!-- PDF export name prompt -->
