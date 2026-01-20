@@ -13,9 +13,10 @@ def create_app(test_config=None):
         SECRET_KEY="dev",
     )
 
-    DATA_DIR = os.getenv('RAILWAY_VOLUME_MOUNT_PATH', 'data')
-    course_csv_path = os.path.join('tuition-calculator', DATA_DIR, 'tuition_fees.csv') 
-    degree_csv_path = os.path.join('tuition-calculator', DATA_DIR, 'degree_fees.csv')
+    DATA_DIR = os.environ.get("RAILWAY_VOLUME_MOUNT_PATH") or os.path.join(app.root_path, "data")
+
+    course_csv_path = os.path.join(DATA_DIR, "tuition_fees.csv")
+    degree_csv_path = os.path.join(DATA_DIR, "degree_fees.csv")
    
     @app.route("/", methods=['GET', 'POST']) 
     def index():
