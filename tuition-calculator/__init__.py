@@ -13,7 +13,10 @@ def create_app(test_config=None):
         SECRET_KEY="dev",
     )
 
-    DATA_DIR = os.environ.get("RAILWAY_VOLUME_MOUNT_PATH") or os.path.join(app.root_path, "data")
+    if os.environ.get("RAILWAY_VOLUME_MOUNT_PATH"):
+        DATA_DIR = os.environ.get("RAILWAY_VOLUME_MOUNT_PATH") 
+    else: 
+        DATA_DIR = os.path.join(app.root_path, "data")
 
     course_csv_path = os.path.join(DATA_DIR, "tuition_fees.csv")
     degree_csv_path = os.path.join(DATA_DIR, "degree_fees.csv")
