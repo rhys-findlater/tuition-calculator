@@ -77,10 +77,10 @@ http://127.0.0.1:5000/
 
 ## Tech Stack
 
-- Frontend: HTML, CSS
+- Frontend: HTML, CSS, JavaScript
 - Backend: Python, Flask
-- Data source: Excel spreadsheet stored in SharePoint
-- Other: Jinja2 templates
+- Data source: Excel (SharePoint)
+- Templates: Jinja2 templates
 
 ## License
 
