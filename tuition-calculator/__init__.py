@@ -90,6 +90,7 @@ def create_app(test_config=None):
             unique_degree_faculties=UNIQUE_DEGREE_FACULTIES,
             degrees=DEGREES
         )
+    
     @app.post("/api/ping")
     def api_ping():
         # Optional: require a token so it’s not an open public endpoint
@@ -98,8 +99,8 @@ def create_app(test_config=None):
             abort(401)
 
         # Log basic info (shows up in Railway logs)
-        body = request.get_data()  # raw bytes
-        print("PING received", {"bytes": len(body), "content_type": request.content_type})
+        body = request.get_data(as_text=True)  # raw bytes
+        print("CSV", body)
 
         return jsonify({"ok": True, "bytes": len(body)}), 200
 
