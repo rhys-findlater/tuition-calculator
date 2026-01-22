@@ -79,8 +79,9 @@ http://127.0.0.1:5000/
 
 - Frontend: HTML, CSS
 - Backend: Python, Flask
-- Data source: Excel spreadsheet stored in SharePoint
-- Other: Jinja2 templates
+- Interactivity: JavaScript
+- Data source: Excel (SharePoint)
+- Templates: Jinja2 templates
 
 ## License
 
