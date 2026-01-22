@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, send_file
+from flask import Flask, render_template, request, redirect, url_for, send_file, abort, jsonify
 from weasyprint import HTML, CSS
 from datetime import datetime
 import pandas as pd
@@ -90,7 +90,19 @@ def create_app(test_config=None):
             unique_degree_faculties=UNIQUE_DEGREE_FACULTIES,
             degrees=DEGREES
         )
-    
+    @app.post("/api/ping")
+    def api_ping():
+        # Optional: require a token so it’s not an open public endpoint
+        token = request.headers.get("X-Sync-Token")
+        if token != os.environ.get("SYNC_TOKEN"):
+            abort(401)
+
+        # Log basic info (shows up in Railway logs)
+        body = request.get_data()  # raw bytes
+        print("PING received", {"bytes": len(body), "content_type": request.content_type})
+
+        return jsonify({"ok": True, "bytes": len(body)}), 200
+
     @app.route("/export-pdf", methods=["POST"])
     def export_pdf():
         # Gets JSON sent from the browser
