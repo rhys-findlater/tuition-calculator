@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Tuition Calculator</title>
+    <title>UCO Tuition Calculator</title>
     <meta name="description" content="Calculate UC Online tuition costs" />
     <!-- Favicon -->
     <link
@@ -224,7 +224,7 @@
               <!-- Top stats -->
               <div class="cost-summary-stats">
                 <div class="cost-summary-stats-row">
-                  <span>Courses selected</span>
+                  <span id="costSummaryItemName">Courses selected</span>
                   <span id="costSummaryCoursesSelected">8</span>
                 </div>
                 <div class="cost-summary-stats-row">
@@ -377,7 +377,7 @@
                 Course Selection
               </div>
               <p>
-                Search and select individual courses to add to your cost
+                Search and select individual courses to add to your tuition
                 calculation
               </p>
               <div class="selected-courses-container">
@@ -515,15 +515,20 @@
                     <div class="conflict-popup-header">
                       <div class="conflict-popup-header-left">
                         <div class="conflict-popup-icon">
-                            <img 
-                            src="{{ url_for('static', filename='icons/triangle-alert.svg') }}" 
+                          <img
+                            src="{{ url_for('static', filename='icons/triangle-alert.svg') }}"
                             class="conflict-popup-icon-img"
                             alt=""
-                            />
+                          />
                         </div>
                         <div class="conflict-popup-titles">
-                          <h2 class="conflict-popup-title">Selection Conflict</h2>
-                          <p class="conflict-popup-subtitle">You cannot mix individual courses with degree selections</p>
+                          <h2 class="conflict-popup-title">
+                            Selection Conflict
+                          </h2>
+                          <p class="conflict-popup-subtitle">
+                            You cannot mix individual courses with degree
+                            selections
+                          </p>
                         </div>
                       </div>
                     </div>
@@ -534,14 +539,20 @@
                       </p>
                     </div>
                     <div class="conflict-popup-actions">
-                      <button 
-                        id="errorCloseCourseBtn" 
-                        class="conflict-btn conflict-btn-cancel" 
-                        type="button">Cancel</button>
-                      <button 
-                        id="errorReplaceCourseBtn" 
-                        class="conflict-btn conflict-btn-danger" 
-                        type="button">Replace Selection</button>
+                      <button
+                        id="errorCloseCourseBtn"
+                        class="conflict-btn conflict-btn-cancel"
+                        type="button"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        id="errorReplaceCourseBtn"
+                        class="conflict-btn conflict-btn-danger"
+                        type="button"
+                      >
+                        Replace Selection
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -572,7 +583,7 @@
                 Degree Selection
               </div>
               <p>
-                Search and select individual degrees to add to your cost
+                Search and select an individual degree to add to your tuition
                 calculation
               </p>
               <div class="selected-courses-container">
@@ -613,7 +624,7 @@
                       class="search-input"
                       name="q"
                       type="search"
-                      placeholder="Search by degree title..."
+                      placeholder="Search by degree code or title..."
                     />
                     <button
                       type="button"
@@ -719,14 +730,19 @@
                           />
                         </div>
                         <div class="conflict-popup-titles">
-                          <h2 class="conflict-popup-title">Multiple Degree Selection</h2>
-                          <p class="conflict-popup-subtitle">Only one degree can be selected at a time</p>
+                          <h2 class="conflict-popup-title">
+                            Multiple Degree Selection
+                          </h2>
+                          <p class="conflict-popup-subtitle">
+                            Only one degree can be selected at a time
+                          </p>
                         </div>
                       </div>
                     </div>
                     <div class="conflict-popup-body">
                       <p class="multi-degree-message">
-                        You currently have <strong id="currentDegreeName"></strong> selected.
+                        You currently have
+                        <strong id="currentDegreeName"></strong> selected.
                         Replace it with <strong id="newDegreeName"></strong>?
                       </p>
                       <!-- <div class="conflict-popup-note">
@@ -734,8 +750,20 @@
                       </div> -->
                     </div>
                     <div class="conflict-popup-actions">
-                      <button id="degreeLimitCancelBtn" class="conflict-btn conflict-btn-cancel" type="button">Cancel</button>
-                      <button id="degreeLimitReplaceBtn" class="conflict-btn conflict-btn-danger" type="button">Replace Degree</button>
+                      <button
+                        id="degreeLimitCancelBtn"
+                        class="conflict-btn conflict-btn-cancel"
+                        type="button"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        id="degreeLimitReplaceBtn"
+                        class="conflict-btn conflict-btn-danger"
+                        type="button"
+                      >
+                        Replace Degree
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -752,26 +780,38 @@
                           />
                         </div>
                         <div class="conflict-popup-titles">
-                          <h2 class="conflict-popup-title">Selection Conflict</h2>
-                          <p class="conflict-popup-subtitle">You cannot mix degree selections with individual courses</p>
+                          <h2 class="conflict-popup-title">
+                            Selection Conflict
+                          </h2>
+                          <p class="conflict-popup-subtitle">
+                            You cannot mix degree selections with individual
+                            courses
+                          </p>
                         </div>
                       </div>
                     </div>
                     <div class="conflict-popup-body">
                       <p>
                         Only courses or degrees can be selected at one time.<br />
-                        Replace your selected courses to choose a degree instead.
+                        Replace your selected courses to choose a degree
+                        instead.
                       </p>
                     </div>
                     <div class="conflict-popup-actions">
-                      <button 
-                        id="errorCloseDegreeBtn" 
-                        class="conflict-btn conflict-btn-cancel" 
-                        type="button">Cancel</button>
-                      <button 
-                        id="errorReplaceDegreeBtn" 
-                        class="conflict-btn conflict-btn-danger" 
-                        type="button">Replace Selection</button>
+                      <button
+                        id="errorCloseDegreeBtn"
+                        class="conflict-btn conflict-btn-cancel"
+                        type="button"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        id="errorReplaceDegreeBtn"
+                        class="conflict-btn conflict-btn-danger"
+                        type="button"
+                      >
+                        Replace Selection
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -890,7 +930,7 @@
 
     <!-- Global footer -->
     <footer class="footer">
-      <p class="footer-text">UC Online Course Tuition Calculator | UC Online</p>
+      <p class="footer-text">UC Online | Tuition Calculator</p>
     </footer>
 
     <!-- PDF export name prompt -->

@@ -104,7 +104,6 @@ main {
 
 /* ==================== Popup ==================== */
 
-
 .popup-backdrop {
   position: fixed;
   inset: 0;
@@ -199,7 +198,7 @@ main {
   display: flex;
   justify-content: flex-end;
   gap: 0.75rem;
-  background: #F9FAFB;
+  background: #f9fafb;
   border-top: 1px solid #e5e7eb;
 }
 
@@ -811,7 +810,7 @@ main {
   padding: 0.5rem 0.75rem 0.5rem 2.5rem;
   border-radius: var(--radius-control);
   border: 1.2px solid #d1d5db;
-  background: url("icons/search-grey.svg") no-repeat 10px center;
+  background: url("../icons/search-grey.svg") no-repeat 10px center;
   background-size: 1rem 1rem;
 }
 

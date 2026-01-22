@@ -35,6 +35,7 @@ const showLessDegreesBtnEl = document.getElementById("showLessDegrees");
 
 // Cost summary
 const costSummaryPillTypeEl = document.getElementById("costSummaryPillType");
+const costSummaryItemNameEl = document.getElementById("costSummaryItemName");
 const costSummaryPillLocationEl = document.getElementById(
   "costSummaryPillLocation",
 );
@@ -187,7 +188,12 @@ function enablePopupDismiss(popupEl, closeFn) {
   );
 }
 
-function openDegreeLimitPopup(degreeLimitPopup, currentTitle, newTitle, onReplace) {
+function openDegreeLimitPopup(
+  degreeLimitPopup,
+  currentTitle,
+  newTitle,
+  onReplace,
+) {
   if (!degreeLimitPopup) return;
 
   const currentEl = document.getElementById("currentDegreeName");
@@ -202,7 +208,7 @@ function openDegreeLimitPopup(degreeLimitPopup, currentTitle, newTitle, onReplac
   openBackdropModal(degreeLimitPopup);
   const close = () => closeBackdropModal(degreeLimitPopup);
   enablePopupDismiss(degreeLimitPopup, close);
-  
+
   cancelBtn?.addEventListener("click", close, { once: true });
 
   replaceBtn?.addEventListener(
@@ -699,7 +705,7 @@ function initAvailableCards(type) {
       const degreeLimitPopup = document.getElementById("degreeLimitPopup");
 
       if (cfg.name === "degree" && cfg.items.size >= 1) {
-        const existing = Array.from(cfg.items.values())[0]; 
+        const existing = Array.from(cfg.items.values())[0];
         const currentTitle = existing?.title;
 
         openDegreeLimitPopup(
@@ -709,13 +715,25 @@ function initAvailableCards(type) {
           () => {
             // remove existing degree
             for (const old of cfg.items.values()) {
-              setAvailableCardVisibility(cfg.cardSelector, cfg.dataKey, old.code, false);
+              setAvailableCardVisibility(
+                cfg.cardSelector,
+                cfg.dataKey,
+                old.code,
+                false,
+              );
             }
             cfg.items.clear();
             renderSelection("degree");
 
-            addItem("degree", { code, title, points, domPrice, intPrice, faculty });
-          }
+            addItem("degree", {
+              code,
+              title,
+              points,
+              domPrice,
+              intPrice,
+              faculty,
+            });
+          },
         );
 
         return;
@@ -817,6 +835,11 @@ function renderSummary(
     learnerLocation === "offshore"
       ? "GST does not apply to offshore learners"
       : "GST is calculated at 15% of the subtotal excluding the levy.";
+
+  if (costSummaryItemNameEl) {
+    costSummaryItemNameEl.textContent =
+      activeItems === selectedCourses ? "Courses selected" : "Degrees selected";
+  }
 
   costSummaryCoursesSelectedEl.textContent = String(activeItems.size);
 
@@ -1017,12 +1040,12 @@ function initTuitionSelection() {
   if (showAllDegreesBtnEl) {
     showAllDegreesBtnEl.addEventListener("click", () => {
       document.querySelectorAll(".selection-degree").forEach((card) => {
-        const title = card.dataset.degreeTitle;
+        const code = card.dataset.degreeCode;
         const cardFaculty = card.dataset.degreeFaculty;
         const facultyMatch =
           currentDegreeFaculty === "All Faculties" ||
           cardFaculty === currentDegreeFaculty;
-        const isSelected = selectedDegrees.has(title);
+        const isSelected = selectedDegrees.has(code);
 
         card.style.display = facultyMatch && !isSelected ? "flex" : "none";
       });
