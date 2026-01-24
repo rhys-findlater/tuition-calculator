@@ -676,18 +676,18 @@
                 {% for degree in degrees %}
                 <div
                   class="selection-item selection-degree"
-                  data-degree-code="{{ degree['Code'] }}"
-                  data-degree-title="{{ degree['Full Title'] }}"
+                  data-degree-code="{{ degree['UC Code'] }}"
+                  data-degree-title="{{ degree['Course Title'] }}"
                   data-degree-points="{{ degree['Points'] }}"
-                  data-degree-dom-price="{{ degree['Dom - Full Prog_2026'] }}"
-                  data-degree-int-price="{{ degree['Int -  Full Prog_2026'] }}"
-                  data-degree-price="{{ degree['Dom - Full Prog_2026'] }}"
-                  data-degree-faculty="{{ degree['Owning Faculty'] }}"
+                  data-degree-dom-price="{{ degree['Dom Fees - 2026'] }}"
+                  data-degree-int-price="{{ degree['Int Fees - 2026'] }}"
+                  data-degree-price="{{ degree['Dom Fees - 2026'] }}"
+                  data-degree-faculty="{{ degree['Faculty'] }}"
                 >
                   <div class="item-info-container">
                     <div class="item-container">
                       <p>{{ degree['UC Code'] }}</p>
-                      <p class="item-faculty">{{ degree['Owning Faculty'] }}</p>
+                      <p class="item-faculty">{{ degree['Faculty'] }}</p>
                       {% if degree['Points'] == 'TBC' %}
                       <p class="item-points">{{ degree['Points'] }}</p>
                       {% else %} {% set p = degree['Points']|float %}
