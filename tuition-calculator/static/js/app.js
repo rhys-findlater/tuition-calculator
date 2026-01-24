@@ -250,6 +250,23 @@ function limitItems(selector, initialLimit = 5) {
   });
 }
 
+function refreshCourses() {
+  fetch("/api/courses")
+    .then((response) => response.json())
+    .then((data) => {
+      // Clear existing courses
+      selectedCourses.clear();
+
+      // Re-render the course cards with new data
+      // You'll need to update your HTML to reflect the new courses
+      // This is a simplified example - adjust based on your HTML structure
+      location.reload(); // Simple approach: reload the page
+    })
+    .catch((error) => {
+      console.error("Failed to refresh courses:", error);
+    });
+}
+
 function getCurrentLearnerType() {
   const checked = document.querySelector('input[name="learner_type"]:checked');
   return checked ? checked.value : "domestic";
@@ -1162,6 +1179,10 @@ function initTuitionSelection() {
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape") closePdfPrompt();
   });
+
+  setInterval(() => {
+    refreshCourses();
+  }, 300000);
 }
 
 if (document.readyState === "loading") {
