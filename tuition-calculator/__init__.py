@@ -16,6 +16,7 @@ def create_app(test_config=None):
         DATA_DIR = os.environ.get("RAILWAY_VOLUME_MOUNT_PATH") 
     else: 
         DATA_DIR = os.path.join(app.root_path, "data")
+        print(DATA_DIR)
 
     course_csv_path = os.path.join(DATA_DIR, "tuition_fees.csv")
     degree_csv_path = os.path.join(DATA_DIR, "degree_fees.csv")
@@ -100,12 +101,49 @@ def create_app(test_config=None):
     
     def get_cleaned_course_data():
         """Load and clean course data from CSV."""
+        os.makedirs(DATA_DIR, exist_ok=True)
+
+        if not os.path.exists(course_csv_path):
+            app.logger.info(f"Creating default course CSV at {course_csv_path}")
+            default_df = pd.DataFrame(columns=[
+                'UC Code', 
+                'Course Title', 
+                'Faculty', 
+                'Points',
+                'Int Fees - 2026', 
+                'Dom Fees - 2026'
+            ])
+            default_df.to_csv(course_csv_path, index=False)
+            return default_df
         course_df = pd.read_csv(course_csv_path)
+
+        if len(course_df) == 0:
+            return course_df
+        
         return clean_course_dataframe(course_df)
     
     def get_cleaned_degree_data():
         """Load and clean degree data from CSV."""
+        os.makedirs(DATA_DIR, exist_ok=True)
+
+        if not os.path.exists(degree_csv_path):
+            app.logger.info(f"Creating default degree CSV at {degree_csv_path}")
+            default_df = pd.DataFrame(columns=[
+                'Code', 
+                'Full Title', 
+                'Owning Faculty', 
+                'Points',
+                'Int -  Full Prog_2026', 
+                'Dom - Full Prog_2026'
+            ])
+            default_df.to_csv(degree_csv_path, index=False)
+            return default_df
+
         degree_df = pd.read_csv(degree_csv_path)
+
+        if len(degree_df) == 0:
+            return degree_df
+
         return clean_degree_dataframe(degree_df)
     
     # ============ ROUTES ============
@@ -117,8 +155,9 @@ def create_app(test_config=None):
         
         COURSES = course_df.to_dict('records')
         DEGREES = degree_df.to_dict('records')
-        UNIQUE_COURSE_FACULTIES = list(course_df['Faculty'].drop_duplicates())
-        UNIQUE_DEGREE_FACULTIES = list(degree_df['Owning Faculty'].drop_duplicates())
+        UNIQUE_COURSE_FACULTIES = list(course_df['Faculty'].drop_duplicates()) if len(course_df) > 0 else []
+        UNIQUE_DEGREE_FACULTIES = list(degree_df['Owning Faculty'].drop_duplicates()) if len(degree_df) > 0 else []
+
         COURSES_JSON = json.dumps(COURSES)
         
         if request.headers.get('Accept') == 'application/json' or request.args.get('format') == 'json':
