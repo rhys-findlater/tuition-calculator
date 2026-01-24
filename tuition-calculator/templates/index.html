@@ -686,7 +686,7 @@
                 >
                   <div class="item-info-container">
                     <div class="item-container">
-                      <p>{{ degree['Code'] }}</p>
+                      <p>{{ degree['UC Code'] }}</p>
                       <p class="item-faculty">{{ degree['Owning Faculty'] }}</p>
                       {% if degree['Points'] == 'TBC' %}
                       <p class="item-points">{{ degree['Points'] }}</p>
@@ -696,12 +696,10 @@
                       </p>
                       {% endif %}
                     </div>
-                    <p>{{ degree['Full Title'] }}</p>
+                    <p>{{ degree['Course Title'] }}</p>
                   </div>
                   <div class="item-button-container">
-                    <p>
-                      ${{ "{:,.2f}".format(degree['Dom - Full Prog_2026']) }}
-                    </p>
+                    <p>${{ "{:,.2f}".format(degree['Dom Fees - 2026']) }}</p>
                     <!-- Toggle button used by JS to add/remove course from selection -->
                     <button
                       class="item-button"

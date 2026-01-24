@@ -64,19 +64,19 @@ def create_app(test_config=None):
     def clean_degree_dataframe(df):
         """Clean and filter degree dataframe."""
         required_columns = [
-            'Int -  Full Prog_2026', 
-            'Dom - Full Prog_2026', 
-            'Owning Faculty', 
-            'Code', 
+            'Int Fees - 2026', 
+            'Dom Fees - 2026', 
+            'Faculty', 
+            'UC Code', 
             'Points', 
-            'Full Title'
+            'Course Title'
         ]
         
         missing_columns = [col for col in required_columns if col not in df.columns]
         if missing_columns:
             raise ValueError(f"Missing required columns: {missing_columns}. Available columns: {list(df.columns)}")
         
-        fee_columns = ['Int -  Full Prog_2026', 'Dom - Full Prog_2026'] 
+        fee_columns = ['Int Fees - 2026', 'Dom Fees - 2026'] 
         for col in fee_columns:
             df[col] = (
                 df[col].astype(str)
@@ -87,15 +87,15 @@ def create_app(test_config=None):
                 .fillna(0).astype(int)
             )
         
-        df['Owning Faculty'] = df['Owning Faculty'].fillna('Other').replace('None', 'Other')
-        df['Code'] = df['Code'].fillna('TBC').replace('nan', 'TBC')
+        df['Faculty'] = df['Faculty'].fillna('Other').replace('None', 'Other')
+        df['UC Code'] = df['UC Code'].fillna('TBC').replace('nan', 'TBC')
         df['Points'] = df['Points'].fillna('TBC').replace('nan', 'TBC')
         
-        df = df[df['Code'] != 'TBC']
+        df = df[df['UC Code'] != 'TBC']
         df = df[df['Points'] != 'TBC']
-        df = df[df['Full Title'] != 'TBC']
-        df = df[df['Int -  Full Prog_2026'] != 0]
-        df = df[df['Dom - Full Prog_2026'] != 0]
+        df = df[df['Course Title'] != 'TBC']
+        df = df[df['Int Fees - 2026'] != 0]
+        df = df[df['Dom Fees - 2026'] != 0]
         
         return df
     
@@ -180,8 +180,8 @@ def create_app(test_config=None):
             degrees=DEGREES
         )
     
-    @app.post("/api/ping")
-    def api_ping():
+    @app.post("/api/course")
+    def api_update_course():
         """Webhook endpoint to receive and save updated COURSE data only."""
         try:
             token = request.headers.get("X-Sync-Token")
@@ -208,6 +208,44 @@ def create_app(test_config=None):
                 "ok": True, 
                 "rows_updated": len(data_df),
                 "message": "Course data updated successfully"
+            }), 200
+            
+        except ValueError as e:
+            app.logger.error(f"Validation error: {str(e)}")
+            return jsonify({"error": str(e)}), 400
+            
+        except Exception as e:
+            app.logger.error(f"Unexpected error in /api/ping: {str(e)}")
+            return jsonify({"error": f"Internal server error: {str(e)}"}), 500
+        
+    @app.post("/api/degree")
+    def api_update_degree():
+        """Webhook endpoint to receive and save updated COURSE data only."""
+        try:
+            token = request.headers.get("X-Sync-Token")
+            if token != os.environ.get("SYNC_TOKEN"):
+                abort(401)
+            
+            body = request.get_data(as_text=True)
+            
+            if not body:
+                return jsonify({"error": "Empty request body"}), 400
+            
+            data_df = pd.read_csv(io.StringIO(body))
+            
+            app.logger.info(f"Received columns: {list(data_df.columns)}")
+            app.logger.info(f"Received {len(data_df)} rows")
+            
+            data_df = clean_degree_dataframe(data_df)
+            
+            data_df.to_csv(degree_csv_path, index=False)
+            
+            app.logger.info(f"Successfully saved {len(data_df)} courses to {degree_csv_path}")
+            
+            return jsonify({
+                "ok": True, 
+                "rows_updated": len(data_df),
+                "message": "Degree data updated successfully"
             }), 200
             
         except ValueError as e:
