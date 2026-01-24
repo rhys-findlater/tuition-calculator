@@ -129,12 +129,12 @@ def create_app(test_config=None):
         if not os.path.exists(degree_csv_path):
             app.logger.info(f"Creating default degree CSV at {degree_csv_path}")
             default_df = pd.DataFrame(columns=[
-                'Code', 
-                'Full Title', 
-                'Owning Faculty', 
+                'UC Code', 
+                'Course Title', 
+                'Faculty', 
                 'Points',
-                'Int -  Full Prog_2026', 
-                'Dom - Full Prog_2026'
+                'Int Fees - 2026', 
+                'Dom Fees - 2026'
             ])
             default_df.to_csv(degree_csv_path, index=False)
             return default_df
@@ -156,7 +156,7 @@ def create_app(test_config=None):
         COURSES = course_df.to_dict('records')
         DEGREES = degree_df.to_dict('records')
         UNIQUE_COURSE_FACULTIES = list(course_df['Faculty'].drop_duplicates()) if len(course_df) > 0 else []
-        UNIQUE_DEGREE_FACULTIES = list(degree_df['Owning Faculty'].drop_duplicates()) if len(degree_df) > 0 else []
+        UNIQUE_DEGREE_FACULTIES = list(degree_df['Faculty'].drop_duplicates()) if len(degree_df) > 0 else []
 
         COURSES_JSON = json.dumps(COURSES)
         
@@ -266,7 +266,7 @@ def create_app(test_config=None):
             COURSES = course_df.to_dict('records')
             DEGREES = degree_df.to_dict('records')
             UNIQUE_COURSE_FACULTIES = list(course_df['Faculty'].drop_duplicates())
-            UNIQUE_DEGREE_FACULTIES = list(degree_df['Owning Faculty'].drop_duplicates())
+            UNIQUE_DEGREE_FACULTIES = list(degree_df['Faculty'].drop_duplicates())
             
             return jsonify({
                 "courses": COURSES,
