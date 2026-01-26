@@ -52,6 +52,7 @@ def create_app(test_config=None):
         df['Faculty'] = df['Faculty'].fillna('Other').replace('None', 'Other')
         df['UC Code'] = df['UC Code'].fillna('TBC').replace('nan', 'TBC')
         df['Points'] = df['Points'].fillna('TBC').replace('nan', 'TBC')
+        df['Course Title'] = df['Course Title'].fillna('TBC').replace('nan', 'TBC')
         
         df = df[df['UC Code'] != 'TBC']
         df = df[df['Points'] != 'TBC']
@@ -90,6 +91,7 @@ def create_app(test_config=None):
         df['Faculty'] = df['Faculty'].fillna('Other').replace('None', 'Other')
         df['UC Code'] = df['UC Code'].fillna('TBC').replace('nan', 'TBC')
         df['Points'] = df['Points'].fillna('TBC').replace('nan', 'TBC')
+        df['Course Title'] = df['Course Title'].fillna('TBC').replace('nan', 'TBC')
         
         df = df[df['UC Code'] != 'TBC']
         df = df[df['Points'] != 'TBC']
@@ -184,9 +186,9 @@ def create_app(test_config=None):
     def api_update_course():
         """Webhook endpoint to receive and save updated COURSE data only."""
         try:
-            # token = request.headers.get("X-Sync-Token")
-            # if token != os.environ.get("SYNC_TOKEN"):
-            #     abort(401)
+            token = request.headers.get("X-Sync-Token")
+            if token != os.environ.get("SYNC_TOKEN"):
+                abort(401)
             
             body = request.get_data(as_text=True)
             

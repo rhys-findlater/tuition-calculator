@@ -1179,10 +1179,6 @@ function initTuitionSelection() {
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape") closePdfPrompt();
   });
-
-  setInterval(() => {
-    refreshCourses();
-  }, 300000);
 }
 
 if (document.readyState === "loading") {
