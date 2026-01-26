@@ -317,3 +317,21 @@ div[data-no-results] {
   animation: staggerSlideUp var(--duration-fast) var(--ease-smooth) forwards; 
   opacity: 0; 
 }
+
+@media (hover: none), (pointer: coarse) {
+  .learner-info-option:hover {
+    transform: none !important;
+    box-shadow: none !important;
+  }
+}
+
+/* Or more specific - no transform at all on touch */
+@media (max-width: 768px) {
+  .learner-info-option {
+    transform: none !important;
+  }
+  
+  .learner-info-option:active {
+    transform: scale(0.98);
+  }
+}
