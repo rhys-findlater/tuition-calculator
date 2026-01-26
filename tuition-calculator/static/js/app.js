@@ -883,8 +883,9 @@ function renderSummary(
         });
   costSummaryLevyNoteEl.textContent = `Based on ${totalCoursePoints} points`;
 
+  const gst = learnerLocation === "onshore" ? totalCourseCost * 0.15 : 0;
   const levyAmount = levy === "TBD" ? 0 : Number(levy);
-  const subTotal = levyAmount + totalCourseCost;
+  const subTotal = gst + totalCourseCost;
   costSummarySubtotalEl.textContent = subTotal.toLocaleString("en-NZ", {
     style: "currency",
     currency: "NZD",
@@ -892,7 +893,6 @@ function renderSummary(
     maximumFractionDigits: 2,
   });
 
-  const gst = learnerLocation === "onshore" ? subTotal * 0.15 : 0;
   costSummaryGstEl.textContent = gst.toLocaleString("en-NZ", {
     style: "currency",
     currency: "NZD",
@@ -900,7 +900,7 @@ function renderSummary(
     maximumFractionDigits: 2,
   });
 
-  const totalCost = subTotal + gst;
+  const totalCost = subTotal + levyAmount;
   costSummaryTotalEl.textContent = totalCost.toLocaleString("en-NZ", {
     style: "currency",
     currency: "NZD",

@@ -58,6 +58,9 @@
             <p class="welcome-title">
               Welcome to the UC Online Tuition Calculator
             </p>
+            <p class="welcome-title-mobile" style="display: none">
+              UC Online Tuition Calculator
+            </p>
           </div>
           <p class="welcome-text">
             Select courses or degrees and a learner type below to receive an
@@ -241,6 +244,33 @@
                 </div>
 
                 <div class="cost-summary-line">
+                  <div class="cost-summary-line-main cost-summary-line-gst">
+                    <span>GST (15%)</span>
+                    <button
+                      type="button"
+                      class="info-icon-wrapper"
+                      aria-label="More information about GST"
+                    >
+                      <img
+                        src="{{ url_for('static', filename='icons/info-grey.svg') }}"
+                        alt=""
+                        class="cost-summary-icon-inline"
+                      />
+                      <span class="info-tooltip" id="GstInfoToolTip">
+                        GST is calculated at 15% of the subtotal including the
+                        levy.
+                      </span>
+                    </button>
+                  </div>
+                  <span id="costSummaryGst">$999</span>
+                </div>
+
+                <div class="cost-summary-line">
+                  <span>Subtotal</span>
+                  <span id="costSummarySubtotal">$9999.00</span>
+                </div>
+
+                <div class="cost-summary-line">
                   <div class="cost-summary-line-main">
                     <span>Student services levy (SSL)</span>
                     <button
@@ -263,33 +293,6 @@
                 <p class="cost-summary-subtext" id="costSummaryLevyNote">
                   Based on 0 points
                 </p>
-
-                <div class="cost-summary-line">
-                  <span>Subtotal</span>
-                  <span id="costSummarySubtotal">$9999.00</span>
-                </div>
-
-                <div class="cost-summary-line">
-                  <div class="cost-summary-line-main">
-                    <span>GST (15%)</span>
-                    <button
-                      type="button"
-                      class="info-icon-wrapper"
-                      aria-label="More information about GST"
-                    >
-                      <img
-                        src="{{ url_for('static', filename='icons/info-grey.svg') }}"
-                        alt=""
-                        class="cost-summary-icon-inline"
-                      />
-                      <span class="info-tooltip" id="GstInfoToolTip">
-                        GST is calculated at 15% of the subtotal including the
-                        levy.
-                      </span>
-                    </button>
-                  </div>
-                  <span id="costSummaryGst">$999</span>
-                </div>
               </div>
 
               <!-- Total + export -->
@@ -985,7 +988,7 @@
             <img
               src="{{ url_for('static', filename='icons/download-white.svg') }}"
               alt="Off-campus location"
-              class="sub-icon"
+              class="sub-icon pdf-icon"
             />
             Download PDF
           </button>

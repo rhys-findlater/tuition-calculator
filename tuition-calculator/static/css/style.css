@@ -327,6 +327,11 @@ main {
   font-weight: 600;
 }
 
+.welcome-title-mobile {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
 .welcome-text {
   font-size: 0.875rem;
   margin-left: 1.65rem;
@@ -648,6 +653,9 @@ main {
   font-size: 0.75rem;
   color: rgba(44, 44, 44, 0.8);
   margin-top: -0.25rem;
+}
+
+.cost-summary-line-gst {
   margin-bottom: 0.75rem;
 }
 
@@ -1751,6 +1759,18 @@ main {
 @media (max-width: 768px) {
   main {
     padding-inline: 1rem;
+  }
+
+  .pdf-icon {
+    display: none;
+  }
+
+  .welcome-title {
+    display: none !important;
+  }
+
+  .welcome-title-mobile {
+    display: block !important;
   }
 
   .header-container {
