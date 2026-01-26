@@ -19,5 +19,13 @@ function closeBackdropModal(backdropEl) {
   }, MODAL_ANIM_MS);
 }
 
+function triggerStagger(selector = '[data-stagger]') {
+  document.querySelectorAll(selector).forEach((el, i) => {
+    el.style.setProperty('--i', i);
+    el.classList.add('data-animate');
+  });
+}
+
+document.addEventListener('DOMContentLoaded', triggerStagger);
 window.openBackdropModal = openBackdropModal;
 window.closeBackdropModal = closeBackdropModal;

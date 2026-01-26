@@ -29,6 +29,149 @@
       href="{{ url_for('static', filename='css/animations.css') }}"
     />
   </head>
+
+  <div id="errorModalCourse" class="popup-backdrop" hidden>
+    <div class="conflict-popup">
+      <div class="conflict-popup-header">
+        <div class="conflict-popup-header-left">
+          <div class="conflict-popup-icon">
+            <img
+              src="{{ url_for('static', filename='icons/triangle-alert.svg') }}"
+              class="conflict-popup-icon-img"
+              alt=""
+            />
+          </div>
+          <div class="conflict-popup-titles">
+            <h2 class="conflict-popup-title">
+              Selection Conflict
+            </h2>
+            <p class="conflict-popup-subtitle">
+              You cannot mix individual courses with degree
+              selections
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="conflict-popup-body">
+        <p>
+          Only courses or degrees can be selected at one time.<br />
+          Replace your selected degree to choose courses instead.
+        </p>
+      </div>
+      <div class="conflict-popup-actions">
+        <button
+          id="errorCloseCourseBtn"
+          class="conflict-btn conflict-btn-cancel"
+          type="button"
+        >
+          Cancel
+        </button>
+        <button
+          id="errorReplaceCourseBtn"
+          class="conflict-btn conflict-btn-danger"
+          type="button"
+        >
+          Replace Selection
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div id="degreeLimitPopup" class="popup-backdrop" hidden>
+    <div class="conflict-popup conflict-popup--degree-limit">
+      <div class="conflict-popup-header">
+        <div class="conflict-popup-header-left">
+          <div class="conflict-popup-icon">
+            <img
+              src="{{ url_for('static', filename='icons/triangle-alert.svg') }}"
+              class="conflict-popup-icon-img"
+              alt=""
+            />
+          </div>
+          <div class="conflict-popup-titles">
+            <h2 class="conflict-popup-title">
+              Multiple Degree Selection
+            </h2>
+            <p class="conflict-popup-subtitle">
+              Only one degree can be selected at a time
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="conflict-popup-body">
+        <p class="multi-degree-message">
+          You currently have
+          <strong id="currentDegreeName"></strong> selected.
+          Replace it with <strong id="newDegreeName"></strong>?
+        </p>
+      </div>
+      <div class="conflict-popup-actions">
+        <button
+          id="degreeLimitCancelBtn"
+          class="conflict-btn conflict-btn-cancel"
+          type="button"
+        >
+          Cancel
+        </button>
+        <button
+          id="degreeLimitReplaceBtn"
+          class="conflict-btn conflict-btn-danger"
+          type="button"
+        >
+          Replace Degree
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div id="errorModalDegree" class="popup-backdrop" hidden>
+    <div class="conflict-popup">
+      <div class="conflict-popup-header">
+        <div class="conflict-popup-header-left">
+          <div class="conflict-popup-icon">
+            <img
+              src="{{ url_for('static', filename='icons/triangle-alert.svg') }}"
+              class="conflict-popup-icon-img"
+              alt=""
+            />
+          </div>
+          <div class="conflict-popup-titles">
+            <h2 class="conflict-popup-title">
+              Selection Conflict
+            </h2>
+            <p class="conflict-popup-subtitle">
+              You cannot mix degree selections with individual
+              courses
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="conflict-popup-body">
+        <p>
+          Only courses or degrees can be selected at one time.<br />
+          Replace your selected courses to choose a degree
+          instead.
+        </p>
+      </div>
+      <div class="conflict-popup-actions">
+        <button
+          id="errorCloseDegreeBtn"
+          class="conflict-btn conflict-btn-cancel"
+          type="button"
+        >
+          Cancel
+        </button>
+        <button
+          id="errorReplaceDegreeBtn"
+          class="conflict-btn conflict-btn-danger"
+          type="button"
+        >
+          Replace Selection
+        </button>
+      </div>
+    </div>
+  </div>
+  
   <body>
     <!-- Global site header with logo and title -->
     <header class="header">
@@ -513,52 +656,6 @@
                   </div>
                 </div>
                 {% endfor %}
-                <div id="errorModalCourse" class="popup-backdrop" hidden>
-                  <div class="conflict-popup">
-                    <div class="conflict-popup-header">
-                      <div class="conflict-popup-header-left">
-                        <div class="conflict-popup-icon">
-                          <img
-                            src="{{ url_for('static', filename='icons/triangle-alert.svg') }}"
-                            class="conflict-popup-icon-img"
-                            alt=""
-                          />
-                        </div>
-                        <div class="conflict-popup-titles">
-                          <h2 class="conflict-popup-title">
-                            Selection Conflict
-                          </h2>
-                          <p class="conflict-popup-subtitle">
-                            You cannot mix individual courses with degree
-                            selections
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="conflict-popup-body">
-                      <p>
-                        Only courses or degrees can be selected at one time.<br />
-                        Replace your selected degree to choose courses instead.
-                      </p>
-                    </div>
-                    <div class="conflict-popup-actions">
-                      <button
-                        id="errorCloseCourseBtn"
-                        class="conflict-btn conflict-btn-cancel"
-                        type="button"
-                      >
-                        Cancel
-                      </button>
-                      <button
-                        id="errorReplaceCourseBtn"
-                        class="conflict-btn conflict-btn-danger"
-                        type="button"
-                      >
-                        Replace Selection
-                      </button>
-                    </div>
-                  </div>
-                </div>
               </div>
 
               <!-- Pagination/visibility controls for long course lists -->
@@ -719,103 +816,6 @@
                   </div>
                 </div>
                 {% endfor %}
-                <div id="degreeLimitPopup" class="popup-backdrop" hidden>
-                  <div class="conflict-popup conflict-popup--degree-limit">
-                    <div class="conflict-popup-header">
-                      <div class="conflict-popup-header-left">
-                        <div class="conflict-popup-icon">
-                          <img
-                            src="{{ url_for('static', filename='icons/triangle-alert.svg') }}"
-                            class="conflict-popup-icon-img"
-                            alt=""
-                          />
-                        </div>
-                        <div class="conflict-popup-titles">
-                          <h2 class="conflict-popup-title">
-                            Multiple Degree Selection
-                          </h2>
-                          <p class="conflict-popup-subtitle">
-                            Only one degree can be selected at a time
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="conflict-popup-body">
-                      <p class="multi-degree-message">
-                        You currently have
-                        <strong id="currentDegreeName"></strong> selected.
-                        Replace it with <strong id="newDegreeName"></strong>?
-                      </p>
-                      <!-- <div class="conflict-popup-note">
-                        <strong>Note:</strong> Replacing will remove your current degree from the estimate.
-                      </div> -->
-                    </div>
-                    <div class="conflict-popup-actions">
-                      <button
-                        id="degreeLimitCancelBtn"
-                        class="conflict-btn conflict-btn-cancel"
-                        type="button"
-                      >
-                        Cancel
-                      </button>
-                      <button
-                        id="degreeLimitReplaceBtn"
-                        class="conflict-btn conflict-btn-danger"
-                        type="button"
-                      >
-                        Replace Degree
-                      </button>
-                    </div>
-                  </div>
-                </div>
-
-                <div id="errorModalDegree" class="popup-backdrop" hidden>
-                  <div class="conflict-popup">
-                    <div class="conflict-popup-header">
-                      <div class="conflict-popup-header-left">
-                        <div class="conflict-popup-icon">
-                          <img
-                            src="{{ url_for('static', filename='icons/triangle-alert.svg') }}"
-                            class="conflict-popup-icon-img"
-                            alt=""
-                          />
-                        </div>
-                        <div class="conflict-popup-titles">
-                          <h2 class="conflict-popup-title">
-                            Selection Conflict
-                          </h2>
-                          <p class="conflict-popup-subtitle">
-                            You cannot mix degree selections with individual
-                            courses
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="conflict-popup-body">
-                      <p>
-                        Only courses or degrees can be selected at one time.<br />
-                        Replace your selected courses to choose a degree
-                        instead.
-                      </p>
-                    </div>
-                    <div class="conflict-popup-actions">
-                      <button
-                        id="errorCloseDegreeBtn"
-                        class="conflict-btn conflict-btn-cancel"
-                        type="button"
-                      >
-                        Cancel
-                      </button>
-                      <button
-                        id="errorReplaceDegreeBtn"
-                        class="conflict-btn conflict-btn-danger"
-                        type="button"
-                      >
-                        Replace Selection
-                      </button>
-                    </div>
-                  </div>
-                </div>
               </div>
 
               <!-- Pagination/visibility controls for long course lists -->
