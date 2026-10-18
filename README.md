@@ -68,6 +68,28 @@ flask --app tuition-calculator run
 http://127.0.0.1:5000/
 ```
 
+## 2027 tuition fee data
+
+Course and degree tuition prices use the 2027 fees excluding GST. The CSV sync
+endpoints (`POST /api/course` and `POST /api/degree`) accept these SharePoint
+internal names and save them with the calculator's standard headers:
+
+| SharePoint internal name | CSV header |
+| --- | --- |
+| `_x0032_027DomFee_x0028_exclGST_x` | `Dom Fees - 2027` |
+| `_x0032_027IntFee_x0028_exclGST_x` | `Int Fees - 2027` |
+
+Both endpoints also accept the standard CSV headers directly. The other required
+columns are `UC Code`, `Course Title`, `Faculty`, and `Points`.
+
+Update the external SharePoint sync flow to select the 2027 fields above. The
+flow is managed outside this repository. Existing 2026 prices are not used as
+2027 prices; populate both CSV files with actual 2027 data through the sync.
+The checked-in CSV files contain headers only.
+
+The Student Services Levy remains at its existing 2026 rate pending a confirmed
+2027 levy.
+
 ## Features
 
 - Clean, staff-friendly user interface

@@ -22,12 +22,24 @@ def create_app(test_config=None):
     degree_csv_path = os.path.join(DATA_DIR, "degree_fees.csv")
    
     # ============ HELPER FUNCTIONS ============
+
+    def normalize_fee_columns(df):
+        """Map the 2027 SharePoint internal fields to the calculator's CSV headers."""
+        fee_columns = {
+            '_x0032_027DomFee_x0028_exclGST_x': 'Dom Fees - 2027',
+            '_x0032_027IntFee_x0028_exclGST_x': 'Int Fees - 2027',
+        }
+        return df.rename(columns={
+            source: target for source, target in fee_columns.items()
+            if target not in df.columns
+        })
     
     def clean_course_dataframe(df):
         """Clean and filter course dataframe."""
+        df = normalize_fee_columns(df)
         required_columns = [
-            'Int Fees - 2026', 
-            'Dom Fees - 2026', 
+            'Int Fees - 2027',
+            'Dom Fees - 2027',
             'Faculty', 
             'UC Code', 
             'Points', 
@@ -38,7 +50,7 @@ def create_app(test_config=None):
         if missing_columns:
             raise ValueError(f"Missing required columns: {missing_columns}. Available columns: {list(df.columns)}")
         
-        fee_columns = ['Int Fees - 2026', 'Dom Fees - 2026'] 
+        fee_columns = ['Int Fees - 2027', 'Dom Fees - 2027']
         for col in fee_columns:
             df[col] = (
                 df[col].astype(str)
@@ -57,16 +69,17 @@ def create_app(test_config=None):
         df = df[df['UC Code'] != 'TBC']
         df = df[df['Points'] != 'TBC']
         df = df[df['Course Title'] != 'TBC']
-        df = df[df['Int Fees - 2026'] != 0]
-        df = df[df['Dom Fees - 2026'] != 0]
+        df = df[df['Int Fees - 2027'] != 0]
+        df = df[df['Dom Fees - 2027'] != 0]
         
         return df
     
     def clean_degree_dataframe(df):
         """Clean and filter degree dataframe."""
+        df = normalize_fee_columns(df)
         required_columns = [
-            'Int Fees - 2026', 
-            'Dom Fees - 2026', 
+            'Int Fees - 2027',
+            'Dom Fees - 2027',
             'Faculty', 
             'UC Code', 
             'Points', 
@@ -77,7 +90,7 @@ def create_app(test_config=None):
         if missing_columns:
             raise ValueError(f"Missing required columns: {missing_columns}. Available columns: {list(df.columns)}")
         
-        fee_columns = ['Int Fees - 2026', 'Dom Fees - 2026'] 
+        fee_columns = ['Int Fees - 2027', 'Dom Fees - 2027']
         for col in fee_columns:
             df[col] = (
                 df[col].astype(str)
@@ -96,8 +109,8 @@ def create_app(test_config=None):
         df = df[df['UC Code'] != 'TBC']
         df = df[df['Points'] != 'TBC']
         df = df[df['Course Title'] != 'TBC']
-        df = df[df['Int Fees - 2026'] != 0]
-        df = df[df['Dom Fees - 2026'] != 0]
+        df = df[df['Int Fees - 2027'] != 0]
+        df = df[df['Dom Fees - 2027'] != 0]
         
         return df
     
@@ -112,8 +125,8 @@ def create_app(test_config=None):
                 'Course Title', 
                 'Faculty', 
                 'Points',
-                'Int Fees - 2026', 
-                'Dom Fees - 2026'
+                'Int Fees - 2027',
+                'Dom Fees - 2027'
             ])
             default_df.to_csv(course_csv_path, index=False)
             return default_df
@@ -135,8 +148,8 @@ def create_app(test_config=None):
                 'Course Title', 
                 'Faculty', 
                 'Points',
-                'Int Fees - 2026', 
-                'Dom Fees - 2026'
+                'Int Fees - 2027',
+                'Dom Fees - 2027'
             ])
             default_df.to_csv(degree_csv_path, index=False)
             return default_df
