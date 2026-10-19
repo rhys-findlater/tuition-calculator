@@ -812,8 +812,10 @@ function capitalize(word) {
   return word.charAt(0).toUpperCase() + word.slice(1);
 }
 
-function calculateLevy(selectedCoursesSize, totalCoursePoints) {
-  return totalCoursePoints * 2.06;
+function calculateLevy(totalCoursePoints) {
+  // $32.13 per 15 points; prorate before rounding the total levy to cents.
+  const levyCentsPer15Points = 3213;
+  return Math.round((totalCoursePoints * levyCentsPer15Points) / 15) / 100;
 }
 
 function calculateCoursesTotals(selectedCourses, isDomestic) {
@@ -871,7 +873,7 @@ function renderSummary(
     maximumFractionDigits: 2,
   });
 
-  const levy = calculateLevy(activeItems.size, totalCoursePoints);
+  const levy = calculateLevy(totalCoursePoints);
   costSummaryLevyEl.textContent =
     levy === "TBD"
       ? "TBD"

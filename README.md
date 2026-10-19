@@ -87,8 +87,10 @@ flow is managed outside this repository. Existing 2026 prices are not used as
 2027 prices; populate both CSV files with actual 2027 data through the sync.
 The checked-in CSV files contain headers only.
 
-The Student Services Levy remains at its existing 2026 rate pending a confirmed
-2027 levy.
+The Student Services Levy is $32.13 per 15 points. It is prorated using the total
+selected course or degree points and rounded once to the nearest cent. For
+example, 10 points costs $21.42, 60 points costs $128.52, and 120 points costs
+$257.04.
 
 ## Features
 
